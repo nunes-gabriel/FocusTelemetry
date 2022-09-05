@@ -8,6 +8,6 @@ def entregas_layout() -> html.Div:
     cada uma das viagens registradas no banco de dados - tempo de viagem, rotas
     alternativas, custos totais, mapa interativo com pontos de entrega, etc.
     """
-    return html.Div(className="page-entregas", children=[
-        html.H3("Página de Entregas")
+    return html.Div(className="painel-entregas", children=[
+        html.H1("Painel de Entregas")
         ])

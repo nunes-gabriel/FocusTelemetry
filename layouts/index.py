@@ -10,12 +10,12 @@ def index_layout() -> html.Div:
     """
     return html.Div([
         dcc.Location(id="url", refresh=False),
-        html.Div(className="BarraLateral", children=[
-            dcc.Link(className="Botao", href="/entregas", children="Entregas"), Br(),
-            dcc.Link(className="Botao", href="/veiculos", children="Veículos"), Br(),
-            dcc.Link(className="Botao", href="/motoristas", children="Motoristas"), Br(),
-            dcc.Link(className="Botao", href="/analise", children="Análise"), Br(),
-            dcc.Link(className="Botao", href="/banco-dados", children="Banco de Dados")
+        html.Div(className="barra-lateral", children=[
+            dcc.Link(className="botao", href="/entregas", children=html.Img(className="icone", src="./assets/icone-entregas.svg", width="60px", height="60px")), Br(),
+            dcc.Link(className="botao", href="/veiculos", children=html.Img(className="icone", src="./assets/icone-veiculos.svg", width="60px", height="60px")), Br(),
+            dcc.Link(className="botao", href="/motoristas", children=html.Img(className="icone", src="./assets/icone-motoristas.svg", width="60px", height="60px")), Br(),
+            dcc.Link(className="botao", href="/analise", children=html.Img(className="icone", src="./assets/icone-analise.svg", width="60px", height="60px")), Br(),
+            dcc.Link(className="botao", href="/banco-dados", children=html.Img(className="icone", src="./assets/icone-banco-dados.svg", width="60px", height="60px"))
             ]),
-        html.Div(id="conteudo-pagina")
+        html.Div(className="page-layer", id="conteudo-pagina")
         ])

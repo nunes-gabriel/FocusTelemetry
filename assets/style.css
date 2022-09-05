@@ -1,0 +1,30 @@
+body {
+    background-color: #2e2e2e;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    color: #e5e5e5;
+}
+
+.barra-lateral {
+    height: 100%;
+    width: 80px;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    background-color: rgb(21, 21, 21);
+    overflow-x: hidden;
+}
+
+.barra-lateral .botao {
+    padding-left: 10px;
+}
+
+.barra-lateral .botao .icone {
+    filter: invert(100%) sepia(0%) saturate(284%) hue-rotate(346deg) brightness(104%) contrast(80%);
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.page-layer {
+    margin-left: 80px;
+}
