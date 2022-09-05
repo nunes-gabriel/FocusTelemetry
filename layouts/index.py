@@ -2,9 +2,12 @@ from dash import html, dcc
 from dash.html import Br
 
 
-def index():
-    """Interface base do dashboard com uma barra lateral, um espaço para exibição
-    do conteúdo dos paineis do dashboard e um 'url-getter' para callback."""
+def index_layout() -> html.Div:
+    """
+    Interface base do Dashboard onde serão indexados os demais layouts da
+    aplicação através de uma barra lateral e um 'url-getter', permitindo
+    alternar entre os diferentes paineis.
+    """
     return html.Div([
         dcc.Location(id="url", refresh=False),
         html.Div(className="BarraLateral", children=[
