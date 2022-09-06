@@ -16,13 +16,17 @@ body {
 }
 
 .barra-lateral .botao {
-    padding-left: 10px;
+    padding-left: 15px;
 }
 
 .barra-lateral .botao .icone {
     filter: invert(100%) sepia(0%) saturate(284%) hue-rotate(346deg) brightness(104%) contrast(80%);
-    margin-top: 5px;
-    margin-bottom: 5px;
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+
+.barra-lateral .botao .icone:hover {
+    filter: invert(59%) sepia(83%) saturate(1455%) hue-rotate(138deg) brightness(98%) contrast(102%);
 }
 
 .page-layer {

@@ -1,3 +1,4 @@
+import plotly.graph_objects as go
 from dash import html, dcc
 from dash.html import Br
 
