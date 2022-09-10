@@ -5,7 +5,7 @@ from layouts.veiculos import veiculos_layout
 from layouts.motoristas import motoristas_layout
 from layouts.analise import analise_layout
 from layouts.banco_dados import banco_dados_layout
-from database.crud_banco import CRUD
+from database.db_crud import CRUD
 
 
 app = Dash(__name__, title="Dash - Entra21", update_title="Carregando...")
@@ -26,7 +26,10 @@ app.validation_layout = html.Div([*layouts.values()])
 
 
 # Callbacks - Index
-@app.callback(Output("conteudo-pagina", "children"), Input("url", "pathname"))
+@app.callback(
+    Output("conteudo-pagina", "children"),
+    Input("url", "pathname")
+    )
 def alterar_painel(pathname):
     """
     Navega entre os diferentes paineis do Dashboard através de uma barra lateral
@@ -45,7 +48,11 @@ def alterar_painel(pathname):
 
 
 # Callbacks - Entregas
-@app.callback(Output("mapa-entregas", "figure"), Input("dropdown-entregas", "value"), prevent_initial_call=True)
+@app.callback(
+    Output("mapa-entregas", "figure"),
+    Input("dropdown-entregas", "value"),
+    prevent_initial_call=True
+    )
 def atualizar_mapa(id_entrega):
     """
     Atualiza as rotas de viagem do mapa de acordo com a entrega selecionada no Dropdown
