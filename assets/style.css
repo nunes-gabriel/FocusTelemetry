@@ -1,9 +1,17 @@
+/* ----> HTML <---- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
 body {
     background-color: #2e2e2e;
     font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
     color: #e5e5e5;
 }
 
+/* ----> Index <---- */
 .barra-lateral {
     height: 100%;
     width: 80px;
@@ -11,7 +19,7 @@ body {
     z-index: 1;
     top: 0;
     left: 0;
-    background-color: rgb(21, 21, 21);
+    background-color: #151515;
     overflow-x: hidden;
 }
 
@@ -25,10 +33,37 @@ body {
     margin-bottom: 15px;
 }
 
-.barra-lateral .botao .icone:hover {
-    filter: invert(59%) sepia(83%) saturate(1455%) hue-rotate(138deg) brightness(98%) contrast(102%);
+.barra-lateral .botao:hover {
+    filter: invert(29%) sepia(98%) saturate(1588%) hue-rotate(158deg) brightness(96%) contrast(101%);
 }
 
+/* ----> Conteúdo <---- */
 .conteudo-pagina {
     margin-left: 80px;
+}
+
+/* ----> Entregas <---- */
+.painel-entregas {
+    margin: 2%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    overflow: hidden;
+}
+
+.painel-entregas .box-dropdown {
+    flex-grow: 2;
+    padding: 10px;
+    border: solid 1px #151515;
+}
+
+.painel-entregas .box-mapa-rotas {
+    padding: 10px;
+    border: solid 1px #151515;
+}
+
+.painel-entregas .box-informacoes {
+    padding: 10px;
+    border: solid 1px #151515;
 }

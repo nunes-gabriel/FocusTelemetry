@@ -1,4 +1,5 @@
 from dash import html, dcc
+import plotly.express as px
 
 
 def entregas_layout() -> html.Div:
