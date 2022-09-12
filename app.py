@@ -1,11 +1,11 @@
 from dash import Dash, html, Input, Output
 from layouts.index import index_layout
+from layouts.home import home_layout
 from layouts.entregas import entregas_layout
 from layouts.veiculos import veiculos_layout
 from layouts.motoristas import motoristas_layout
 from layouts.analise import analise_layout
 from layouts.banco_dados import banco_dados_layout
-from testes.layouts import entregas
 
 
 app = Dash(__name__, title="Dash - Entra21", update_title="Carregando...")
@@ -13,6 +13,7 @@ app = Dash(__name__, title="Dash - Entra21", update_title="Carregando...")
 
 layouts = {
     "index": index_layout(),
+    "home": home_layout(),
     "entregas": entregas_layout(),
     "veiculos": veiculos_layout(),
     "motoristas": motoristas_layout(),
@@ -35,7 +36,9 @@ def alterar_painel(pathname):
     Navega entre os diferentes paineis do Dashboard através de uma barra lateral
     que alterna o caminho URL da página executando o callback.
     """
-    if pathname == "/veiculos":
+    if pathname == "/entregas":
+        return layouts["entregas"]
+    elif pathname == "/veiculos":
         return layouts["veiculos"]
     elif pathname == "/motoristas":
         return layouts["motoristas"]
@@ -44,7 +47,7 @@ def alterar_painel(pathname):
     elif pathname == "/banco-dados":
         return layouts["banco-dados"]
     else:
-        return layouts["entregas"]
+        return layouts["home"]
 
 
 # Callbacks - Entregas

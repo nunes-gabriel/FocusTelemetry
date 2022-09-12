@@ -15,8 +15,8 @@ def index_layout() -> html.Div:
                 children=[
                     dcc.Link(
                         className="botao",
-                        title="Home",
-                        href="/home",
+                        title="Início",
+                        href="/",
                         children=html.Img(
                             className="icone",
                             src="./assets/rosa-dos-ventos.png",
@@ -27,7 +27,7 @@ def index_layout() -> html.Div:
                     dcc.Link(
                         className="botao",
                         title="Entregas",
-                        href="/",
+                        href="/entregas",
                         children=html.Img(
                             className="icone",
                             src="./assets/icone-entregas.svg",
