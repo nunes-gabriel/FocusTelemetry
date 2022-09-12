@@ -22,7 +22,7 @@ fig = px.line_mapbox(
     )
 
 fig.update_layout(
-    mapbox_style="open-street-map",
+    mapbox_style="carto-positron",
     mapbox_zoom=8,
     mapbox_center_lat=-26.915501,
     mapbox_center_lon=-49.070904,

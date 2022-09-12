@@ -5,6 +5,7 @@ from layouts.veiculos import veiculos_layout
 from layouts.motoristas import motoristas_layout
 from layouts.analise import analise_layout
 from layouts.banco_dados import banco_dados_layout
+from testes.layouts import entregas
 
 
 app = Dash(__name__, title="Dash - Entra21", update_title="Carregando...")
