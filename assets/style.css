@@ -1,4 +1,4 @@
-/* ----> HTML <---- */
+/* Body */
 * {
     margin: 0;
     padding: 0;
@@ -6,12 +6,12 @@
 }
 
 body {
-    background-color: #242424;
+    background-color: #2e2e2e;
     font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
     color: #e5e5e5;
 }
 
-/* ----> Index <---- */
+/* Index */
 .barra-lateral {
     height: 100%;
     width: 80px;
@@ -19,30 +19,29 @@ body {
     z-index: 1;
     top: 0;
     left: 0;
-    background-color: #D9D9D9;
+    background-color: #151515;
     overflow-x: hidden;
 }
 
 .barra-lateral .botao {
-    padding-left: 15px;
+    padding-left: 20px;
 }
 
-.barra-lateral.botao .icone {
+.barra-lateral .botao .icone {
     filter: invert(100%) sepia(0%) saturate(284%) hue-rotate(346deg) brightness(104%) contrast(80%);
-    margin-top: 15px;
-    margin-bottom: 15px;
+    margin-top: 10px;
+    margin-bottom: 10px;
 }
 
 .barra-lateral .botao:hover {
     filter: invert(29%) sepia(98%) saturate(1588%) hue-rotate(158deg) brightness(96%) contrast(101%);
 }
 
-/* ----> Conteúdo <---- */
 .conteudo-pagina {
     margin-left: 80px;
 }
 
-/* ----> Entregas <---- */
+/* Entregas */
 .painel-entregas {
     margin: 2%;
     display: flex;
@@ -53,19 +52,39 @@ body {
 }
 
 .painel-entregas .box-dropdown {
-    flex-grow: 2;
-    padding: 10px;
+    padding: 15px;
+    margin-bottom: 15px;
     border: solid 1px #151515;
 }
 
 .painel-entregas .box-mapa-rotas {
-    padding: 10px;
+    padding: 15px;
+    margin-bottom: 15px;
     border: solid 1px #151515;
+}
+
+.painel-entregas .box-mapa-rotas .mapa {
+    padding-top: 15px;
+    padding-bottom: 15px;
+}
+
+.painel-entregas .box-mapa-rotas .tabela-rotas {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.painel-entregas .box-mapa-rotas td, th {
+    border: 1px solid #151515;
+    text-align: left;
+    padding: 8px;
+}
+
+.painel-entregas .box-mapa-rotas .cabecalho {
+    font-weight: bold;
+    background-color: #151515;
 }
 
 .painel-entregas .box-informacoes {
-    padding: 10px;
+    padding: 15px;
     border: solid 1px #151515;
 }
-
-/* ----> Veículos <---- */
