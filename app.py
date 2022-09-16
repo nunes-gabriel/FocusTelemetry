@@ -1,5 +1,6 @@
 from dash import Dash, html, dcc, Input, Output, State
 from plotly import express as px
+from pandas import read_csv
 
 import layouts
 import plugins
@@ -49,7 +50,7 @@ def atualizar_pagina(pathname: str):
     ],
     Input("entregas-dropdown", "value"),
 )
-def atualizar_rotas(id_entrega: int):
+def atualizar_entrega(id_entrega: int):
     """Atualiza a página de entregas conforme o dropdown."""
     rotas = plugins.maps.GoogleMaps(id_entrega)
 
@@ -83,6 +84,27 @@ def atualizar_rotas(id_entrega: int):
         ]
 
     return output_mapa(rotas.filtro_dataframe), output_tabela(rotas.filtro_ordenadas)
+
+
+@app.callback(
+    Output("entregas-dropdown", "options"),
+    Input("entregas-filtro", "value")
+    )
+def filtrar_entregas(filtro: bool):
+    """Filtra as entregas já concluídas do dropdown."""
+    if filtro:
+        return layouts.options()
+    else:
+        dados = read_csv("./database/_dataframe.csv", delimiter=";")
+        lista_opcoes = list()
+        for linha in dados.iterrows():
+            linha = dict(linha[1])
+            if linha["em_viagem"]:
+                lista_opcoes.append({
+                    "label": f"COD#{linha['id']} - {linha['ponto_partida']} // {linha['ponto_chegada']}",
+                    "value": linha["id"]
+                    })
+        return lista_opcoes
 
 
 if __name__ == "__main__":

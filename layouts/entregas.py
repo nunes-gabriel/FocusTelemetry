@@ -9,7 +9,9 @@ def entregas() -> html.Div:
             html.H1("Entregas"),
             html.P("Escolha uma entrega para análise. Caso queira registrar uma nova entrega acesse o painel do banco "
                    "de dados."),
-            dcc.Dropdown(className="dropdown", options=options(), value=1, clearable=False, id="entregas-dropdown")
+            dcc.Dropdown(className="dropdown", options=options(), value=1, clearable=False, id="entregas-dropdown"),
+            dcc.Checklist(className="checklist", options=[{"label": "Exibir entregas conclúidas", "value": True}],
+                value=[True], inline=True, id="entregas-filtro")
             ]),
         html.Div(className="box-mapa-rotas", children=[
             html.H1("Rotas de Entrega"),

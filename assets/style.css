@@ -54,13 +54,17 @@ body {
 .painel-entregas .box-dropdown {
     padding: 15px;
     margin-bottom: 15px;
-    border: solid 1px #151515;
+    border: solid 2px #151515;
+}
+
+.painel-entregas .box-dropdown .dropdown {
+    color: black;
 }
 
 .painel-entregas .box-mapa-rotas {
     padding: 15px;
     margin-bottom: 15px;
-    border: solid 1px #151515;
+    border: solid 2px #151515;
 }
 
 .painel-entregas .box-mapa-rotas .mapa {
@@ -86,5 +90,5 @@ body {
 
 .painel-entregas .box-informacoes {
     padding: 15px;
-    border: solid 1px #151515;
+    border: solid 2px #151515;
 }
