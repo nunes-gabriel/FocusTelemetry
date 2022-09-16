@@ -1,4 +1,4 @@
-from dash import Dash, html, dcc, Input, Output
+from dash import Dash, html, dcc, Input, Output, State
 from plotly import express as px
 
 import layouts
@@ -14,21 +14,19 @@ all_layouts = {
     "motoristas": layouts.motoristas(),
     "analise": layouts.analise(),
     "banco-dados": layouts.banco_dados(),
-    }
+}
 
 app.layout = all_layouts["index"]
 app.validation_layout = html.Div([*all_layouts.values()])
 
 
+# Callbacks -> 'index.py'
 @app.callback(
     Output("conteudo-pagina", "children"),
     Input("url", "pathname")
-    )
-def alterar_painel(pathname: str):
-    """
-    Navega entre os diferentes paineis do Dashboard através de uma barra lateral
-    que alterna o caminho URL da página executando o callback.
-    """
+)
+def atualizar_pagina(pathname: str):
+    """Atualiza o layout da página conforme o URL."""
     if pathname == "/entregas":
         return all_layouts["entregas"]
     elif pathname == "/veiculos":
@@ -43,52 +41,48 @@ def alterar_painel(pathname: str):
         return all_layouts["home"]
 
 
+# Callbacks -> 'entregas.py'
 @app.callback(
     [
         Output("entregas-mapa", "figure"),
         Output("entregas-tabela-rotas", "children")
     ],
-    Input("entregas-dropdown", "value")
-    )
-def atualizar_mapa(entrega: str):
-    entrega = entrega.split(" - ")
-    rotas = plugins.maps.GoogleMaps(
-        int(entrega[0].removeprefix("COD#")),
-        entrega[1].split(" / ")[0],
-        entrega[1].split(" / ")[-1]
-        )
+    Input("entregas-dropdown", "value"),
+)
+def atualizar_rotas(id_entrega: int):
+    """Atualiza a página de entregas conforme o dropdown."""
+    rotas = plugins.maps.GoogleMaps(id_entrega)
 
-    def gerar_mapa(data: list[dict]):
-        figure_mapa = px.line_mapbox(
-            data_frame=data,
+    def output_mapa(lista_rotas: list[dict]):
+        """Retorna um mapa com as diferentes rotas de viagem."""
+        return px.line_mapbox(
+            data_frame=lista_rotas,
             lat="latitude",
             lon="longitude",
             color="nome",
             zoom=11
-            )
-        figure_mapa.update_layout(
-            mapbox_style="open-street-map",
+        ) \
+            .update_layout(
+            mapbox_style="carto-positron",
             margin={"r": 0, "t": 0, "l": 0, "b": 0}
-            )
-        return figure_mapa
+        )
 
-    def gerar_tabela(data: list[dict]):
-        tabela = [
+    def output_tabela(lista_rotas: list[dict]):
+        """Retorna uma tabela com informações sobre as rotas de viagem."""
+        return [
             html.Tr(className="cabecalho", children=[
-                html.Th("Nome"), html.Th("Distância"), html.Th("Tempo")
-                ])
-            ]
-        for rota in data:
-            tabela.append(
-                html.Tr([
-                    html.Th(rota["nome"]),
-                    html.Th(f"{rota['distancia'] / 1000}km"),
-                    html.Th(f"{rota['tempo'] / 60:.2f}min")
-                    ])
-                )
-        return tabela
-    
-    return gerar_mapa(rotas.data_frame), gerar_tabela(rotas.dicionario)
+                html.Th("Nome"),
+                html.Th("Distância"),
+                html.Th("Tempo")
+            ]),
+            *[html.Tr([
+                html.Th(rota["nome"]),
+                html.Th(f"{rota['distancia'] / 1000}km"),
+                html.Th(f"{rota['tempo'] / 60:.2f}min")
+            ]) for rota in lista_rotas]
+        ]
+
+    return output_mapa(rotas.filtro_dataframe), output_tabela(rotas.filtro_ordenadas)
 
 
 if __name__ == "__main__":
