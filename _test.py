@@ -1,5 +1,5 @@
-import pandas
+import datetime
 
-dados = pandas.read_csv("./database/_dataframe.csv", delimiter=";")
-for linha in dados.iterrows():
-    print(dict(linha[1]))
+data_atual = datetime.datetime.now()
+dia_atual = data_atual.date()
+hora_atual = data_atual.time()

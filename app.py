@@ -49,7 +49,7 @@ def atualizar_pagina(pathname: str):
         Output("entregas-tabela-rotas", "children")
     ],
     Input("entregas-dropdown", "value"),
-)
+    )
 def atualizar_entrega(id_entrega: int):
     """Atualiza a página de entregas conforme o dropdown."""
     rotas = plugins.maps.GoogleMaps(id_entrega)
