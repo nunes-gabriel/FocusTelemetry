@@ -113,6 +113,18 @@ body {
     padding: 15px;
 }
 
+#painel-entregas #box-info-geral .botao {
+    background-color: #151515;
+    color: #e5e5e5;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    height: 30px;
+    width: 25%;
+}
+
+#painel-entregas #box-info-geral-entregue {
+    margin-right: 15px;
+}
+
 /* #C:04 --> Box do mapa de rotas */
 #painel-entregas #box-rotas {
     border: solid 2px #151515;

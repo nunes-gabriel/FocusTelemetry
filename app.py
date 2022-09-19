@@ -20,11 +20,12 @@ all_layouts = {
 app.layout = all_layouts["index"]
 app.validation_layout = html.Div([*all_layouts.values()])
 
-
 """
 Lista de Callbacks ('index.py')
  | atualizar_pagina
 """
+
+
 @app.callback(
     Output("conteudo-pagina", "children"),
     Input("url", "pathname")
@@ -54,6 +55,8 @@ Lista de Callbacks ('entregas.py')
 | | output_botao
 | filtrar entregas
 """
+
+
 @app.callback(
     [
         Output("box-rotas-mapa", "figure"),
@@ -62,7 +65,7 @@ Lista de Callbacks ('entregas.py')
         Output("box-info-geral-entregue", "value")
     ],
     Input("box-pesquisa-dropdown", "value"),
-    )
+)
 def atualizar_entrega(id_entrega: int):
     """Atualiza a página de entregas conforme o dropdown."""
     rotas_entrega = plugins.maps.GoogleMaps(id_entrega)
@@ -75,11 +78,11 @@ def atualizar_entrega(id_entrega: int):
             lon="longitude",
             color="nome",
             zoom=11
-            ) \
+        ) \
             .update_layout(
             mapbox_style="carto-positron",
             margin={"r": 0, "t": 0, "l": 0, "b": 0}
-            )
+        )
 
     def output_tabela(lista_rotas: list[dict]):
         """Retorna uma tabela com informações sobre as rotas de viagem."""
@@ -94,29 +97,27 @@ def atualizar_entrega(id_entrega: int):
                 html.Td(f"{rota['distancia'] / 1000}km"),
                 html.Td(f"{rota['tempo'] / 60:.2f}min")
             ]) for rota in lista_rotas]
-            ]
-    
+        ]
+
     def output_infos_geral():
         return [
             html.P(f"ID da Entrega: {id_entrega}"),
             html.P(f"Status Atual: "),
             html.P(f"Data de Saída: "),
-            html.P(f"Data de Chegada: ")
+            html.P(f"Previsão de Entrega: ")
             ]
-    
+
     def output_botao():
         return str(id_entrega)
 
-    return output_mapa(rotas_entrega.filtro_dataframe), \
-           output_tabela(rotas_entrega.filtro_ordenadas), \
-           output_infos_geral(), \
-           output_botao()
+    return output_mapa(rotas_entrega.filtro_dataframe), output_tabela(rotas_entrega.filtro_ordenadas), \
+           output_infos_geral(), output_botao()
 
 
 @app.callback(
     Output("box-pesquisa-dropdown", "options"),
     Input("box-pesquisa-filtro", "value")
-    )
+)
 def filtrar_entregas(filtro: bool):
     """Filtra as entregas já concluídas do dropdown."""
     if filtro:
@@ -130,7 +131,7 @@ def filtrar_entregas(filtro: bool):
                 lista_opcoes.append({
                     "label": f"COD#{linha['id']} - {linha['ponto_partida']} // {linha['ponto_chegada']}",
                     "value": linha["id"]
-                    })
+                })
         return lista_opcoes
 
 

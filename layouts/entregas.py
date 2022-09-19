@@ -9,16 +9,19 @@ def entregas() -> html.Div:
             html.Div(className="column", children=[
                 html.Div(id="box-pesquisa", children=[
                     html.H1("Entregas"),
-                    html.P("Escolha uma entrega para análise. Caso queira registrar uma nova entrega acesse o painel do banco "
-                        "de dados."),
+                    html.P("Escolha uma entrega para análise. Caso queira registrar uma nova entrega acesse o painel do"
+                           "banco de dados."),
                     dcc.Dropdown(id="box-pesquisa-dropdown", options=entregas_opcoes(), value=1, clearable=False),
                     dcc.Checklist(id="box-pesquisa-filtro", options=[{"label": "Exibir entregas conclúidas", "value": True}],
-                        value=[True], inline=True)
+                                  value=[True], inline=True)
                     ]),
                 html.Div(id="box-info-geral", children=[
                     html.H1("Informações Gerais"),
                     html.Div(id="box-info-geral-textos"),
-                    html.Button(id="box-info-geral-entregue", children="Marcar Entregue")
+                    html.Div(className="row", children=[
+                        html.Button(className="botao", id="box-info-geral-entregue", children="Marcar c/ Entregue"),
+                        html.Button(className="botao", id="box-info-geral-saida", children="Saiu p/ Entrega")
+                        ]),
                     ])
                 ]),
             html.Div(id="box-rotas", children=[
