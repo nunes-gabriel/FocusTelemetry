@@ -21,7 +21,10 @@ app.layout = all_layouts["index"]
 app.validation_layout = html.Div([*all_layouts.values()])
 
 
-# Callbacks -> 'index.py'
+"""
+Lista de Callbacks ('index.py')
+ | atualizar_pagina
+"""
 @app.callback(
     Output("conteudo-pagina", "children"),
     Input("url", "pathname")
@@ -42,17 +45,27 @@ def atualizar_pagina(pathname: str):
         return all_layouts["home"]
 
 
-# Callbacks -> 'entregas.py'
+"""
+Lista de Callbacks ('entregas.py')
+| atualizar_entrega
+| | output_mapa
+| | output_tabela
+| | output_infos_geral
+| | output_botao
+| filtrar entregas
+"""
 @app.callback(
     [
-        Output("entregas-mapa", "figure"),
-        Output("entregas-tabela-rotas", "children")
+        Output("box-rotas-mapa", "figure"),
+        Output("box-rotas-tabela", "children"),
+        Output("box-info-geral-textos", "children"),
+        Output("box-info-geral-entregue", "value")
     ],
-    Input("entregas-dropdown", "value"),
+    Input("box-pesquisa-dropdown", "value"),
     )
 def atualizar_entrega(id_entrega: int):
     """Atualiza a página de entregas conforme o dropdown."""
-    rotas = plugins.maps.GoogleMaps(id_entrega)
+    rotas_entrega = plugins.maps.GoogleMaps(id_entrega)
 
     def output_mapa(lista_rotas: list[dict]):
         """Retorna um mapa com as diferentes rotas de viagem."""
@@ -62,38 +75,52 @@ def atualizar_entrega(id_entrega: int):
             lon="longitude",
             color="nome",
             zoom=11
-        ) \
+            ) \
             .update_layout(
             mapbox_style="carto-positron",
             margin={"r": 0, "t": 0, "l": 0, "b": 0}
-        )
+            )
 
     def output_tabela(lista_rotas: list[dict]):
         """Retorna uma tabela com informações sobre as rotas de viagem."""
         return [
-            html.Tr(className="cabecalho", children=[
+            html.Tr(children=[
                 html.Th("Nome"),
                 html.Th("Distância"),
                 html.Th("Tempo")
             ]),
-            *[html.Tr([
-                html.Th(rota["nome"]),
-                html.Th(f"{rota['distancia'] / 1000}km"),
-                html.Th(f"{rota['tempo'] / 60:.2f}min")
+            *[html.Tr(children=[
+                html.Td(rota["nome"]),
+                html.Td(f"{rota['distancia'] / 1000}km"),
+                html.Td(f"{rota['tempo'] / 60:.2f}min")
             ]) for rota in lista_rotas]
-        ]
+            ]
+    
+    def output_infos_geral():
+        return [
+            html.P(f"ID da Entrega: {id_entrega}"),
+            html.P(f"Status Atual: "),
+            html.P(f"Data de Saída: "),
+            html.P(f"Data de Chegada: ")
+            ]
+    
+    def output_botao():
+        return str(id_entrega)
 
-    return output_mapa(rotas.filtro_dataframe), output_tabela(rotas.filtro_ordenadas)
+    return output_mapa(rotas_entrega.filtro_dataframe), \
+           output_tabela(rotas_entrega.filtro_ordenadas), \
+           output_infos_geral(), \
+           output_botao()
 
 
 @app.callback(
-    Output("entregas-dropdown", "options"),
-    Input("entregas-filtro", "value")
+    Output("box-pesquisa-dropdown", "options"),
+    Input("box-pesquisa-filtro", "value")
     )
 def filtrar_entregas(filtro: bool):
     """Filtra as entregas já concluídas do dropdown."""
     if filtro:
-        return layouts.options()
+        return layouts.entregas_opcoes()
     else:
         dados = read_csv("./database/_dataframe.csv", delimiter=";")
         lista_opcoes = list()

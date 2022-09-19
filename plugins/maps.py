@@ -7,13 +7,13 @@ import os
 
 
 class GoogleMaps:
-    dir_logs = "./plugins/logs/maps/"
+    dir_cache = "./plugins/cache/maps/"
 
     def __init__(self, cod_entrega: int):
         """Gera os datasets contendo as rotas de entrega e as suas informações."""
         self.id_entrega = cod_entrega
-        if self.__log_existe():
-            self.__log_carregar()
+        if self.__cache_existe():
+            self.__cache_carregar()
         else:
             banco_dados = self.__banco_dados()
             maps = googlemaps.Client("AIzaSyD9j77oIrgO1-fAXb4V3af9srmuJArBp_4")
@@ -31,7 +31,7 @@ class GoogleMaps:
                 )
             self.filtro_ordenadas = self.__filtro_ordenadas()
             self.filtro_dataframe = self.__filtro_dataframe()
-            self.__log_criar()
+            self.__cache_criar()
 
     def __banco_dados(self) -> dict:
         """Conecta-se com o banco de dados retornando as informações necessárias."""
@@ -80,27 +80,27 @@ class GoogleMaps:
                     })
         return dataframe
 
-    def __log_existe(self) -> bool:
-        """Verifica se há ou não um log já criado para a entrega analisada."""
-        arquivos = os.listdir(GoogleMaps.dir_logs)
-        nome_log = f"log_maps#{self.id_entrega}.json"
-        if nome_log in arquivos:
+    def __cache_existe(self) -> bool:
+        """Verifica se há ou não um cache já criado para a entrega analisada."""
+        arquivos = os.listdir(GoogleMaps.dir_cache)
+        nome_cache = f"maps_ID#{self.id_entrega}.json"
+        if nome_cache in arquivos:
             return True
         else:
             return False
     
-    def __log_carregar(self) -> None:
-        """Carrega o log da entrega analisada caso este já tenha sido criado."""
-        with open(f"{GoogleMaps.dir_logs}log_maps#{self.id_entrega}.json", "r") as log:
-            json_data = json.load(log)
+    def __cache_carregar(self) -> None:
+        """Carrega o cache da entrega analisada caso este já tenha sido criado."""
+        with open(f"{GoogleMaps.dir_cache}maps_ID#{self.id_entrega}.json", "r") as cache:
+            json_data = json.load(cache)
             self.filtro_ordenadas = json_data["ordenadas"]
             self.filtro_dataframe = json_data["dataframe"]
     
-    def __log_criar(self) -> None:
-        """Cria o log da entrega analisada para uso posterior, poupando requests da API."""
-        with open(f"{GoogleMaps.dir_logs}log_maps#{self.id_entrega}.json", "w") as log:
+    def __cache_criar(self) -> None:
+        """Cria o cache da entrega analisada para uso posterior, poupando requests da API."""
+        with open(f"{GoogleMaps.dir_cache}maps_ID#{self.id_entrega}.json", "w") as cache:
             json_data = {
                 "ordenadas": self.filtro_ordenadas,
                 "dataframe": self.filtro_dataframe
                 }
-            json.dump(json_data, log)
+            json.dump(json_data, cache)

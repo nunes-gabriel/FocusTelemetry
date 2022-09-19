@@ -1,94 +1,144 @@
-/* Body */
+/* Sumário de Blocos de Código:
+ * | A. app.py
+ * | B. index.py
+ * | C. entregas.py
+ */
+
+
+/* #A // Conteúdo do Bloco ('app.py')
+ * | 01. Estilos gerais
+ * | 02. Corpo da página
+ */
+
+/* #A:01 --> Estilos gerais */
 * {
+    box-sizing: border-box;
     margin: 0;
     padding: 0;
-    box-sizing: border-box;
 }
 
+/* #A:02 --> Corpo da página */
 body {
     background-color: #2e2e2e;
-    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
     color: #e5e5e5;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
 }
 
-/* Index */
-.barra-lateral {
-    height: 100%;
-    width: 80px;
-    position: fixed;
-    z-index: 1;
-    top: 0;
-    left: 0;
+
+/* #B // Conteúdo do Bloco ('index.py'):
+ * | 01. Barra lateral
+ * | 02. Botões da barra lateral
+ * | 03. Layer do dashboard
+ */
+
+/* #B:01 --> Barra lateral */
+#barra-lateral {
     background-color: #151515;
+    height: 100%;
+    left: 0;
     overflow-x: hidden;
+    position: fixed;
+    top: 0;
+    width: 80px;
+    z-index: 1;
 }
 
-.barra-lateral .botao {
+/* #B:02 --> Botões da barra lateral */
+#barra-lateral a {
     padding-left: 20px;
 }
 
-.barra-lateral .botao .icone {
+#barra-lateral a img {
     filter: invert(100%) sepia(0%) saturate(284%) hue-rotate(346deg) brightness(104%) contrast(80%);
-    margin-top: 10px;
-    margin-bottom: 10px;
+    margin: 10px 0 10px 0;
 }
 
-.barra-lateral .botao:hover {
+#barra-lateral a:hover {
     filter: invert(29%) sepia(98%) saturate(1588%) hue-rotate(158deg) brightness(96%) contrast(101%);
 }
 
-.conteudo-pagina {
+/* #B:03 --> Layer do dashboard */
+#conteudo-pagina {
     margin-left: 80px;
 }
 
-/* Entregas */
-.painel-entregas {
-    margin: 2%;
+
+/* #C // Conteúdos do Bloco ('entregas.py')
+ * | 01. Painel de entregas
+ * | 02. Box de pesquisa
+ * | 03. Box de informações
+ * | 04. Box do mapa de rotas
+ * | 05. Mapa de rotas
+ * | 06. Tabela de rotas
+ */
+
+/* #C:01 --> Painel de entregas */
+#painel-entregas {
     display: flex;
     flex-direction: column;
     justify-content: center;
+    margin: 2%;
+    overflow: hidden;
     text-align: center;
+}
+
+#painel-entregas .row {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
     overflow: hidden;
 }
 
-.painel-entregas .box-dropdown {
-    padding: 15px;
-    margin-bottom: 15px;
-    border: solid 2px #151515;
+#painel-entregas .row .column {
+    flex-direction: column;
+    overflow: hidden;
+    width: 45%;
 }
 
-.painel-entregas .box-dropdown .dropdown {
+/* #C:02 --> Box de pesquisa */
+#painel-entregas #box-pesquisa {
+    border: solid 2px #151515;
+    margin-bottom: 15px;
+    padding: 15px;
+}
+
+#painel-entregas #box-pesquisa-dropdown {
     color: black;
+    font-size: 14px;
 }
 
-.painel-entregas .box-mapa-rotas {
-    padding: 15px;
-    margin-bottom: 15px;
+/* #C:03 --> Box de informações */
+#painel-entregas #box-info-geral {
     border: solid 2px #151515;
+    padding: 15px;
 }
 
-.painel-entregas .box-mapa-rotas .mapa {
-    padding-top: 15px;
-    padding-bottom: 15px;
+/* #C:04 --> Box do mapa de rotas */
+#painel-entregas #box-rotas {
+    border: solid 2px #151515;
+    margin: 0 0 15px 15px;
+    padding: 15px;
+    width: 55%;
 }
 
-.painel-entregas .box-mapa-rotas .tabela-rotas {
+/* #C:05 --> Mapa de rotas */
+#painel-entregas #box-rotas-mapa {
+    padding: 15px 0 15px 0;
+}
+
+/* #C:06 --> Tabela de rotas */
+#painel-entregas #box-rotas-tabela {
     border-collapse: collapse;
     width: 100%;
 }
 
-.painel-entregas .box-mapa-rotas td, th {
+#painel-entregas #box-rotas-tabela th, td {
     border: 1px solid #151515;
-    text-align: left;
     padding: 8px;
+    text-align: left;
 }
 
-.painel-entregas .box-mapa-rotas .cabecalho {
-    font-weight: bold;
+#painel-entregas #box-rotas-tabela th {
     background-color: #151515;
-}
-
-.painel-entregas .box-informacoes {
-    padding: 15px;
-    border: solid 2px #151515;
+    font-weight: bold;
 }

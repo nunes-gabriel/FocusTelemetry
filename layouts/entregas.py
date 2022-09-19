@@ -4,25 +4,33 @@ import pandas as pd
 
 def entregas() -> html.Div:
     """Página de análise de entregas — rotas, custos, informações essênciais"""
-    return html.Div(className="painel-entregas", children=[
-        html.Div(className="box-dropdown", children=[
-            html.H1("Entregas"),
-            html.P("Escolha uma entrega para análise. Caso queira registrar uma nova entrega acesse o painel do banco "
-                   "de dados."),
-            dcc.Dropdown(className="dropdown", options=options(), value=1, clearable=False, id="entregas-dropdown"),
-            dcc.Checklist(className="checklist", options=[{"label": "Exibir entregas conclúidas", "value": True}],
-                value=[True], inline=True, id="entregas-filtro")
-            ]),
-        html.Div(className="box-mapa-rotas", children=[
-            html.H1("Rotas de Entrega"),
-            dcc.Graph(className="mapa", id="entregas-mapa"),
-            html.Table(className="tabela-rotas", id="entregas-tabela-rotas")
-            ]),
-        html.Div(className="box-informacoes", id="entregas-box-informacoes", children="Nenhuma entrega foi selecionada")
+    return html.Div(id="painel-entregas", children=[
+        html.Div(className="row", children=[
+            html.Div(className="column", children=[
+                html.Div(id="box-pesquisa", children=[
+                    html.H1("Entregas"),
+                    html.P("Escolha uma entrega para análise. Caso queira registrar uma nova entrega acesse o painel do banco "
+                        "de dados."),
+                    dcc.Dropdown(id="box-pesquisa-dropdown", options=entregas_opcoes(), value=1, clearable=False),
+                    dcc.Checklist(id="box-pesquisa-filtro", options=[{"label": "Exibir entregas conclúidas", "value": True}],
+                        value=[True], inline=True)
+                    ]),
+                html.Div(id="box-info-geral", children=[
+                    html.H1("Informações Gerais"),
+                    html.Div(id="box-info-geral-textos"),
+                    html.Button(id="box-info-geral-entregue", children="Marcar Entregue")
+                    ])
+                ]),
+            html.Div(id="box-rotas", children=[
+                html.H1("Rotas de Viagem"),
+                dcc.Graph(id="box-rotas-mapa"),
+                html.Table(id="box-rotas-tabela")
+                ])
+            ])
         ])
 
 
-def options() -> list:
+def entregas_opcoes() -> list:
     dados = pd.read_csv("./database/_dataframe.csv", delimiter=";")
     lista_opcoes = list()
     for linha in dados.iterrows():
