@@ -112,11 +112,15 @@ body {
     padding: 15px;
 }
 
+#painel-entregas #box-info-geral-textos {
+    padding: 15px 0 15px 0
+}
+
 #painel-entregas #box-info-geral .botao {
     background-color: #151515;
     color: #e5e5e5;
     font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
-    height: 30px;
+    height: 40px;
     width: 25%;
 }
 
