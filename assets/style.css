@@ -33,7 +33,7 @@ body {
 
 /* #B:01 --> Barra lateral */
 #barra-lateral {
-    background-color: #151515;
+    background-color: #000000;
     height: 100%;
     left: 0;
     overflow-x: hidden;
@@ -53,7 +53,7 @@ body {
 }
 
 #barra-lateral a:hover {
-    filter: invert(29%) sepia(98%) saturate(1588%) hue-rotate(158deg) brightness(96%) contrast(101%);
+    filter: invert(83%) sepia(93%) saturate(2367%) hue-rotate(206deg) brightness(70%) contrast(101%);
 }
 
 /* #B:03 --> Layer do dashboard */
