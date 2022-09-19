@@ -49,7 +49,6 @@ body {
 }
 
 #barra-lateral a img {
-    filter: invert(100%) sepia(0%) saturate(284%) hue-rotate(346deg) brightness(104%) contrast(80%);
     margin: 10px 0 10px 0;
 }
 

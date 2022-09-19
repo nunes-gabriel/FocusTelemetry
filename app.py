@@ -20,12 +20,9 @@ all_layouts = {
 app.layout = all_layouts["index"]
 app.validation_layout = html.Div([*all_layouts.values()])
 
-"""
-Lista de Callbacks ('index.py')
- | atualizar_pagina
-"""
 
-
+# Lista de Callbacks ('index.py')
+# | atualizar_pagina
 @app.callback(
     Output("conteudo-pagina", "children"),
     Input("url", "pathname")
@@ -46,17 +43,13 @@ def atualizar_pagina(pathname: str):
         return all_layouts["home"]
 
 
-"""
-Lista de Callbacks ('entregas.py')
-| atualizar_entrega
-| | output_mapa
-| | output_tabela
-| | output_infos_geral
-| | output_botao
-| filtrar entregas
-"""
-
-
+# Lista de Callbacks ('entregas.py')
+# | atualizar_entrega
+# | | output_mapa
+# | | output_tabela
+# | | output_infos_geral
+# | | output_botao
+# | filtrar entregas
 @app.callback(
     [
         Output("box-rotas-mapa", "figure"),
@@ -110,8 +103,12 @@ def atualizar_entrega(id_entrega: int):
     def output_botao():
         return str(id_entrega)
 
-    return output_mapa(rotas_entrega.filtro_dataframe), output_tabela(rotas_entrega.filtro_ordenadas), \
-           output_infos_geral(), output_botao()
+    return (
+        output_mapa(rotas_entrega.filtro_dataframe),
+        output_tabela(rotas_entrega.filtro_ordenadas),
+        output_infos_geral(),
+        output_botao()
+        )
 
 
 @app.callback(
