@@ -1,7 +1,7 @@
 import googlemaps
+import database
 import datetime
 import string
-import pandas
 import json
 import os
 
@@ -18,10 +18,10 @@ class GoogleMaps:
             banco_dados = self.__banco_dados()
             maps = googlemaps.Client("AIzaSyD9j77oIrgO1-fAXb4V3af9srmuJArBp_4")
             self.__response = maps.directions(
-                origin=banco_dados["ponto_partida"],
-                destination=banco_dados["ponto_chegada"],
+                origin=banco_dados[0],
+                destination=banco_dados[1],
                 mode="driving",
-                waypoints=banco_dados["pontos_parada"],
+                waypoints=banco_dados[2],
                 alternatives=True,
                 language="pt-br",
                 units="metric",
@@ -33,13 +33,17 @@ class GoogleMaps:
             self.filtro_dataframe = self.__filtro_dataframe()
             self.__cache_criar()
 
-    def __banco_dados(self) -> dict:
+    def __banco_dados(self) -> list:
         """Conecta-se com o banco de dados retornando as informações necessárias."""
-        dados = pandas.read_csv("./database/_dataframe.csv", delimiter=";")
-        dados_linha = dict(dados.loc[self.id_entrega - 1])
-        if dados_linha["pontos_parada"] == "*":
-            dados_linha.update({"pontos_parada": []})
-        return dados_linha
+        banco_dados = database.BancoDados()
+        entrega = banco_dados.entregas_busca(self.id_entrega)
+        dados_maps = [entrega[3], entrega[4]]
+        if entrega[-2].strip() == "Sem parada":
+            dados_maps.append([])
+        else:
+            dados_maps.append(entrega[-2])
+        banco_dados.finalizar()
+        return dados_maps
 
     def __filtro_ordenadas(self) -> list[dict]:
         """Converte os dados da rota para uma lista de dicionários ordenada."""

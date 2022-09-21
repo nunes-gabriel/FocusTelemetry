@@ -1,5 +1,7 @@
 from dash import html, dcc
+
 import pandas as pd
+import database
 
 
 def entregas() -> html.Div:
@@ -34,12 +36,13 @@ def entregas() -> html.Div:
 
 
 def entregas_opcoes() -> list:
-    dados = pd.read_csv("./database/_dataframe.csv", delimiter=";")
-    lista_opcoes = list()
-    for linha in dados.iterrows():
-        linha = dict(linha[1])
-        lista_opcoes.append({
-            "label": f"COD#{linha['id']} - {linha['ponto_partida']} // {linha['ponto_chegada']}",
-            "value": linha["id"]
+    banco_dados = database.BancoDados()
+    opcoes = list()
+    for linha in banco_dados.entregas_lista():
+        opcoes.append({
+            "label": f"ID#{linha[0]} - {linha[3]} // {linha[6]} // {linha[4]}",
+            "value": linha[0]
             })
-    return lista_opcoes
+    else:
+        banco_dados.finalizar()
+        return opcoes

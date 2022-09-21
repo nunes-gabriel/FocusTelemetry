@@ -3,6 +3,7 @@ from plotly import express as px
 from pandas import read_csv
 
 import layouts
+import database
 import plugins
 
 app = Dash(__name__, title="Dash - Entra21", update_title="Carregando...")
@@ -61,6 +62,7 @@ def atualizar_pagina(pathname: str):
 )
 def atualizar_entrega(id_entrega: int):
     """Atualiza a página de entregas conforme o dropdown."""
+    banco_dados = database.BancoDados()
     rotas_entrega = plugins.maps.GoogleMaps(id_entrega)
 
     def output_mapa(lista_rotas: list[dict]):
@@ -120,16 +122,17 @@ def filtrar_entregas(filtro: bool):
     if filtro:
         return layouts.entregas_opcoes()
     else:
-        dados = read_csv("./database/_dataframe.csv", delimiter=";")
-        lista_opcoes = list()
-        for linha in dados.iterrows():
-            linha = dict(linha[1])
-            if linha["em_viagem"]:
-                lista_opcoes.append({
-                    "label": f"COD#{linha['id']} - {linha['ponto_partida']} // {linha['ponto_chegada']}",
-                    "value": linha["id"]
-                })
-        return lista_opcoes
+        banco_dados = database.BancoDados()
+        opcoes = list()
+        for linha in banco_dados.entregas_lista():
+            if linha[-1] == "Entrega em andamento":
+                opcoes.append({
+                    "label": f"ID#{linha[0]} - {linha[3]} // {linha[6]} // {linha[4]}",
+                    "value": linha[0]
+                    })
+        else:
+            banco_dados.finalizar()
+            return opcoes
 
 
 if __name__ == "__main__":
