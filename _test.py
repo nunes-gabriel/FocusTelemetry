@@ -43,7 +43,8 @@ class GoogleMaps:
         """Converte os dados da rota para uma lista de dicionários ordenada."""
         rotas_ordenadas = list()
         for rota, letra in zip(self.__response, string.ascii_uppercase):
-            for parada in rota["legs"]:
+            lista_paradas = []
+            for numero, parada in enumerate(rota["legs"]):
                 coordenadas = list()
                 for ponto in parada["steps"]:
                     coordenadas.append({
@@ -52,24 +53,40 @@ class GoogleMaps:
                         })
                 else:
                     coordenadas.insert(0, {
-                        "latitude": parada["start_location"]["lat"],
-                        "longitude": parada["start_location"]["lng"]
+                        "latitude": ponto["start_location"]["lat"],
+                        "longitude": ponto["start_location"]["lng"]
                         })
+                lista_paradas.append({
+                    "nome": f"Parada {numero}",
+                    "distancia": parada["distance"]["value"],
+                    "tempo": parada["duration"]["value"],
+                    "coordenadas": coordenadas
+                    })
+            rotas_ordenadas.append({
+                "nome": f"Rota {letra}",
+                "distancia": sum([parada["distancia"] for parada in lista_paradas]),
+                "tempo": sum([parada["tempo"] for parada in lista_paradas]),
+                "paradas": lista_paradas
+                })
+        return rotas_ordenadas
 
     def __filtro_dataframe(self) -> list[dict]:
         """Converte os dados da rota para um data frame válido pelo Plotly."""
         dataframe = list()
         for rota in self.filtro_ordenadas:
-            for coordenada in rota["coordenadas"]:
-                dataframe.append({
-                    "nome": rota["nome"],
-                    "distancia": rota["distancia"],
-                    "tempo": rota["tempo"],
-                    "latitude": coordenada["latitude"],
-                    "longitude": coordenada["longitude"]
-                })
+            for pontos in [parada["coordenadas"] for parada in rota["paradas"]]:
+                for ponto in pontos:
+                    dataframe.append({
+                        "nome": rota["nome"],
+                        "distancia": rota["distancia"],
+                        "tempo": rota["tempo"],
+                        "latitude": ponto["latitude"],
+                        "longitude": ponto["longitude"]
+                        })
         return dataframe
 
 
 if __name__ == '__main__':
     rota = GoogleMaps(1)
+    print(rota.filtro_ordenadas)
+    print(rota.filtro_dataframe)

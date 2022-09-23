@@ -1,6 +1,5 @@
 from dash import Dash, html, dcc, Input, Output, State
 from plotly import express as px
-from pandas import read_csv
 
 import layouts
 import database
@@ -87,12 +86,12 @@ def atualizar_entrega(id_entrega: int):
                 html.Th("Distância"),
                 html.Th("Tempo")
             ]),
-            *[html.Tr(children=[
+            * [html.Tr(children=[
                 html.Td(rota["nome"]),
                 html.Td(f"{rota['distancia'] / 1000}km"),
                 html.Td(f"{rota['tempo'] / 60:.2f}min")
             ]) for rota in lista_rotas]
-        ]
+            ]
 
     def output_infos_geral():
         return [
