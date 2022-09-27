@@ -15,7 +15,7 @@ all_layouts = {
     "motoristas": layouts.motoristas(),
     "analise": layouts.analise(),
     "banco-dados": layouts.banco_dados(),
-}
+    }
 
 app.layout = all_layouts["index"]
 app.validation_layout = html.Div([*all_layouts.values()])
@@ -26,7 +26,7 @@ app.validation_layout = html.Div([*all_layouts.values()])
 @app.callback(
     Output("conteudo-pagina", "children"),
     Input("url", "pathname")
-)
+    )
 def atualizar_pagina(pathname: str):
     """Atualiza o layout da página conforme o URL."""
     if pathname == "/entregas":
@@ -58,7 +58,7 @@ def atualizar_pagina(pathname: str):
         Output("box-info-geral-entregue", "value")
     ],
     Input("box-pesquisa-dropdown", "value"),
-)
+    )
 def atualizar_entrega(id_entrega: int):
     """Atualiza a página de entregas conforme o dropdown."""
     banco_dados = database.BancoDados()
@@ -72,11 +72,11 @@ def atualizar_entrega(id_entrega: int):
             lon="longitude",
             color="nome",
             zoom=11
-        ) \
+            ) \
             .update_layout(
             mapbox_style="carto-darkmatter",
             margin={"r": 0, "t": 0, "l": 0, "b": 0}
-        )
+            )
 
     def output_tabela(lista_rotas: list[dict]):
         """Retorna uma tabela com informações sobre as rotas de viagem."""
@@ -85,12 +85,12 @@ def atualizar_entrega(id_entrega: int):
                 html.Th("Nome"),
                 html.Th("Distância"),
                 html.Th("Tempo")
-            ]),
-            * [html.Tr(children=[
+                ]),
+            + [html.Tr(children=[
                 html.Td(rota["nome"]),
                 html.Td(f"{rota['distancia'] / 1000}km"),
                 html.Td(f"{rota['tempo'] / 60:.2f}min")
-            ]) for rota in lista_rotas]
+                ]) for rota in lista_rotas]
             ]
 
     def output_infos_geral():
@@ -115,7 +115,7 @@ def atualizar_entrega(id_entrega: int):
 @app.callback(
     Output("box-pesquisa-dropdown", "options"),
     Input("box-pesquisa-filtro", "value")
-)
+    )
 def filtrar_entregas(filtro: bool):
     """Filtra as entregas já concluídas do dropdown."""
     if filtro:

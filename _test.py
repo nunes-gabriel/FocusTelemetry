@@ -1,7 +1,13 @@
+from dash import Dash, dcc
+import plotly.express as px
+
 import googlemaps
 import database
 import datetime
 import string
+import json
+
+app = Dash(__name__, title="teste")
 
 
 class GoogleMaps:
@@ -12,7 +18,7 @@ class GoogleMaps:
         self.id_entrega = cod_entrega
         banco_dados = self.__banco_dados()
         maps = googlemaps.Client("AIzaSyD9j77oIrgO1-fAXb4V3af9srmuJArBp_4")
-        self.__response = maps.directions(
+        self.response = maps.directions(
             origin=banco_dados[0],
             destination=banco_dados[1],
             mode="driving",
@@ -42,7 +48,7 @@ class GoogleMaps:
     def __filtro_ordenadas(self) -> list[dict]:
         """Converte os dados da rota para uma lista de dicionários ordenada."""
         rotas_ordenadas = list()
-        for rota, letra in zip(self.__response, string.ascii_uppercase):
+        for rota, letra in zip(self.response, string.ascii_uppercase):
             lista_paradas = []
             for numero, parada in enumerate(rota["legs"]):
                 coordenadas = list()
@@ -86,7 +92,21 @@ class GoogleMaps:
         return dataframe
 
 
-if __name__ == '__main__':
-    rota = GoogleMaps(1)
-    print(rota.filtro_ordenadas)
-    print(rota.filtro_dataframe)
+rota = GoogleMaps(1)
+
+app.layout = dcc.Graph(figure=px.line_mapbox(
+    data_frame=rota.filtro_dataframe,
+    lat="latitude",
+    lon="longitude",
+    color="nome",
+    zoom=11
+    ) \
+    .update_layout(
+    mapbox_style="carto-darkmatter",
+    margin={"r": 0, "t": 0, "l": 0, "b": 0}
+    ))
+
+
+if __name__ == "__main__":
+    with open("./plugins/cache/maps/teste.json", "w") as arquivo:
+        json.dump(rota.response, arquivo)
