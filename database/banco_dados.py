@@ -10,7 +10,6 @@ class BancoDados:
         self.__cur.close()
         self.__con.close()
 
-    # Tabela --> Entregas
     def entregas_busca(self, id_entrega):
         self.__cur.execute("SELECT * FROM Entregas WHERE id = ?", str(id_entrega))
         return self.__cur.fetchone()

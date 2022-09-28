@@ -17,12 +17,13 @@ class GoogleMaps:
         """Gera os datasets contendo as rotas de entrega e as suas informações."""
         self.id_entrega = cod_entrega
         banco_dados = self.__banco_dados()
+        self.paradas = banco_dados[2]
         maps = googlemaps.Client("AIzaSyD9j77oIrgO1-fAXb4V3af9srmuJArBp_4")
         self.response = maps.directions(
             origin=banco_dados[0],
             destination=banco_dados[1],
             mode="driving",
-            waypoints=banco_dados[2],
+            waypoints=self.paradas,
             alternatives=True,
             language="pt-br",
             units="metric",
