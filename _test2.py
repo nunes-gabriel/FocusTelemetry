@@ -23,18 +23,25 @@ Chaves do Response["legs"]:
 """
 
 
-def main():
-    with open("./plugins/cache/maps/teste.json", "r") as arquivo:
-        response = json.load(arquivo)
-        numero_rotas = response.__len__()
-        for rota in response:
-            viagens = rota["legs"]
-            for numero, viagem in enumerate(viagens):
-                print(f"{numero}:")
-                print(f"Local Final - {viagem['end_location']}")
-                print(f"Local Inicial - {viagem['start_location']}")
-                print("\n\n")
+def main(response_bruto: list[dict]):
+    numero_rotas = response_bruto.__len__()
+    for rota in response_bruto:
+        print(rota["waypoint_order"])
+        viagens = rota["legs"]
+        for numero, viagem in enumerate(viagens):
+            print(f"Viagem {numero + 1}:")
+            print(f"Local Final - {viagem['end_location']}")
+            print(f"Local Inicial - {viagem['start_location']}", end="\n\n\n")
+
+
+def filtro_organizado(response_bruto: list[dict]):
+    rotas_organizadas = list()
+    for rota in response_bruto:
+        for numero, viagem in enumerate(rota["legs"]):
+            pass
 
 
 if __name__ == "__main__":
-    main()
+    with open("./plugins/cache/maps/teste2.json", "r") as arquivo:
+        response = json.load(arquivo)
+        main(response)

@@ -39,10 +39,11 @@ class GoogleMaps:
         banco_dados = database.BancoDados()
         entrega = banco_dados.entregas_busca(self.id_entrega)
         dados_maps = [entrega[3], entrega[4]]
-        if entrega[-2].strip() == "Sem parada":
+        if entrega[8].strip() == "Sem parada":
             dados_maps.append([])
         else:
-            dados_maps.append(entrega[-2])
+            paradas = entrega[8].split("/")
+            dados_maps.append(paradas)
         banco_dados.finalizar()
         return dados_maps
 
@@ -93,7 +94,7 @@ class GoogleMaps:
         return dataframe
 
 
-rota = GoogleMaps(1)
+rota = GoogleMaps(37)
 
 app.layout = dcc.Graph(figure=px.line_mapbox(
     data_frame=rota.filtro_dataframe,
@@ -109,5 +110,5 @@ app.layout = dcc.Graph(figure=px.line_mapbox(
 
 
 if __name__ == "__main__":
-    with open("./plugins/cache/maps/teste.json", "w") as arquivo:
+    with open("./plugins/cache/maps/teste2.json", "w") as arquivo:
         json.dump(rota.response, arquivo)
