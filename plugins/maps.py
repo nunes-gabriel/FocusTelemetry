@@ -11,7 +11,7 @@ class GoogleMaps:
 
     def __init__(self, cod_entrega: int):
         """Gera os datasets contendo as rotas de entrega e as suas informações."""
-        self.id_entrega = cod_entrega
+        self.__id_entrega = cod_entrega
         if self.__cache_existe():
             self.__cache_carregar()
         else:
@@ -29,65 +29,73 @@ class GoogleMaps:
                 optimize_waypoints=True,
                 traffic_model="best_guess"
                 )
-            self.filtro_ordenadas = self.__filtro_ordenadas()
-            self.filtro_dataframe = self.__filtro_dataframe()
+            self.rota_organizada = self.__filtro_organizado()
+            self.rota_dataframe = self.__filtro_dataframe()
             self.__cache_criar()
 
     def __banco_dados(self) -> list:
         """Conecta-se com o banco de dados retornando as informações necessárias."""
         banco_dados = database.BancoDados()
-        entrega = banco_dados.entregas_busca(self.id_entrega)
+        entrega = banco_dados.entregas_busca(self.__id_entrega)
         dados_maps = [entrega[3], entrega[4]]
-        if entrega[-2].strip() == "Sem parada":
+        if entrega[8].strip() == "Sem parada":
             dados_maps.append([])
         else:
-            dados_maps.append(entrega[-2])
+            paradas = entrega[8].split("/")
+            dados_maps.append(paradas)
         banco_dados.finalizar()
         return dados_maps
 
-    def __filtro_ordenadas(self) -> list[dict]:
+    def __filtro_organizado(self) -> list[dict]:
         """Converte os dados da rota para uma lista de dicionários ordenada."""
-        rotas_ordenadas = list()
-        for rota, letra in zip(self.__response, string.ascii_uppercase):
-            coordenadas = list()
-            data_bruto = rota["legs"][0]
-            pontos = data_bruto["steps"]
-            for ponto in pontos:
-                coordenadas.append({
-                    "latitude": ponto["end_location"]["lat"],
-                    "longitude": ponto["end_location"]["lng"]
-                    })
-            else:
-                coordenadas.insert(0, {
-                    "latitude": data_bruto["start_location"]["lat"],
-                    "longitude": data_bruto["start_location"]["lng"]
-                    })
-            rotas_ordenadas.append({
-                "nome": "Rota " + letra,
-                "distancia": data_bruto["distance"]["value"],
-                "tempo": data_bruto["duration"]["value"],
-                "coordenadas": coordenadas
+        rotas_organizadas = list()
+        for letra, rota in zip(string.ascii_uppercase, self.__response):
+            rota_paradas = list()
+            for index, parada in enumerate(rota["legs"]):
+                coordenadas_parada = [{
+                    "lat": parada["steps"][0]["start_location"]["lat"],
+                    "lon": parada["steps"][0]["start_location"]["lng"]
+                    }]
+                for coordenada in parada["steps"]:
+                    coordenadas_parada.append({
+                        "lat": coordenada["end_location"]["lat"],
+                        "lon": coordenada["end_location"]["lng"]
+                        })
+                else:
+                    rota_paradas.append({
+                        "index": index + 1,
+                        "parada": parada["end_address"],
+                        "distância": parada["distance"]["value"],
+                        "duração": parada["duration"]["value"],
+                        "coordenadas": coordenadas_parada
+                        })
+            rotas_organizadas.append({
+                "index": letra,
+                "distância": sum([parada["distância"] for parada in rota_paradas]),
+                "duração": sum([parada["duração"] for parada in rota_paradas]),
+                "paradas": rota_paradas
                 })
-        return rotas_ordenadas
+        return rotas_organizadas
 
     def __filtro_dataframe(self) -> list[dict]:
         """Converte os dados da rota para um data frame válido pelo Plotly."""
         dataframe = list()
-        for rota in self.filtro_ordenadas:
-            for coordenada in rota["coordenadas"]:
-                dataframe.append({
-                    "nome": rota["nome"],
-                    "distancia": rota["distancia"],
-                    "tempo": rota["tempo"],
-                    "latitude": coordenada["latitude"],
-                    "longitude": coordenada["longitude"]
-                    })
+        for rota in self.rota_organizada:
+            for pontos in [parada["coordenadas"] for parada in rota["paradas"]]:
+                for ponto in pontos:
+                    dataframe.append({
+                        "Rota": rota["index"],
+                        "Distância": rota["distância"],
+                        "Tempo": rota["duração"],
+                        "Latitude": ponto["lat"],
+                        "Longitude": ponto["lon"]
+                        })
         return dataframe
 
     def __cache_existe(self) -> bool:
         """Verifica se há ou não um cache já criado para a entrega analisada."""
         arquivos = os.listdir(GoogleMaps.dir_cache)
-        nome_cache = f"maps_ID#{self.id_entrega}.json"
+        nome_cache = f"maps_ID#{self.__id_entrega}.json"
         if nome_cache in arquivos:
             return True
         else:
@@ -95,16 +103,16 @@ class GoogleMaps:
     
     def __cache_carregar(self) -> None:
         """Carrega o cache da entrega analisada caso este já tenha sido criado."""
-        with open(f"{GoogleMaps.dir_cache}maps_ID#{self.id_entrega}.json", "r") as cache:
+        with open(f"{GoogleMaps.dir_cache}maps_ID#{self.__id_entrega}.json", "r") as cache:
             json_data = json.load(cache)
-            self.filtro_ordenadas = json_data["ordenadas"]
-            self.filtro_dataframe = json_data["dataframe"]
+            self.rota_organizada = json_data["organizada"]
+            self.rota_dataframe = json_data["dataframe"]
     
     def __cache_criar(self) -> None:
         """Cria o cache da entrega analisada para uso posterior, poupando requests da API."""
-        with open(f"{GoogleMaps.dir_cache}maps_ID#{self.id_entrega}.json", "w") as cache:
+        with open(f"{GoogleMaps.dir_cache}maps_ID#{self.__id_entrega}.json", "w") as cache:
             json_data = {
-                "ordenadas": self.filtro_ordenadas,
-                "dataframe": self.filtro_dataframe
+                "organizada": self.rota_organizada,
+                "dataframe": self.rota_dataframe
                 }
             json.dump(json_data, cache)

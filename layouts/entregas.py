@@ -9,7 +9,7 @@ def entregas() -> html.Div:
     return html.Div(id="painel-entregas", children=[
         html.Div(className="row", children=[
             html.Div(className="column", children=[
-                html.Div(id="box-pesquisa", children=[
+                html.Div(className="card", id="box-pesquisa", children=[
                     html.H1("Entregas"),
                     html.P("Escolha uma entrega para análise. Caso queira registrar uma nova entrega acesse o painel do"
                            "banco de dados."),
@@ -17,7 +17,7 @@ def entregas() -> html.Div:
                     dcc.Checklist(id="box-pesquisa-filtro", options=[{"label": "Exibir entregas conclúidas", "value": True}],
                                   value=[True], inline=True)
                     ]),
-                html.Div(id="box-info-geral", children=[
+                html.Div(className="card", id="box-info-geral", children=[
                     html.H1("Informações Gerais"),
                     html.Div(id="box-info-geral-textos"),
                     html.Div(className="row", children=[
@@ -26,12 +26,11 @@ def entregas() -> html.Div:
                         ]),
                     ])
                 ]),
-            html.Div(id="box-rotas", children=[
-                html.H1("Rotas de Viagem"),
-                dcc.Graph(id="box-rotas-mapa"),
-                html.Table(id="box-rotas-tabela")
+            html.Div(className="card", id="box-mapa", children=[
+                dcc.Graph(id="box-mapa-rotas")
                 ])
-            ])
+            ]),
+        html.Div(className="card", id="box-rotas")
         ])
 
 

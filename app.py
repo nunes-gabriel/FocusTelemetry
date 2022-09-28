@@ -21,8 +21,6 @@ app.layout = all_layouts["index"]
 app.validation_layout = html.Div([*all_layouts.values()])
 
 
-# Lista de Callbacks ('index.py')
-# | atualizar_pagina
 @app.callback(
     Output("conteudo-pagina", "children"),
     Input("url", "pathname")
@@ -43,17 +41,10 @@ def atualizar_pagina(pathname: str):
         return all_layouts["home"]
 
 
-# Lista de Callbacks ('entregas.py')
-# | atualizar_entrega
-# | | output_mapa
-# | | output_tabela
-# | | output_infos_geral
-# | | output_botao
-# | filtrar entregas
 @app.callback(
     [
-        Output("box-rotas-mapa", "figure"),
-        Output("box-rotas-tabela", "children"),
+        Output("box-mapa-rotas", "figure"),
+        Output("box-rotas", "children"),
         Output("box-info-geral-textos", "children"),
         Output("box-info-geral-entregue", "value")
     ],
@@ -68,18 +59,22 @@ def atualizar_entrega(id_entrega: int):
         """Retorna um mapa com as diferentes rotas de viagem."""
         return px.line_mapbox(
             data_frame=lista_rotas,
-            lat="latitude",
-            lon="longitude",
-            color="nome",
-            zoom=11
+            lat="Latitude",
+            lon="Longitude",
+            color="Rota",
+            zoom=6
             ) \
             .update_layout(
             mapbox_style="carto-darkmatter",
             margin={"r": 0, "t": 0, "l": 0, "b": 0}
             )
 
-    def output_tabela(lista_rotas: list[dict]):
+    def output_rotas(lista_rotas: list[dict]):
         """Retorna uma tabela com informações sobre as rotas de viagem."""
+        return [
+            
+            ]
+        
         return [
             html.Tr(children=[
                 html.Th("Nome"),
@@ -105,8 +100,8 @@ def atualizar_entrega(id_entrega: int):
         return str(id_entrega)
 
     return (
-        output_mapa(rotas_entrega.filtro_dataframe),
-        output_tabela(rotas_entrega.filtro_ordenadas),
+        output_mapa(rotas_entrega.rota_dataframe),
+        output_rotas(rotas_entrega.rota_organizada),
         output_infos_geral(),
         output_botao()
         )

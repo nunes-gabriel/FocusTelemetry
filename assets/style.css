@@ -1,3 +1,14 @@
+/* Variáveis (cores, medidas e fontes) */
+:root {
+    --cor-fundo-body: #2e2e2e;
+    --cor-fundo-barra: #000000;
+    --cor-fundo-card: #1f1f1f;
+    --cor-borda-card: #131313;
+
+    --fonte-geral-cor: #e5e5e5;
+}
+
+
 /* Conteúdo do Bloco ('app.py')
  * | 01. Estilos gerais
  * | 02. Corpo da página
@@ -12,8 +23,8 @@
 
 /* #02 --> Corpo da página */
 body {
-    background-color: #2e2e2e;
-    color: #e5e5e5;
+    background-color: var(--cor-fundo-body);
+    color: var(--fonte-geral-cor);
     font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
 }
 
@@ -26,7 +37,7 @@ body {
 
 /* #01 --> Barra lateral */
 #barra-lateral {
-    background-color: #000000;
+    background-color: var(--cor-fundo-barra);
     height: 100%;
     left: 0;
     overflow-x: hidden;
@@ -87,9 +98,13 @@ body {
     width: 45%;
 }
 
+#painel-entregas .card {
+    background-color: var(--cor-fundo-card);
+}
+
 /* #02 --> Box de pesquisa */
 #painel-entregas #box-pesquisa {
-    border: solid 2px #151515;
+    border: solid 2px var(--cor-borda-card);
     margin-bottom: 15px;
     padding: 15px;
 }
@@ -101,7 +116,7 @@ body {
 
 /* #03 --> Box de informações */
 #painel-entregas #box-info-geral {
-    border: solid 2px #151515;
+    border: solid 2px var(--cor-borda-card);
     padding: 15px;
 }
 
@@ -110,8 +125,8 @@ body {
 }
 
 #painel-entregas #box-info-geral .botao {
-    background-color: #151515;
-    color: #e5e5e5;
+    background-color: var(--cor-borda-card);
+    color: var(--fonte-geral-cor);
     font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
     height: 40px;
     width: 25%;
@@ -122,16 +137,16 @@ body {
 }
 
 /* #04 --> Box do mapa de rotas */
-#painel-entregas #box-rotas {
-    border: solid 2px #151515;
+#painel-entregas #box-mapa {
+    border: solid 2px var(--cor-borda-card);
     margin: 0 0 15px 15px;
     padding: 15px;
     width: 55%;
 }
 
 /* #05 --> Mapa de rotas */
-#painel-entregas #box-rotas-mapa {
-    padding: 15px 0 15px 0;
+#painel-entregas #box-mapa-rotas {
+    height: 80vh;
 }
 
 /* #06 --> Tabela de rotas */
@@ -141,12 +156,12 @@ body {
 }
 
 #painel-entregas #box-rotas-tabela th, td {
-    border: 1px solid #151515;
+    border: 1px solid var(--cor-borda-card);
     padding: 8px;
     text-align: left;
 }
 
 #painel-entregas #box-rotas-tabela th {
-    background-color: #151515;
+    background-color: var(--cor-borda-card);
     font-weight: bold;
 }
