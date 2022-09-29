@@ -9,6 +9,7 @@ def index() -> html.Div:
     """
     return html.Div(children=[
         dcc.Location(id="url", refresh=False),
+        html.Div(style={"display": "none"}, id="no_update"),
         html.Div(id="barra-lateral", children=[
             dcc.Link(title="Início", href="/", children=html.Img(
                 src="./assets/images/icone-home.svg", width="40px", height="40px"

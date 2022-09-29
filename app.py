@@ -150,12 +150,13 @@ def filtrar_entregas(filtro: bool):
 
 
 @app.callback(
-    Output("box-info-geral-output-botoes", "children"),
+    Output("no_update", "children"),
     Input("box-info-geral-entregue", "n_clicks"),
+    State("box-pesquisa-dropdown", "value"),
     prevent_initial_call=True
     )
-def marcar_entregue(cliques: int):
-    return "Teste"
+def marcar_entregue(_):
+    raise PreventUpdate
 
 
 if __name__ == "__main__":
