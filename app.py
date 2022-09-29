@@ -46,7 +46,8 @@ def atualizar_pagina(pathname: str):
     [
         Output("box-rotas-mapa", "figure"),
         Output("box-rotas-tabelas", "children"),
-        Output("box-info-geral-textos", "children")
+        Output("box-info-geral-textos", "children"),
+        Output("box-info-geral-entregue", "value")
     ],
     Input("box-pesquisa-dropdown", "value"),
     )
@@ -94,8 +95,8 @@ def atualizar_entrega(id_entrega: int):
                 layout_rotas.append(html.Hr())
         return layout_rotas
 
-    def output_infos_geral():
-        dados = banco_dados.entregas_busca(id_entrega)
+    def output_infos_geral(banco: database.BancoDados):
+        dados = banco.entregas_busca(id_entrega)
         return [
             html.P([html.Strong("ID da Entrega: "), id_entrega]),
             html.P([html.Strong("Status Atual: "), dados[-2]]),
@@ -111,10 +112,14 @@ def atualizar_entrega(id_entrega: int):
             html.P([html.Strong("Número de Paradas: "), dados[8].split("/").__len__() + 1])
             ]
 
+    def output_botao():
+        return str(id_entrega)
+
     return (
         output_mapa(rotas_entrega.rota_dataframe),
         output_rotas(rotas_entrega.rota_organizada),
-        output_infos_geral(),
+        output_infos_geral(banco_dados),
+        output_botao()
         )
 
 
@@ -155,7 +160,7 @@ def filtrar_entregas(filtro: bool):
     State("box-pesquisa-dropdown", "value"),
     prevent_initial_call=True
     )
-def marcar_entregue(_):
+def marcar_entregue(_, id_entrega: int):
     raise PreventUpdate
 
 
