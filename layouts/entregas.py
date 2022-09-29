@@ -1,6 +1,5 @@
 from dash import html, dcc
 
-import pandas as pd
 import database
 
 
@@ -26,11 +25,11 @@ def entregas() -> html.Div:
                         ]),
                     ])
                 ]),
-            html.Div(className="card", id="box-mapa", children=[
-                dcc.Graph(id="box-mapa-rotas")
+            html.Div(className="card", id="box-mapa-rotas", children=[
+                dcc.Graph(id="box-mapa-rotas-graph")
                 ])
             ]),
-        html.Div(className="card", id="box-rotas")
+        html.Div(className="card", id="box-info-rotas")
         ])
 
 

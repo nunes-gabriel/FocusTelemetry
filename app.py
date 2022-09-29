@@ -43,8 +43,8 @@ def atualizar_pagina(pathname: str):
 
 @app.callback(
     [
-        Output("box-mapa-rotas", "figure"),
-        Output("box-rotas", "children"),
+        Output("box-mapa-rotas-graph", "figure"),
+        Output("box-info-rotas", "children"),
         Output("box-info-geral-textos", "children"),
         Output("box-info-geral-entregue", "value")
     ],
@@ -71,22 +71,60 @@ def atualizar_entrega(id_entrega: int):
 
     def output_rotas(lista_rotas: list[dict]):
         """Retorna uma tabela com informações sobre as rotas de viagem."""
-        return [
-            
-            ]
+        layout_rotas = list()
+        for index, rota in enumerate(lista_rotas):
+            layout_rotas.extend([
+                html.H1(f"Rota {rota['index']}"),
+                html.Table(children=[
+                    html.Tr(children=[
+                        html.Th("Nº Parada"),
+                        html.Th("Endereço"),
+                        html.Th("Distância"),
+                        html.Th("Duração")
+                        ]),
+                    * [html.Tr(children=[
+                        html.Td(parada["index"]),
+                        html.Td(parada["parada"]),
+                        html.Td(parada["distância"]),
+                        html.Td(parada["duração"])
+                        ]) for parada in rota["paradas"]]
+                    ]),
+                ])
+            if index != len(lista_rotas) - 1:
+                layout_rotas.append(html.Hr())
+        return layout_rotas
+
+        # return [*[[
+        #     html.H1(f"Rota {rota['index']}"),
+        #     html.Table(children=[
+        #         html.Tr(children=[
+        #             html.Th("Nº Parada"),
+        #             html.Th("Endereço"),
+        #             html.Th("Distância"),
+        #             html.Th("Duração")
+        #             ]),
+        #         * [html.Tr(children=[
+        #             html.Td(parada["index"]),
+        #             html.Td(parada["parada"]),
+        #             html.Td(parada["distância"]),
+        #             html.Td(parada["duração"])
+        #             ]) for parada in rota["paradas"]]
+        #         ]),
+        #     html.Hr(),
+        #     ] for rota in lista_rotas]]
         
-        return [
-            html.Tr(children=[
-                html.Th("Nome"),
-                html.Th("Distância"),
-                html.Th("Tempo")
-                ]),
-            + [html.Tr(children=[
-                html.Td(rota["nome"]),
-                html.Td(f"{rota['distancia'] / 1000}km"),
-                html.Td(f"{rota['tempo'] / 60:.2f}min")
-                ]) for rota in lista_rotas]
-            ]
+        # return [
+        #     html.Tr(children=[
+        #         html.Th("Nome"),
+        #         html.Th("Distância"),
+        #         html.Th("Tempo")
+        #         ]),
+        #     + [html.Tr(children=[
+        #         html.Td(rota["nome"]),
+        #         html.Td(f"{rota['distancia'] / 1000}km"),
+        #         html.Td(f"{rota['tempo'] / 60:.2f}min")
+        #         ]) for rota in lista_rotas]
+        #     ]
 
     def output_infos_geral():
         return [
