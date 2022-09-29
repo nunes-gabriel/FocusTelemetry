@@ -26,10 +26,6 @@ def index() -> html.Div:
                 src="./assets/images/icone-motoristas.svg", width="40px", height="40px"
                 )),
             html.Br(),
-            dcc.Link(title="Análise Geral", href="/analise", children=html.Img(
-                src="./assets/images/icone-analise.svg", width="40px", height="40px"
-                )),
-            html.Br(),
             dcc.Link(title="Banco de Dados", href="/banco-dados", children=html.Img(
                 src="./assets/images/icone-banco-dados.svg", width="40px", height="40px"
                 ))
