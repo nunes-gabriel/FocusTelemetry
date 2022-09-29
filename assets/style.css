@@ -112,13 +112,12 @@ body {
 #painel-entregas #box-pesquisa-dropdown {
     color: black;
     font-size: 14px;
-    padding: 10px;
 }
 
 /* #03 --> Box de informações */
 #painel-entregas #box-info-geral {
     border: solid 2px var(--cor-borda-card);
-    padding: 21px;
+    padding: 15px;
 }
 
 #painel-entregas #box-info-geral-textos {
@@ -152,7 +151,6 @@ body {
 
 /* #06 --> Tabela de rotas */
 #painel-entregas #box-rotas-tabela {
-    display: flex;
     border-collapse: collapse;
     width: 100%;
 }
@@ -160,10 +158,10 @@ body {
 #painel-entregas #box-rotas-tabela th, td {
     border: 1px solid var(--cor-borda-card);
     padding: 8px;
+    text-align: left;
 }
 
 #painel-entregas #box-rotas-tabela th {
     background-color: var(--cor-borda-card);
     font-weight: bold;
-    text-align: left;
 }
