@@ -137,7 +137,7 @@ body {
 }
 
 /* #04 --> Box do mapa de rotas */
-#painel-entregas #box-mapa-rotas {
+#painel-entregas #box-rotas {
     border: solid 2px var(--cor-borda-card);
     margin: 0 0 15px 15px;
     padding: 15px;
@@ -145,23 +145,23 @@ body {
 }
 
 /* #05 --> Mapa de rotas */
-#painel-entregas #box-mapa-rotas-graph{
-    height: 60vh;
+#painel-entregas #box-rotas-mapa{
+    height: 55vh;
 }
 
 /* #06 --> Tabela de rotas */
-#painel-entregas #box-rotas-tabela {
+#painel-entregas .box-rotas-tabela {
     border-collapse: collapse;
     width: 100%;
 }
 
-#painel-entregas #box-rotas-tabela th, td {
+#painel-entregas .box-rotas-tabela th, td {
     border: 1px solid var(--cor-borda-card);
     padding: 8px;
     text-align: left;
 }
 
-#painel-entregas #box-rotas-tabela th {
+#painel-entregas .box-rotas-tabela th {
     background-color: var(--cor-borda-card);
     font-weight: bold;
 }

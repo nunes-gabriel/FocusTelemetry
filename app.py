@@ -1,4 +1,5 @@
 from dash import Dash, html, dcc, Input, Output, State
+from dash.exceptions import PreventUpdate
 from plotly import express as px
 
 import layouts
@@ -43,10 +44,9 @@ def atualizar_pagina(pathname: str):
 
 @app.callback(
     [
-        Output("box-mapa-rotas-graph", "figure"),
-        Output("box-info-rotas", "children"),
-        Output("box-info-geral-textos", "children"),
-        Output("box-info-geral-entregue", "value")
+        Output("box-rotas-mapa", "figure"),
+        Output("box-rotas-tabelas", "children"),
+        Output("box-info-geral-textos", "children")
     ],
     Input("box-pesquisa-dropdown", "value"),
     )
@@ -75,9 +75,9 @@ def atualizar_entrega(id_entrega: int):
         for index, rota in enumerate(lista_rotas):
             layout_rotas.extend([
                 html.H1(f"Rota {rota['index']}"),
-                html.Table(children=[
+                html.Table(className="box-rotas-tabela", children=[
                     html.Tr(children=[
-                        html.Th("Nº Parada"),
+                        html.Th("Ordem Parada"),
                         html.Th("Endereço"),
                         html.Th("Distância"),
                         html.Th("Duração")
@@ -94,54 +94,27 @@ def atualizar_entrega(id_entrega: int):
                 layout_rotas.append(html.Hr())
         return layout_rotas
 
-        # return [*[[
-        #     html.H1(f"Rota {rota['index']}"),
-        #     html.Table(children=[
-        #         html.Tr(children=[
-        #             html.Th("Nº Parada"),
-        #             html.Th("Endereço"),
-        #             html.Th("Distância"),
-        #             html.Th("Duração")
-        #             ]),
-        #         * [html.Tr(children=[
-        #             html.Td(parada["index"]),
-        #             html.Td(parada["parada"]),
-        #             html.Td(parada["distância"]),
-        #             html.Td(parada["duração"])
-        #             ]) for parada in rota["paradas"]]
-        #         ]),
-        #     html.Hr(),
-        #     ] for rota in lista_rotas]]
-        
-        # return [
-        #     html.Tr(children=[
-        #         html.Th("Nome"),
-        #         html.Th("Distância"),
-        #         html.Th("Tempo")
-        #         ]),
-        #     + [html.Tr(children=[
-        #         html.Td(rota["nome"]),
-        #         html.Td(f"{rota['distancia'] / 1000}km"),
-        #         html.Td(f"{rota['tempo'] / 60:.2f}min")
-        #         ]) for rota in lista_rotas]
-        #     ]
-
     def output_infos_geral():
+        dados = banco_dados.entregas_busca(id_entrega)
         return [
-            html.P(f"ID da Entrega: {id_entrega}"),
-            html.P(f"Status Atual: "),
-            html.P(f"Data de Saída: "),
-            html.P(f"Previsão de Entrega: ")
+            html.P([html.Strong("ID da Entrega: "), id_entrega]),
+            html.P([html.Strong("Status Atual: "), dados[-2]]),
+            html.P([html.Strong("Feedback: "), dados[-1]]),
+            html.P([html.Strong("Placa do Veículo: "), dados[1]]),
+            html.P([html.Strong("CPF do Motorista: "), dados[2]]),
+            html.P([html.Strong("Data de Saída: "), dados[9]]),
+            html.P([html.Strong("Data Prevista: "), dados[10]]),
+            html.P([html.Strong("Data de Chegada: "), dados[11]]),
+            html.P([html.Strong("Tipo de Carga: "), dados[5]]),
+            html.P([html.Strong("Peso da Carga: "), dados[6], "kg"]),
+            html.P([html.Strong("Valor da Carga: "), "R$", dados[7]]),
+            html.P([html.Strong("Número de Paradas: "), dados[8].split("/").__len__() + 1])
             ]
-
-    def output_botao():
-        return str(id_entrega)
 
     return (
         output_mapa(rotas_entrega.rota_dataframe),
         output_rotas(rotas_entrega.rota_organizada),
         output_infos_geral(),
-        output_botao()
         )
 
 
@@ -157,14 +130,32 @@ def filtrar_entregas(filtro: bool):
         banco_dados = database.BancoDados()
         opcoes = list()
         for linha in banco_dados.entregas_lista():
-            if linha[-1] == "Entrega em andamento":
-                opcoes.append({
-                    "label": f"ID#{linha[0]} - {linha[3]} // {linha[6]} // {linha[4]}",
-                    "value": linha[0]
-                    })
+            if linha[-2] == "Entregue ":
+                continue
+            label_meio = "//"
+            if linha[8] != "Sem parada ":
+                paradas = linha[8].split("/")
+                if len(paradas) > 2:
+                    label_meio += f" {paradas[0]} // ... // {paradas[-1]}  //"
+                else:
+                    for parada in paradas:
+                        label_meio += f" {parada} //"
+            opcoes.append({
+                "label": f"ID#{linha[0]} - {linha[3]} {label_meio} {linha[4]}",
+                "value": linha[0]
+            })
         else:
             banco_dados.finalizar()
             return opcoes
+
+
+@app.callback(
+    Output("box-info-geral-output-botoes", "children"),
+    Input("box-info-geral-entregue", "n_clicks"),
+    prevent_initial_call=True
+    )
+def marcar_entregue(cliques: int):
+    return "Teste"
 
 
 if __name__ == "__main__":
