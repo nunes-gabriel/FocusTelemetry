@@ -25,11 +25,11 @@ def entregas() -> html.Div:
                         ]),
                     ])
                 ]),
-            html.Div(className="card", id="box-mapa-rotas", children=[
-                dcc.Graph(id="box-mapa-rotas-graph")
+            html.Div(className="card", id="box-rotas", children=[
+                dcc.Graph(id="box-rotas-mapa"),
+                html.Div(className="card", id="box-rotas-tabelas")
                 ])
-            ]),
-        html.Div(className="card", id="box-info-rotas")
+            ])
         ])
 
 
@@ -37,8 +37,16 @@ def entregas_opcoes() -> list:
     banco_dados = database.BancoDados()
     opcoes = list()
     for linha in banco_dados.entregas_lista():
+        label_meio = "//"
+        if linha[8] != "Sem parada ":
+            paradas = linha[8].split("/")
+            if len(paradas) > 2:
+                label_meio += f" {paradas[0]} // ... // {paradas[-1]}  //"
+            else:
+                for parada in paradas:
+                    label_meio += f" {parada} //"
         opcoes.append({
-            "label": f"ID#{linha[0]} - {linha[3]} // {linha[6]} // {linha[4]}",
+            "label": f"ID#{linha[0]} - {linha[3]} {label_meio} {linha[4]}",
             "value": linha[0]
             })
     else:
