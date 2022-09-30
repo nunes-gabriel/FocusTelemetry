@@ -1,43 +1,44 @@
-/* Variáveis (cores, medidas e fontes) */
+/*
+  Tabela de Conteúdos:
+  - Variáveis
+  - Corpo da Página
+  - Barra Lateral
+  - Linhas e Colunas
+  - Box de Conteúdo
+  - Elementos Especiais
+  - Página de Entregas
+*/
+
+/* --> Variáveis */
 :root {
-    --cor-fundo-body: #2e2e2e;
-    --cor-fundo-barra: #000000;
-    --cor-fundo-card: #1f1f1f;
-    --cor-borda-card: #131313;
+    --cor-corpo-fundo: #2e2e2e;
+    --cor-barra-fundo: #000000;
+    --cor-box-fundo: #1f1f1f;
+    --cor-box-borda: #131313;
 
     --fonte-geral-cor: #e5e5e5;
 }
 
-
-/* Conteúdo do Bloco ('app.py')
- * | 01. Estilos gerais
- * | 02. Corpo da página
- */
-
-/* #01 --> Estilos gerais */
+/* --> Corpo da Página */
 * {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
 }
 
-/* #02 --> Corpo da página */
 body {
-    background-color: var(--cor-fundo-body);
+    background-color: var(--cor-corpo-fundo);
     color: var(--fonte-geral-cor);
     font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
 }
 
+#conteudo-pagina {
+    margin-left: 80px;
+}
 
-/* Conteúdo do Bloco ('index.py'):
- * | 01. Barra lateral
- * | 02. Botões da barra lateral
- * | 03. Layer do dashboard
- */
-
-/* #01 --> Barra lateral */
-#barra-lateral {
-    background-color: var(--cor-fundo-barra);
+/* --> Barra Lateral */
+.barra-lateral {
+    background-color: var(--cor-barra-fundo);
     height: 100%;
     left: 0;
     overflow-x: hidden;
@@ -47,120 +48,103 @@ body {
     z-index: 1;
 }
 
-/* #02 --> Botões da barra lateral */
-#barra-lateral a {
+.barra-lateral a {
     padding-left: 20px;
 }
 
-#barra-lateral a img {
+.barra-lateral a img {
     margin: 10px 0 10px 0;
 }
 
-#barra-lateral a:hover {
+.barra-lateral a:hover {
     filter: invert(83%) sepia(93%) saturate(2367%) hue-rotate(206deg) brightness(70%) contrast(101%);
 }
 
-/* #03 --> Layer do dashboard */
-#conteudo-pagina {
-    margin-left: 80px;
-}
-
-
-/* Conteúdos do Bloco ('entregas.py')
- * | 01. Painel de entregas
- * | 02. Box de pesquisa
- * | 03. Box de informações
- * | 04. Box do mapa de rotas
- * | 05. Mapa de rotas
- * | 06. Tabela de rotas
- */
-
-/* #01 --> Painel de entregas */
-#painel-entregas {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    margin: 2%;
-    overflow: hidden;
-    text-align: center;
-}
-
-#painel-entregas .row {
+/* --> Linhas e Colunas */
+.linha {
     display: flex;
     flex-direction: row;
     justify-content: center;
     overflow: hidden;
 }
 
-#painel-entregas .row .column {
+.coluna {
     flex-direction: column;
     overflow: hidden;
+}
+
+.coluna.width45 {
     width: 45%;
 }
 
-#painel-entregas .card {
-    background-color: var(--cor-fundo-card);
-}
-
-/* #02 --> Box de pesquisa */
-#painel-entregas #box-pesquisa {
-    border: solid 2px var(--cor-borda-card);
-    margin-bottom: 15px;
+/* --> Box de Conteúdos */
+.box {
+    background-color: var(--cor-box-fundo);
+    border: solid 2px var(--cor-box-borda);
     padding: 15px;
 }
 
-#painel-entregas #box-pesquisa-dropdown {
+/* --> Elementos Especiais */
+.dropdown {
     color: black;
     font-size: 14px;
 }
 
-/* #03 --> Box de informações */
-#painel-entregas #box-info-geral {
-    border: solid 2px var(--cor-borda-card);
-    padding: 15px;
+/* --> Página de Entregas */
+#pagina-entregas {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin: 2%;
+    overflow: hidden;
+    text-align: left;
 }
 
-#painel-entregas #box-info-geral-textos {
+.box.margem-pesquisa {
+    margin-bottom: 15px;
+}
+
+#pagina-entregas #box-info-geral-textos {
     padding: 15px 0 15px 0
 }
 
-#painel-entregas #box-info-geral .botao {
-    background-color: var(--cor-borda-card);
+#pagina-entregas #box-info-geral .botao {
+    background-color: var(--cor-box-borda);
     color: var(--fonte-geral-cor);
     font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
     height: 40px;
     width: 25%;
 }
 
-#painel-entregas #box-info-geral-entregue {
+#pagina-entregas #box-info-geral-entregue {
     margin-right: 15px;
 }
 
 /* #04 --> Box do mapa de rotas */
-#painel-entregas #box-rotas {
-    border: solid 2px var(--cor-borda-card);
+#pagina-entregas #box-rotas {
+    border: solid 2px var(--cor-box-borda);
     margin: 0 0 15px 15px;
     padding: 15px;
     width: 55%;
 }
 
 /* #05 --> Mapa de rotas */
-#painel-entregas #box-rotas-mapa{
+#pagina-entregas #box-rotas-mapa{
     height: 55vh;
 }
 
 /* #06 --> Tabela de rotas */
-#painel-entregas .box-rotas-tabela {
+#pagina-entregas .box-rotas-tabela {
     border-collapse: collapse;
     width: 100%;
 }
 
-#painel-entregas .box-rotas-tabela th, td {
-    border: 1px solid var(--cor-borda-card);
+#pagina-entregas .box-rotas-tabela th, td {
+    border: 1px solid var(--cor-box-borda);
     padding: 8px;
 }
 
-#painel-entregas .box-rotas-tabela th {
-    background-color: var(--cor-borda-card);
+#pagina-entregas .box-rotas-tabela th {
+    background-color: var(--cor-box-borda);
     font-weight: bold;
 }
