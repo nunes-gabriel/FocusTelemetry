@@ -1,4 +1,5 @@
 from dash import html, dcc, Input, Output, State
+from plotly import graph_objects as go
 from plotly import express as px
 
 import database
@@ -15,29 +16,31 @@ dash.register_page(
 
 
 def layout():
-    return html.Div(id="pagina-entregas", children=[
+    return html.Div(id="entregas-body", children=[
         html.Div(className="linha", children=[
-            html.Div(className="coluna width45", children=[
-                html.Div(className="box margem-pesquisa", children=[
+            html.Div(className="coluna entregas-esquerda", children=[
+                html.Div(className="box entregas-pesquisa", children=[
                     html.H1("Entregas"),
                     html.P("Escolha uma entrega para análise. Caso queira registrar uma nova entrega acesse o painel do"
                            "banco de dados."),
-                    dcc.Dropdown(className="dropdown", id="box-pesquisa-dropdown", value=1, clearable=False),
-                    dcc.Checklist(id="box-pesquisa-filtro", options=[{"label": "Exibir entregas conclúidas", "value": True}],
+                    dcc.Dropdown(className="dropdown", id="entregas-dropdown", value=1, clearable=False),
+                    dcc.Checklist(id="entregas-checklist", options=[{"label": "Exibir entregas conclúidas", "value": True}],
                                   value=[True], inline=True)
                     ]),
-                html.Div(className="box", id="box-info-geral", children=[
+                html.Div(className="box", children=[
                     html.H1("Informações Gerais"),
-                    html.Div(id="box-info-geral-textos"),
+                    html.Div(id="entregas-informacoes"),
                     html.Div(className="linha", children=[
-                        html.Button(className="botao", id="box-info-geral-entregue", children="Marcar c/ Entregue"),
-                        html.Button(className="botao", id="box-info-geral-saida", children="Saiu p/ Entrega")
+                        html.Button(className="botao entregas", id="entregas-botao-entregue", children="Marcar c/ Entregue"),
+                        html.Button(className="botao entregas", id="entregas-botao-saida", children="Saiu p/ Entrega")
                         ]),
                     ])
                 ]),
-            html.Div(className="coluna", id="box-rotas", children=[
-                dcc.Graph(id="box-rotas-mapa"),
-                html.Div(className="box", id="box-rotas-tabelas")
+            html.Div(className="coluna entregas-rotas", children=[
+                html.Div(className="box entregas-rotas", children=[
+                    dcc.Graph(id="entregas-mapa"),
+                    html.Div(id="entregas-tabela")
+                    ]),
                 ])
             ])
         ])
@@ -45,11 +48,11 @@ def layout():
 
 @dash.callback(
     [
-        Output("box-rotas-mapa", "figure"),
-        Output("box-rotas-tabelas", "children"),
-        Output("box-info-geral-textos", "children")
+        Output("entregas-mapa", "figure"),
+        Output("entregas-tabela", "children"),
+        Output("entregas-informacoes", "children")
     ],
-    Input("box-pesquisa-dropdown", "value"),
+    Input("entregas-dropdown", "value"),
     )
 def dropdown_callbacks(id_entrega: int):
     """Atualiza a página de entregas conforme o dropdown."""
@@ -58,6 +61,12 @@ def dropdown_callbacks(id_entrega: int):
 
     def output_mapa(lista_rotas: list[dict]):
         """Retorna um mapa com as diferentes rotas de viagem."""
+        mapa = go.Figure()
+        for rota in lista_rotas:
+            mapa.add_trace(go.Scattermapbox(
+                mode="lines"
+                ))
+        
         return px.line_mapbox(
             data_frame=lista_rotas,
             lat="Latitude",
@@ -72,11 +81,10 @@ def dropdown_callbacks(id_entrega: int):
 
     def output_rotas(lista_rotas: list[dict]):
         """Retorna uma tabela com informações sobre as rotas de viagem."""
-        layout_rotas = list()
-        for index, rota in enumerate(lista_rotas):
-            layout_rotas.extend([
+        return [
+            html.Div(className="box", style={"margin-top": "15px"}, children=[
                 html.H1(f"Rota {rota['index']}"),
-                html.Table(className="box-rotas-tabela", children=[
+                html.Table(className="entregas-tabela", children=[
                     html.Tr(children=[
                         html.Th("Ordem Parada"),
                         html.Th("Endereço"),
@@ -88,14 +96,14 @@ def dropdown_callbacks(id_entrega: int):
                         html.Td(parada["parada"]),
                         html.Td(parada["distância"]),
                         html.Td(parada["duração"])
-                        ]) for parada in rota["paradas"]]
+                        ])
+                        for parada in rota["paradas"]]
                     ]),
                 ])
-            if index != len(lista_rotas) - 1:
-                layout_rotas.append(html.Hr())
-        return layout_rotas
+            for rota in lista_rotas
+            ]
 
-    def output_infos_geral(banco: database.BancoDados):
+    def output_informacoes(banco: database.BancoDados):
         dados = banco.entregas_busca(id_entrega)
         return [
             html.P([html.Strong("ID da Entrega: "), id_entrega]),
@@ -115,13 +123,13 @@ def dropdown_callbacks(id_entrega: int):
     return (
         output_mapa(rotas_entrega.rota_dataframe),
         output_rotas(rotas_entrega.rota_organizada),
-        output_infos_geral(banco_dados)
+        output_informacoes(banco_dados)
         )
 
 
 @dash.callback(
-    Output("box-pesquisa-dropdown", "options"),
-    Input("box-pesquisa-filtro", "value")
+    Output("entregas-dropdown", "options"),
+    Input("entregas-checklist", "value")
     )
 def filtrar_entregas(filtro: bool):
     """Filtra as entregas já concluídas do dropdown."""
@@ -149,8 +157,8 @@ def filtrar_entregas(filtro: bool):
 
 @dash.callback(
     Output("none", "children"),
-    Input("box-info-geral-entregue", "n_clicks"),
-    State("box-pesquisa-dropdown", "value"),
+    Input("entregas-botao-entregue", "n_clicks"),
+    State("entregas-dropdown", "value"),
     prevent_initial_call=True
     )
 def marcar_entregue(_, id_entrega: int):

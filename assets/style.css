@@ -73,14 +73,28 @@ body {
     overflow: hidden;
 }
 
-.coluna.width45 {
+.coluna.entregas-esquerda {
     width: 45%;
+}
+
+.coluna.entregas-rotas {
+    width: 55%;
 }
 
 /* --> Box de Conteúdos */
 .box {
     background-color: var(--cor-box-fundo);
     border: solid 2px var(--cor-box-borda);
+    padding: 15px;
+    text-align: left;
+}
+
+.box.entregas-pesquisa {
+    margin-bottom: 15px;
+}
+
+.box.entregas-rotas {
+    margin: 0 0 15px 15px;
     padding: 15px;
 }
 
@@ -90,61 +104,49 @@ body {
     font-size: 14px;
 }
 
-/* --> Página de Entregas */
-#pagina-entregas {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    margin: 2%;
-    overflow: hidden;
-    text-align: left;
-}
-
-.box.margem-pesquisa {
-    margin-bottom: 15px;
-}
-
-#pagina-entregas #box-info-geral-textos {
-    padding: 15px 0 15px 0
-}
-
-#pagina-entregas #box-info-geral .botao {
+.botao {
     background-color: var(--cor-box-borda);
-    color: var(--fonte-geral-cor);
     font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    color: var(--fonte-geral-cor);
+}
+
+.botao.entregas {
     height: 40px;
     width: 25%;
 }
 
-#pagina-entregas #box-info-geral-entregue {
+/* --> Página de Entregas */
+#entregas-body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    overflow: hidden;
+    margin: 2%;
+}
+
+#entregas-informacoes {
+    padding: 15px 0 15px 0
+}
+
+#entregas-botao-entregue {
     margin-right: 15px;
 }
 
-/* #04 --> Box do mapa de rotas */
-#pagina-entregas #box-rotas {
-    border: solid 2px var(--cor-box-borda);
-    margin: 0 0 15px 15px;
-    padding: 15px;
-    width: 55%;
-}
-
-/* #05 --> Mapa de rotas */
-#pagina-entregas #box-rotas-mapa{
+#entregas-mapa{
     height: 55vh;
 }
 
-/* #06 --> Tabela de rotas */
-#pagina-entregas .box-rotas-tabela {
+.entregas-tabela {
     border-collapse: collapse;
     width: 100%;
 }
 
-#pagina-entregas .box-rotas-tabela th, td {
+.entregas-tabela th, td {
     border: 1px solid var(--cor-box-borda);
     padding: 8px;
 }
 
-#pagina-entregas .box-rotas-tabela th {
+.entregas-tabela th {
     background-color: var(--cor-box-borda);
     font-weight: bold;
 }
