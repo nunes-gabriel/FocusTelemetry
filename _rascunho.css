@@ -1,0 +1,153 @@
+/*
+  Tabela de Conteúdos:
+  - Variáveis
+  - Corpo da Página
+  - Barra Lateral
+  - Linhas e Colunas
+  - Box de Conteúdo
+  - Elementos Especiais
+  - Página de Entregas
+*/
+
+/* --> Variáveis */
+:root {
+    --cor-corpo-fundo: #2e2e2e;
+    --cor-barra-fundo: #000000;
+    --cor-box-fundo: #1f1f1f;
+    --cor-box-borda: #131313;
+    --fonte-geral-cor: #e5e5e5;
+    --tamanho-sidebar: 80px;
+}
+
+/* --> Corpo da Página */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: var(--cor-corpo-fundo);
+    color: var(--fonte-geral-cor);
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+}
+
+#content {
+    margin-left: var(--tamanho-sidebar);
+}
+
+.page {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    overflow: hidden;
+    margin: 2%;
+}
+
+/* --> Barra Lateral */
+.sidebar {
+    background-color: var(--cor-barra-fundo);
+    height: 100%;
+    left: 0;
+    overflow-x: hidden;
+    position: fixed;
+    top: 0;
+    width: var(--tamanho-sidebar);
+    z-index: 1;
+}
+
+.sidebar a {
+    padding-left: 20px;
+}
+
+.sidebar a img {
+    margin: 10px 0 10px 0;
+}
+
+.sidebar a:hover {
+    filter: invert(83%) sepia(93%) saturate(2367%) hue-rotate(206deg) brightness(70%) contrast(101%);
+}
+
+/* --> Linhas e Colunas */
+.linha {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.coluna {
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.coluna.entregas-esquerda {
+    width: 45%;
+}
+
+.coluna.entregas-rotas {
+    width: 55%;
+}
+
+/* --> Box de Conteúdos */
+.box {
+    background-color: var(--cor-box-fundo);
+    border: solid 2px var(--cor-box-borda);
+    padding: 15px;
+    text-align: left;
+}
+
+.box.entregas-pesquisa {
+    margin-bottom: 15px;
+}
+
+.box.entregas-rotas {
+    margin: 0 0 15px 15px;
+    padding: 15px;
+}
+
+/* --> Elementos Especiais */
+.dropdown {
+    color: black;
+    font-size: 14px;
+}
+
+.botao {
+    background-color: var(--cor-box-borda);
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    color: var(--fonte-geral-cor);
+}
+
+.botao.entregas {
+    height: 40px;
+    width: 25%;
+}
+
+/* --> Página de Entregas */
+
+#entregas-informacoes {
+    padding: 15px 0 15px 0
+}
+
+#entregas-botao-entregue {
+    margin-right: 15px;
+}
+
+#entregas-mapa{
+    height: 55vh;
+}
+
+.entregas-tabela {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.entregas-tabela th, td {
+    border: 1px solid var(--cor-box-borda);
+    padding: 8px;
+}
+
+.entregas-tabela th {
+    background-color: var(--cor-box-borda);
+    font-weight: bold;
+}

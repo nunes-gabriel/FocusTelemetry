@@ -11,13 +11,13 @@ app = Dash(
 
 app.layout = html.Div([
     html.Div(style={"display": "none"}, id="none"),
-    html.Div(className="barra-lateral", children=[
+    html.Ul(className="sidebar", children=[
         dcc.Link(title=pagina["title"], href=pagina["path"], children=html.Img(
-            src=f"./assets/images/icone-{pagina['name']}.svg", width="40px", height="40px"
+            src=f"./assets/icons/icone-{pagina['name']}.svg", width="40px", height="40px"
             ))
         for pagina in dash.page_registry.values()
         ]),
-    html.Div(id="conteudo-pagina", children=dash.page_container)
+    html.Div(id="content", children=dash.page_container)
     ])
 
 if __name__ == "__main__":

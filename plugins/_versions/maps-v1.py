@@ -78,27 +78,18 @@ class GoogleMaps:
         return rotas_organizadas
 
     def __filtro_dataframe(self) -> list[dict]:
-        """Converte os dados da rota para um data frame utilizável pelo Plotly."""
-        def _extrair(lista: list, *itens):
-            for i in itens:
-                lista.extend(i)
-            return lista
-
+        """Converte os dados da rota para um data frame válido pelo Plotly."""
         dataframe = list()
         for rota in self.rota_organizada:
-            coordenadas = [parada["coordenadas"] for parada in rota["paradas"]]
-            coordenadas_extraidas = _extrair([], *coordenadas)
-            dataframe.append({
-                "linhas": {
-                    "nome": f"Rota {rota['index']}",
-                    "lat": [coord["lat"] for coord in coordenadas_extraidas],
-                    "lon": [coord["lon"] for coord in coordenadas_extraidas]
-                    },
-                "pontos": {
-                    "lat": [coord[-1]["lat"] for coord in coordenadas],
-                    "lon": [coord[-1]["lon"] for coord in coordenadas]
-                    }
-                })
+            for pontos in [parada["coordenadas"] for parada in rota["paradas"]]:
+                for ponto in pontos:
+                    dataframe.append({
+                        "Rota": rota["index"],
+                        "Distância": rota["distância"],
+                        "Tempo": rota["duração"],
+                        "Latitude": ponto["lat"],
+                        "Longitude": ponto["lon"]
+                        })
         return dataframe
 
     def __cache_existe(self) -> bool:

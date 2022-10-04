@@ -11,9 +11,13 @@ class BancoDados:
         self.__con.close()
 
     def entregas_busca(self, id_entrega):
-        self.__cur.execute("SELECT * FROM Entregas WHERE id=?", [str(id_entrega)])
+        self.__cur.execute("SELECT * FROM ENTREGAS WHERE id=?", [str(id_entrega)])
         return self.__cur.fetchone()
 
     def entregas_lista(self):
-        self.__cur.execute("SELECT * FROM Entregas")
+        self.__cur.execute("SELECT * FROM ENTREGAS")
+        return self.__cur.fetchall()
+
+    def veiculos_lista(self):
+        self.__cur.execute("SELECT * FROM VEICULO")
         return self.__cur.fetchall()
