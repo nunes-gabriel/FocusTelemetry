@@ -95,6 +95,10 @@ class GoogleMaps:
                     "lon": [coord["lon"] for coord in coordenadas_extraidas]
                     },
                 "pontos": {
+                    "partida": {
+                        "lat": coordenadas[0][0]["lat"],
+                        "lon": coordenadas[0][0]["lon"]
+                        },
                     "lat": [coord[-1]["lat"] for coord in coordenadas],
                     "lon": [coord[-1]["lon"] for coord in coordenadas]
                     }

@@ -31,6 +31,7 @@
     --c-sidebar-fundo: #FCFBFB;
     --c-botao-fundo: #FDFDFD;
     --c-box-borda: #1C1C1C;
+    --c-ponto-paradas: #FDF508;
 
     /* Fontes */
     --f-cor-titulo: #173C85;
@@ -132,6 +133,10 @@ body {
     box-shadow: inset 0 0 6px #00000042; 
 }
 
+.modebar{
+    display: none !important;
+}
+
 /* --> Página de Entregas */
 #entregas--mapa {
     position: absolute;
@@ -204,4 +209,50 @@ body {
 
 #entregas--tabela .left {
     border-right: 1px solid var(--f-cor-texto);
+}
+
+#entregas--legenda {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    left: calc(2% + var(--t-sidebar));
+    bottom: 2%;
+    font-size: 16px ;
+    color: var(--c-botao-fundo);
+}
+
+#entregas--legenda label {
+    display: flex;
+    align-items: center;
+}
+
+.circle {
+    height: 16px;
+    width: 16px;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 5px;
+}
+
+.circle.entregas--partida {
+    background-color: #E8E7E7;
+}
+
+.circle.entregas--paradas {
+    background-color: var(--c-ponto-paradas);
+}
+
+.line {
+    height: 3px;
+    width: 16px;
+    border: none;
+    margin-right: 5px;
+}
+
+.line.entregas--recomendada {
+    background-color: red;
+}
+
+.line.entregas--alternativas {
+    background-color: var(--f-cor-titulo);
 }

@@ -1,6 +1,5 @@
 from dash import html, dcc, Input, Output, State
 from plotly import graph_objects as go
-from plotly import express as px
 
 import database
 import plugins
@@ -33,6 +32,12 @@ def layout():
             html.Button(className="button", id="entregas--botao-entregue", children="Marcar como entregue"),
             html.Br(),
             html.Button(className="button", id="entregas--botao-saida", children="Saiu para entrega")
+            ]),
+        html.Div(id="entregas--legenda", children=[
+            html.Label([html.Span(className="circle entregas--partida"), "Ponto de Partida"]),
+            html.Label([html.Span(className="circle entregas--paradas"), "Ponto de Parada"]),
+            html.Label([html.Hr(className="line entregas--recomendada"), "Rota Recomendada"]),
+            html.Label([html.Hr(className="line entregas--alternativas"), "Rota Alternativa"])
             ])
         ])
 
@@ -53,14 +58,16 @@ def dropdown_callbacks(id_entrega: int):
     def output_mapa(lista_rotas: list[dict]):
         """Retorna um mapa com as diferentes rotas de viagem."""
         mapa = go.Figure()
-        for rota in lista_rotas:
+        for index, rota in enumerate(reversed(lista_rotas)):
             mapa.add_trace(go.Scattermapbox(
                 mode="lines",
                 lon=rota["linhas"]["lon"],
                 lat=rota["linhas"]["lat"],
                 name=rota["linhas"]["nome"],
+                hoverinfo="skip",
                 line={
-                    "color": "#173C85"
+                    "color": "#173C85" if index != len(lista_rotas) - 1 else "red",
+                    "width": 3
                     }
                 ))
         else:
@@ -68,11 +75,21 @@ def dropdown_callbacks(id_entrega: int):
                 mode="markers",
                 lon=rota["pontos"]["lon"],
                 lat=rota["pontos"]["lat"],
-                name="Paradas",
+                name="Parada",
                 marker={
-                    "size": 8,
-                    "color": "#E8E7E7"
+                    "size": 10,
+                    "color": "#FDF508"
                     }
+                )) \
+            .add_trace(go.Scattermapbox(
+                mode="markers",
+                lon=[rota["pontos"]["partida"]["lon"]],
+                lat=[rota["pontos"]["partida"]["lat"]],
+                name="Partida",
+                marker={
+                    "size": 10,
+                    "color": "#E8E7E7"
+                }
                 )) \
             .update_layout(
                 margin={"r": 0, "t": 0, "l": 0, "b": 0},
@@ -85,6 +102,7 @@ def dropdown_callbacks(id_entrega: int):
             .update_traces(showlegend=False)
 
     def output_informacoes(banco: database.BancoDados):
+        """Retorna informações básicas sobre a entrega selecionada."""
         dados = banco.entregas_busca(id_entrega)
         return [
             html.P(f"ID da Entrega: {id_entrega}"),
@@ -99,6 +117,7 @@ def dropdown_callbacks(id_entrega: int):
             ]
 
     def output_tabela(lista_rotas: list[dict]):
+        """Retorna uma tabela com as paradas de entrega da viagem."""
         return html.Tbody([
             html.Tr(children=[
                 html.Td(className="left", children=f"{parada['index']}ª"),
