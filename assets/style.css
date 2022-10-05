@@ -1,14 +1,4 @@
-/*
-  Tabela de Conteúdos:
-  - Imports
-  - Variáveis
-  - Corpo da Página
-  - Barra Lateral
-  - Elementos Especiais
-  - Página de Entregas
-*/
-
-/* --> Imports */
+/* Imports */
 @font-face {
     font-family: PoppinsBold;
     src: url("./fonts/Poppins-Bold.ttf");
@@ -24,45 +14,42 @@
     src: url("./fonts/Inter-Regular.ttf");
 }
 
-/* --> Variáveis */
+/* Variáveis */
 :root {
-    /* Cores */
-    --c-body-fundo: #4C4B4E;
-    --c-sidebar-fundo: #FCFBFB;
-    --c-botao-fundo: #FDFDFD;
-    --c-box-borda: #1C1C1C;
-    --c-ponto-paradas: #FDF508;
-
-    /* Fontes */
-    --f-cor-titulo: #173C85;
-    --f-cor-texto: #4C4B4E;
-
-    /* Medidas */
-    --t-sidebar: 120px;
+    --cor-Preto: #1C1C1C;
+    --cor-Branco: #FCFBFB;
+    --cor-BrancoClaro: #F1F1F1;
+    --cor-BrancoCinzento: #CACACA;
+    --cor-CinzaClaro: #4C4B4E;
+    --cor-CinzaMapa: #262626;
+    --cor-AzulEscuro: #173C85;
+    --cor-AzulClaro: #E5F2FF;
+    --cor-Amarelo: #FDF508;
+    --tamanho-BarraLateral: 120px;
 }
 
-/* --> Corpo da Página */
+/* Geral */
 * {
     margin: 0;
     padding: 0;
 }
 
 body {
-    background-color: var(--c-body-fundo);
+    background-color: var(--cor-CinzaMapa);
     font-family: PoppinsBold;
-    color: var(--f-cor-titulo);
+    color: var(--cor-AzulEscuro);
+    overflow-x: hidden;
 }
 
-#content {
-    margin-left: var(--t-sidebar);
+#conteudo {
+    margin-left: var(--tamanho-BarraLateral);
 }
 
-/* --> Barra Lateral */
-.sidebar {
-    background-color: var(--c-sidebar-fundo);
+/* Barra Lateral */
+#barra-lateral {
+    background-color: var(--cor-Branco);
     height: 100%;
-    width: var(--t-sidebar);
-    overflow-y: hidden;
+    width: var(--tamanho-BarraLateral);
     position: fixed;
     display: flex;
     align-items: center;
@@ -70,26 +57,43 @@ body {
     justify-content: center;
     left: 0;
     top: 0;
+    overflow-y: hidden;
     z-index: 1;
 }
 
-.sidebar a {
+#barra-lateral a {
     margin: 25px;
     padding: 10px;
-    border: 3px solid var(--f-cor-titulo);
+    border: 3px solid var(--cor-AzulEscuro);
     border-radius: 15px;
     display: block;
     max-height: 40px;
 }
 
-.sidebar a:hover {
+#barra-lateral a:hover {
     filter: brightness(0) saturate(100%) invert(0%) sepia(100%) saturate(0%) hue-rotate(307deg) brightness(102%) contrast(102%);
+    background-color: #0000001f;
     cursor: pointer;
 }
 
-/* --> Cards */
+/* Scrollbar */
+::-webkit-scrollbar {
+    width: 12px;
+}
+
+::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 6px #0000004d;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    box-shadow: inset 0 0 6px #00000042;
+}
+
+/* Cards */
 .card {
-    background-color: var(--c-sidebar-fundo);
+    background-color: var(--cor-Branco);
     border-radius: 40px;
     padding: 20px;
     text-align: center;
@@ -98,79 +102,108 @@ body {
 .card p {
     font-family: Inter;
     font-size: 16px;
-    color: var(--f-cor-texto);
+    color: var(--cor-CinzaClaro);
     padding: 5px;
 }
 
-/* --> Elementos Especiais */
-.button {
-    height: 38px;
-    width: 100%;
-    border: 1px solid var(--f-cor-titulo);
+.card.entregas--pesquisa /* Pág. Entregas */ {
+    position: absolute;
+    width: calc(35% - var(--tamanho-BarraLateral));
+    left: calc(2% + var(--tamanho-BarraLateral));
+    top: 2%;
+    animation-name: entregas--pesquisa;
+    animation-duration: 0.8s;
+}
+
+.card.entregas--informacoes /* Pág. Entregas */ {
+    position: absolute;
+    width: calc(35% - var(--tamanho-BarraLateral));
+    top: 2%;
+    right: 2%;
+    animation-name: entregas--informacoes;
+    animation-duration: 0.8s;
+}
+
+.card.veiculos--pesquisa /* Pág. Veículos */ {
+    position: absolute;
+    height: 90%;
+    width: calc(39% - var(--tamanho-BarraLateral));
+    left: calc(2% + var(--tamanho-BarraLateral));
+    top: 2%;
+    animation-name: veiculos--pesquisa;
+    animation-duration: 0.8s;
+}
+
+.card.veiculos--informacoes /* Pág. Veículos */ {
+    display: none;
+    position: absolute;
+    height: 50%;
+    width: calc(58% - var(--tamanho-BarraLateral));
+    right: 2%;
+    top: 2%;
+    animation-name: veiculos--informacoes;
+    animation-duration: 0.8s;
+}
+
+/* Botões */
+.botao {
+    border: 1px solid var(--cor-AzulEscuro);
     border-radius: 50px;
     box-shadow: 0px 2px 8px #00000063;
     font-family: PoppinsRegular;
+    color: var(--cor-AzulEscuro);
+}
+
+.botao.entregas--informacoes /* Pág. Entregas */ {
+    height: 38px;
+    width: 100%;
     font-size: 24px;
-    color: var(--f-cor-titulo);
     margin-top: 15px;
 }
 
-.button:hover {
+.botao:hover {
+    background-color: var(--cor-AzulClaro);
     cursor: pointer;
 }
 
-::-webkit-scrollbar {
-    width: 12px;
-}
-
-::-webkit-scrollbar-track {
-    box-shadow: inset 0 0 6px #0000004d; 
-    border-radius: 10px;
-}
-
-::-webkit-scrollbar-thumb {
-    border-radius: 10px;
-    box-shadow: inset 0 0 6px #00000042; 
-}
-
-.modebar{
+/* Plotly */
+.modebar {
     display: none !important;
 }
 
-/* --> Página de Entregas */
-#entregas--mapa {
-    position: absolute;
-    height: 100%;
-    width: calc(100% - var(--t-sidebar));
-    overflow: hidden;
-    z-index: -1;
+/* Plotly | Dropdown */
+.dropdown {
+    color: var(--cor-CinzaClaro);
 }
 
-#entregas--dropdown {
+.dropdown.entregas--pesquisa /* Pág. Entregas */ {
     font-size: 10px;
-    color: var(--f-cor-texto);
 }
 
-.entregas--pesquisa .Select-control {
+.dropdown.entregas--pesquisa .Select-control /* Pág. Entregas */ {
     border-radius: 10px;
 }
 
-#entregas--checklist {
+/* Plotly | Checklist */
+.checklist.entregas--pesquisa {
     padding-top: 10px;
     font-size: 12px;
 }
 
-#entregas--checklist input {
+.checklist input {
     margin-right: 5px;
 }
 
-.card.entregas--pesquisa {
+/* Entregas | Mapa*/
+#entregas--mapa {
     position: absolute;
-    width: calc(35% - var(--t-sidebar));
-    left: calc(2% + var(--t-sidebar));
-    top: 2%;
+    height: 100%;
+    width: calc(100% - var(--tamanho-BarraLateral));
+    overflow: hidden;
+    z-index: -1;
 }
 
+/* Entregas | Posições */
 #entregas--informacoes {
     line-height: 15px;
     margin-bottom: 20px;
@@ -180,21 +213,21 @@ body {
     font-family: PoppinsBold;
     font-size: 14px;
     text-align: center;
-    color: var(--f-cor-texto);
+    color: var(--cor-CinzaClaro);
 }
 
-.card.entregas--informacoes {
-    position: absolute;
-    width: calc(35% - var(--t-sidebar));
-    right: 2%;
-    top: 2%;
+#entregas--informacoes a {
+    text-decoration: none;
+    color: var(--cor-Preto);
+    border-bottom: 2px solid var(--cor-Preto);
 }
 
+/* Entregas | Tabela */
 #entregas--tabela {
     border-collapse: collapse;
     text-align: left;
     font-size: 14px;
-    color: var(--f-cor-texto);
+    color: var(--cor-CinzaClaro);
 }
 
 #entregas--tabela tbody {
@@ -208,17 +241,18 @@ body {
 }
 
 #entregas--tabela .left {
-    border-right: 1px solid var(--f-cor-texto);
+    border-right: 1px solid var(--cor-CinzaClaro);
 }
 
+/* Entregas | Legenda */
 #entregas--legenda {
     position: absolute;
     display: flex;
     flex-direction: column;
-    left: calc(2% + var(--t-sidebar));
+    left: calc(2% + var(--tamanho-BarraLateral));
     bottom: 2%;
-    font-size: 16px ;
-    color: var(--c-botao-fundo);
+    font-size: 16px;
+    color: var(--cor-Branco);
 }
 
 #entregas--legenda label {
@@ -226,7 +260,7 @@ body {
     align-items: center;
 }
 
-.circle {
+.circulo {
     height: 16px;
     width: 16px;
     border-radius: 50%;
@@ -234,25 +268,47 @@ body {
     margin-right: 5px;
 }
 
-.circle.entregas--partida {
-    background-color: #E8E7E7;
+.circulo.ponto--partida {
+    background-color: var(--cor-BrancoClaro);
 }
 
-.circle.entregas--paradas {
-    background-color: var(--c-ponto-paradas);
+.circulo.ponto--parada {
+    background-color: var(--cor-Amarelo);
 }
 
-.line {
+.linha {
     height: 3px;
     width: 16px;
     border: none;
     margin-right: 5px;
 }
 
-.line.entregas--recomendada {
+.linha.rota--recomendada {
     background-color: red;
 }
 
-.line.entregas--alternativas {
-    background-color: var(--f-cor-titulo);
+.linha.rota--alternativas {
+    background-color: var(--cor-AzulEscuro);
+}
+
+/* Entregas | Animações */
+@keyframes entregas--pesquisa {
+    from {top: -30%;}
+    to   {top: 2%;}
+}
+
+@keyframes entregas--informacoes {
+    from {right: -35%}
+    to   {right: 2%}
+}
+
+/* Veículos | Animações */
+@keyframes veiculos--pesquisa {
+    from {top: -100%;}
+    to   {top: 2%;}
+}
+
+@keyframes veiculos--informacoes {
+    from {right: -40%}
+    to   {right: 2%}
 }

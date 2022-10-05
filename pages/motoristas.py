@@ -8,11 +8,12 @@ import dash
 dash.register_page(
     __name__,
     path="/motoristas",
+    path_template="/motoristas/<cpf_motorista>",
     title="Painel de Motoristas",
     name="motoristas",
     order=3
     )
 
 
-def layout():
+def layout(cpf_motorista=None):
     return html.Div("Motoristas")

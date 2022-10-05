@@ -19,9 +19,9 @@ def layout():
         dcc.Graph(id="entregas--mapa"),
         html.Div(className="card entregas--pesquisa", children=[
             html.H1("Entregas"),
-            html.P("Escolha uma entrega para análise ou registre uma nova entrega no banco de dados."),
-            dcc.Dropdown(className="dropdown", id="entregas--dropdown", value=1, clearable=False),
-            dcc.Checklist(id="entregas--checklist", options=[{"label": "Exibir entregas conclúidas", "value": True}],
+            html.P("Escolha uma entrega para análise ou cadastre uma nova entrega no sistema."),
+            dcc.Dropdown(className="dropdown entregas--pesquisa", id="entregas--dropdown", value=1, clearable=False),
+            dcc.Checklist(className="checklist entregas--pesquisa", id="entregas--checklist", options=[{"label": "Exibir entregas conclúidas", "value": True}],
                 value=[True], inline=True)
             ]),
         html.Div(className="card entregas--informacoes", children=[
@@ -29,15 +29,15 @@ def layout():
             html.Div(id="entregas--informacoes"),
             html.H2("Paradas"),
             html.Table(id="entregas--tabela"),
-            html.Button(className="button", id="entregas--botao-entregue", children="Marcar como entregue"),
+            html.Button(className="botao entregas--informacoes", id="entregas--botao-entregue", children="Marcar como entregue"),
             html.Br(),
-            html.Button(className="button", id="entregas--botao-saida", children="Saiu para entrega")
+            html.Button(className="botao entregas--informacoes", id="entregas--botao-saida", children="Saiu para entrega")
             ]),
         html.Div(id="entregas--legenda", children=[
-            html.Label([html.Span(className="circle entregas--partida"), "Ponto de Partida"]),
-            html.Label([html.Span(className="circle entregas--paradas"), "Ponto de Parada"]),
-            html.Label([html.Hr(className="line entregas--recomendada"), "Rota Recomendada"]),
-            html.Label([html.Hr(className="line entregas--alternativas"), "Rota Alternativa"])
+            html.Label([html.Span(className="circulo ponto--partida"), "Ponto de Partida"]),
+            html.Label([html.Span(className="circulo ponto--parada"), "Ponto de Parada"]),
+            html.Label([html.Hr(className="linha rota--recomendada"), "Rota Recomendada"]),
+            html.Label([html.Hr(className="linha rota--alternativas"), "Rota Alternativa"])
             ])
         ])
 
@@ -77,7 +77,7 @@ def dropdown_callbacks(id_entrega: int):
                 lat=rota["pontos"]["lat"],
                 name="Parada",
                 marker={
-                    "size": 10,
+                    "size": 11,
                     "color": "#FDF508"
                     }
                 )) \
@@ -87,8 +87,8 @@ def dropdown_callbacks(id_entrega: int):
                 lat=[rota["pontos"]["partida"]["lat"]],
                 name="Partida",
                 marker={
-                    "size": 10,
-                    "color": "#E8E7E7"
+                    "size": 11,
+                    "color": "#F1F1F1"
                 }
                 )) \
             .update_layout(
@@ -97,7 +97,8 @@ def dropdown_callbacks(id_entrega: int):
                     "center": {"lon": -53.1805017, "lat": -14.2400732},
                     "style": "carto-darkmatter",
                     "zoom": 4
-                    }
+                    },
+                paper_bgcolor="#262626"
                 ) \
             .update_traces(showlegend=False)
 
@@ -110,8 +111,14 @@ def dropdown_callbacks(id_entrega: int):
             html.P(f"Data de Saída: {dados[9]}"),
             html.P(f"Previsão de Entrega: {dados[10]}"),
             html.Hr(),
-            html.P(f"Placa do Veículo: {dados[1]}"),
-            html.P(f"CPF do Motorista: {dados[2]}"),
+            html.P(children=[
+                "Placa do Veículo: ",
+                dcc.Link(href=f"/veiculos/{dados[1]}", children=dados[1])
+                ]),
+            html.P(children=[
+                "CPF do Motorista: ",
+                dcc.Link(href=f"/motoristas/{dados[2]}", children=dados[2])
+                ]),
             html.P(f"Tipo de Carga: {dados[5]}"),
             html.P(f"Peso da Carga: {dados[6]}kg")
             ]
