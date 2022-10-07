@@ -13,7 +13,7 @@ app.layout = html.Div([
     html.Div(style={"display": "none"}, id="none"),
     html.Ul(id="barra-lateral", children=[
         dcc.Link(title=pagina["title"], href=pagina["relative_path"], children=html.Img(
-            src=f"./assets/icons/icone-{pagina['name']}.svg", width="40px", height="40px"
+            src=app.get_asset_url(f"/icons/icone-{pagina['name']}.svg"), width="40px", height="40px"
             ))
         for pagina in dash.page_registry.values()
         ]),
