@@ -5,6 +5,8 @@ from os import listdir
 import database
 import dash
 
+from database import banco_dados
+
 dash.register_page(
     __name__,
     path="/veiculos",
@@ -117,7 +119,10 @@ def filtrar_veiculos(busca: str, filtro: str):
 def informacoes_veiculo(url: str):
     query = dict()
     veiculo = None
+    entregas = None
+    status = None
 
+    banco_dados = database.BancoDados()
     img_nomes = [img.split(".")[0] for img in listdir("./assets/images/veiculos/")]
     img_arquivos = listdir("./assets/images/veiculos/")
 
@@ -132,18 +137,47 @@ def informacoes_veiculo(url: str):
         if url == "":
             veiculo = _BUSCA()[0]
         else:
-            banco_dados = database.BancoDados()
             veiculo = banco_dados.veiculos_busca(query["placa"])
-            banco_dados.finalizar()
+
+    def _ENTREGA():
+        nonlocal entregas
+        entregas = banco_dados.veiculos_entregas(veiculo[1])
+
+    def _STATUS():
+        nonlocal status
+        entregas_andamento = banco_dados.entregas_andamento()
+        for entrega in entregas_andamento:
+            if veiculo[1] == entrega[1]:
+                status = True
+        else:
+            status = False
 
     _QUERY()
     _VEICULO()
+    _ENTREGA()
+
+    banco_dados.finalizar()
 
     return [
         html.Img(src=dash.get_asset_url(f"/images/veiculos/{img_arquivos[img_nomes.index(veiculo[1])]}"),
-            width="280px", height="325px")
+            width="260px", height="325px")
         if veiculo[1] in img_nomes else
         html.Div(className="sem-imagem veiculos--informacoes", children=html.Img(
             src=dash.get_asset_url("/icons/icone-camera.svg"), width="100px", height="100px"
             )),
+        html.Div(className="conteudo", children=[
+            html.Div(className="informacoes-basicas", children=[
+                html.P(f"Placa: {veiculo[1]}"),
+                html.P(f"Marca: {veiculo[2]}"),
+                html.P(f"Cor do Veículo: {veiculo[3]}"),
+                html.P(f"Ano do Veículo: {veiculo[4]}"),
+                html.P(f"Vencimento dos Documentos: {veiculo[5]}"),
+                html.P(f"Entregas Realizadas: {len(entregas)}")
+                ]),
+            html.Div(className="status", children=[
+                html.P(style={"color": "red"}, children="Veículo em viagem...")
+                if status else
+                html.P(style={"color": "green"}, children="Veículo em espera...")
+                ])
+            ])
         ]

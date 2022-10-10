@@ -171,7 +171,7 @@ body {
     border-bottom-left-radius: 0;
     border-top-left-radius: 0;
     height: 325px;
-    width: 280px;
+    width: 260px;
 }
 
 .card.entregas--pesquisa /* Pág. Entregas */ {
@@ -424,9 +424,36 @@ input {
 }
 
 #veiculos--informacoes img {
-    padding-left: 15px;
     box-shadow: 0px 2px 8px #00000063;
     border-radius: 40px;
+    position: relative;
+    left: 15px;
+}
+
+#veiculos--informacoes .sem-imagem {
+    box-shadow: 0px 2px 8px #00000063;
+    border-radius: 40px;
+    position: relative;
+    left: 15px;
+}
+
+#veiculos--informacoes .sem-imagem img {
+    box-shadow: none;
+    left: 0;
+}
+
+#veiculos--informacoes .conteudo {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    text-align: left;
+    left: 15px;
+    padding-left: 15px;
+}
+
+#veiculos--informacoes .informacoes-basicas p {
+    font-family: PoppinsBold;
+    font-size: 17px;
 }
 
 /* Veículos | Animações */

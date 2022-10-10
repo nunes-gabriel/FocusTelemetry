@@ -18,10 +18,18 @@ class BancoDados:
         self.__cur.execute("SELECT * FROM ENTREGAS")
         return self.__cur.fetchall()
 
+    def entregas_andamento(self):
+        self.__cur.execute("SELECT * FROM ENTREGAS WHERE status='Em andamento...'")
+        return self.__cur.fetchall()
+
     def veiculos_busca(self, placa):
         self.__cur.execute("SELECT * FROM VEICULO WHERE placa=?", [placa])
         return self.__cur.fetchone()
 
     def veiculos_lista(self):
         self.__cur.execute("SELECT * FROM VEICULO")
+        return self.__cur.fetchall()
+
+    def veiculos_entregas(self, placa):
+        self.__cur.execute("SELECT * FROM ENTREGAS WHERE placa=?", [placa])
         return self.__cur.fetchall()
