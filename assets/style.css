@@ -439,3 +439,11 @@ input {
     from {right: calc(-58% - 2% - var(--tamanho-BarraLateral))}
     to   {right: 2%}
 }
+
+#card--entregas-andamento {
+    background-color: var(--cor-Branco);
+    height: 80%;
+    width: 50%;
+    border-radius: 40px;
+    padding: 20px;
+}
