@@ -1,150 +1,449 @@
-/*
-  Tabela de Conteúdos:
-  - Variáveis
-  - Corpo da Página
-  - Barra Lateral
-  - Linhas e Colunas
-  - Box de Conteúdo
-  - Elementos Especiais
-  - Página de Entregas
-*/
-
-/* --> Variáveis */
-:root {
-    --cor-corpo-fundo: #2e2e2e;
-    --cor-barra-fundo: #000000;
-    --cor-box-fundo: #1f1f1f;
-    --cor-box-borda: #131313;
-
-    --fonte-geral-cor: #e5e5e5;
+/* Imports */
+@font-face {
+    font-family: PoppinsBold;
+    src: url("./fonts/Poppins-Bold.ttf");
 }
 
-/* --> Corpo da Página */
+@font-face {
+    font-family: PoppinsRegular;
+    src: url("./fonts/Poppins-Regular.ttf");
+}
+
+@font-face {
+    font-family: Inter;
+    src: url("./fonts/Inter-Regular.ttf");
+}
+
+/* Variáveis */
+:root {
+    --cor-Preto: #1C1C1C;
+    --cor-Branco: #FCFBFB;
+    --cor-BrancoClaro: #F1F1F1;
+    --cor-BrancoCinzento: #CACACA;
+    --cor-CinzaClaro: #4C4B4E;
+    --cor-CinzaMapa: #262626;
+    --cor-AzulEscuro: #173C85;
+    --cor-AzulClaro: #E5F2FF;
+    --cor-Amarelo: #FDF508;
+    --tamanho-BarraLateral: 120px;
+}
+
+/* Geral */
 * {
-    box-sizing: border-box;
     margin: 0;
     padding: 0;
 }
 
 body {
-    background-color: var(--cor-corpo-fundo);
-    color: var(--fonte-geral-cor);
-    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
-}
-
-#conteudo-pagina {
-    margin-left: 80px;
-}
-
-/* --> Barra Lateral */
-.barra-lateral {
-    background-color: var(--cor-barra-fundo);
-    height: 100%;
-    left: 0;
+    background-color: var(--cor-CinzaMapa);
+    font-family: PoppinsBold;
+    color: var(--cor-AzulEscuro);
     overflow-x: hidden;
+}
+
+#conteudo {
+    margin-left: var(--tamanho-BarraLateral);
+}
+
+/* Barra Lateral */
+#barra-lateral {
+    background-color: var(--cor-Branco);
+    height: 100%;
+    width: var(--tamanho-BarraLateral);
     position: fixed;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    left: 0;
     top: 0;
-    width: 80px;
+    overflow-y: hidden;
     z-index: 1;
 }
 
-.barra-lateral a {
-    padding-left: 20px;
+#barra-lateral a {
+    margin: 25px;
+    padding: 10px;
+    border: 3px solid var(--cor-AzulEscuro);
+    border-radius: 15px;
+    display: block;
+    max-height: 40px;
 }
 
-.barra-lateral a img {
-    margin: 10px 0 10px 0;
+#barra-lateral a:hover {
+    filter: brightness(0) saturate(100%) invert(0%) sepia(100%) saturate(0%) hue-rotate(307deg) brightness(102%) contrast(102%);
+    background-color: #0000001f;
+    cursor: pointer;
 }
 
-.barra-lateral a:hover {
-    filter: invert(83%) sepia(93%) saturate(2367%) hue-rotate(206deg) brightness(70%) contrast(101%);
+/* Scrollbar */
+::-webkit-scrollbar {
+    width: 12px;
 }
 
-/* --> Linhas e Colunas */
-.linha {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    overflow: hidden;
+::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 6px #0000004d;
+    border-radius: 10px;
 }
 
-.coluna {
-    flex-direction: column;
-    overflow: hidden;
+::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    box-shadow: inset 0 0 6px #00000042;
 }
 
-.coluna.width45 {
-    width: 45%;
-}
-
-/* --> Box de Conteúdos */
-.box {
-    background-color: var(--cor-box-fundo);
-    border: solid 2px var(--cor-box-borda);
-    padding: 15px;
-}
-
-/* --> Elementos Especiais */
-.dropdown {
-    color: black;
-    font-size: 14px;
-}
-
-/* --> Página de Entregas */
-#pagina-entregas {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    margin: 2%;
-    overflow: hidden;
+/* Linhas (rows) */
+.row {
+    display: inline-block;
+    width: 100%;
     text-align: left;
 }
 
-.box.margem-pesquisa {
-    margin-bottom: 15px;
+/* Cards */
+.card {
+    background-color: var(--cor-Branco);
+    border-radius: 40px;
+    padding: 20px;
+    text-align: center;
 }
 
-#pagina-entregas #box-info-geral-textos {
-    padding: 15px 0 15px 0
+.card p {
+    font-family: Inter;
+    font-size: 16px;
+    color: var(--cor-CinzaClaro);
+    padding: 5px;
 }
 
-#pagina-entregas #box-info-geral .botao {
-    background-color: var(--cor-box-borda);
-    color: var(--fonte-geral-cor);
-    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
-    height: 40px;
-    width: 25%;
+.card-busca {
+    display: flex;
+    border: 2px solid var(--cor-AzulEscuro);
+    border-radius: 20px;
+    width: calc(100% -2px);
+    margin-bottom: 10px;
 }
 
-#pagina-entregas #box-info-geral-entregue {
-    margin-right: 15px;
+.card-busca:hover {
+    background-color: var(--cor-AzulClaro);
 }
 
-/* #04 --> Box do mapa de rotas */
-#pagina-entregas #box-rotas {
-    border: solid 2px var(--cor-box-borda);
-    margin: 0 0 15px 15px;
-    padding: 15px;
-    width: 55%;
+.card-busca img {
+    border-right: 1px solid #ccc;
+    border-bottom-left-radius: 20px;
+    border-top-left-radius: 20px;
+    margin-right: 10px;
 }
 
-/* #05 --> Mapa de rotas */
-#pagina-entregas #box-rotas-mapa{
-    height: 55vh;
+.card-busca p {
+    font-family: PoppinsBold;
+    font-size: 15px;
+    text-align: left;
+    line-height: 12px;
+    margin-left: 12px;
 }
 
-/* #06 --> Tabela de rotas */
-#pagina-entregas .box-rotas-tabela {
-    border-collapse: collapse;
+.card-busca div {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.card-busca .sem-imagem img {
+    margin-right: 0;
+}
+
+.card-busca-link {
+    text-decoration: none;
+}
+
+.sem-imagem {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--cor-BrancoCinzento);
+    border-right: 1px solid #ccc;
+    border-bottom-left-radius: 20px;
+    border-top-left-radius: 20px;
+    margin-right: 10px;
+    height: 135px;
+    width: 120px;
+}
+
+.sem-imagem.veiculos--informacoes {
+    border-bottom-left-radius: 0;
+    border-top-left-radius: 0;
+    height: 325px;
+    width: 280px;
+}
+
+.card.entregas--pesquisa /* Pág. Entregas */ {
+    position: absolute;
+    width: calc(35% - var(--tamanho-BarraLateral));
+    left: calc(2% + var(--tamanho-BarraLateral));
+    top: 2%;
+    animation: entregas--pesquisa 0.8s;
+}
+
+.card.entregas--informacoes /* Pág. Entregas */ {
+    position: absolute;
+    width: calc(35% - var(--tamanho-BarraLateral));
+    top: 2%;
+    right: 2%;
+    animation: entregas--informacoes 0.8s;
+}
+
+.card.veiculos--pesquisa /* Pág. Veículos */ {
+    position: absolute;
+    height: 90%;
+    width: calc(39% - var(--tamanho-BarraLateral));
+    left: calc(2% + var(--tamanho-BarraLateral));
+    top: 2%;
+    animation: veiculos--pesquisa 0.8s;
+}
+
+.card.veiculos--informacoes /* Pág. Veículos */ {
+    position: absolute;
+    height: 45%;
+    width: calc(58% - var(--tamanho-BarraLateral));
+    right: 2%;
+    top: 2%;
+    animation: veiculos--informacoes 0.8s;
+}
+
+/* Botões */
+.botao {
+    border: 1px solid var(--cor-AzulEscuro);
+    border-radius: 50px;
+    box-shadow: 0px 2px 8px #00000063;
+    font-family: PoppinsRegular;
+    color: var(--cor-AzulEscuro);
+}
+
+.botao.entregas--informacoes /* Pág. Entregas */ {
+    height: 38px;
     width: 100%;
+    font-size: 24px;
+    margin-top: 15px;
 }
 
-#pagina-entregas .box-rotas-tabela th, td {
-    border: 1px solid var(--cor-box-borda);
-    padding: 8px;
+.botao:hover {
+    background-color: var(--cor-AzulClaro);
+    cursor: pointer;
 }
 
-#pagina-entregas .box-rotas-tabela th {
-    background-color: var(--cor-box-borda);
-    font-weight: bold;
+/* Plotly */
+.modebar {
+    display: none !important;
+}
+
+/* Plotly | Dropdown */
+.dropdown {
+    color: var(--cor-CinzaClaro);
+}
+
+.dropdown.entregas--pesquisa /* Pág. Entregas */ {
+    font-size: 10px;
+}
+
+.dropdown.entregas--pesquisa .Select-control /* Pág. Entregas */ {
+    border-radius: 10px;
+}
+
+.dropdown.veiculos--pesquisa {
+    font-size: 14px;
+    width: 20%;
+    float: left;
+}
+
+/* Plotly | Input */
+.input {
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    height: 36px;
+    color: var(--cor-CinzaClaro);
+    margin-left: 5px;
+    overflow: hidden;
+}
+
+input {
+    font-family: PoppinsBold;
+    font-weight: normal;
+    font-size: 14px;
+    padding: 7px;
+}
+
+.input.veiculos--pesquisa {
+    width: calc(80% - 5px);
+}
+
+/* Plotly | Checklist */
+.checklist.entregas--pesquisa {
+    padding-top: 10px;
+    font-size: 12px;
+}
+
+.checklist input {
+    margin-right: 5px;
+}
+
+/* Entregas | Mapa*/
+#entregas--mapa {
+    position: absolute;
+    height: 100%;
+    width: calc(100% - var(--tamanho-BarraLateral));
+    overflow: hidden;
+    z-index: -2;
+}
+
+#entregas--mapa-fadeout {
+    background-color: var(--cor-CinzaMapa);
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    opacity: 0;
+    visibility: hidden;
+    overflow: hidden;
+    z-index: -1;
+    animation: entregas--mapa-fadeout 0.8s linear;
+}
+
+/* Entregas | Posições */
+#entregas--informacoes {
+    line-height: 15px;
+    margin-bottom: 20px;
+}
+
+#entregas--informacoes p {
+    font-family: PoppinsBold;
+    font-size: 14px;
+    text-align: center;
+    color: var(--cor-CinzaClaro);
+}
+
+#entregas--informacoes a {
+    text-decoration: none;
+    color: var(--cor-Preto);
+    border-bottom: 2px solid var(--cor-Preto);
+}
+
+/* Entregas | Tabela */
+#entregas--tabela {
+    border-collapse: collapse;
+    text-align: left;
+    font-size: 14px;
+    color: var(--cor-CinzaClaro);
+}
+
+#entregas--tabela tbody {
+    display: block;
+    max-height: 240px;
+    overflow: auto;
+}
+
+#entregas--tabela td {
+    padding: 15px;
+}
+
+#entregas--tabela .left {
+    border-right: 1px solid var(--cor-CinzaClaro);
+}
+
+/* Entregas | Legenda */
+#entregas--legenda {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    left: calc(2% + var(--tamanho-BarraLateral));
+    bottom: 2%;
+    font-size: 16px;
+    color: var(--cor-Branco);
+}
+
+#entregas--legenda label {
+    display: flex;
+    align-items: center;
+}
+
+.circulo {
+    height: 16px;
+    width: 16px;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 5px;
+}
+
+.circulo.ponto--partida {
+    background-color: var(--cor-BrancoClaro);
+}
+
+.circulo.ponto--parada {
+    background-color: var(--cor-Amarelo);
+}
+
+.linha {
+    height: 3px;
+    width: 16px;
+    border: none;
+    margin-right: 5px;
+}
+
+.linha.rota--recomendada {
+    background-color: red;
+}
+
+.linha.rota--alternativas {
+    background-color: var(--cor-AzulEscuro);
+}
+
+/* Entregas | Animações */
+@keyframes entregas--pesquisa {
+    from {top: -30%;}
+    to   {top: 2%;}
+}
+
+@keyframes entregas--informacoes {
+    from {right: calc(-35% - 2% - var(--tamanho-BarraLateral))}
+    to   {right: 2%}
+}
+
+@keyframes entregas--mapa-fadeout {
+    from {opacity: 1; visibility: visible;}
+    to   {opacity: 0; visibility: hidden;}
+}
+
+/* Veículos | Lista */
+#veiculos--lista {
+    margin-top: 10px;
+    max-height: calc(80% - 10px);
+    overflow: auto;
+}
+
+#veiculos--informacoes {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+#veiculos--informacoes img {
+    padding-left: 15px;
+    box-shadow: 0px 2px 8px #00000063;
+    border-radius: 40px;
+}
+
+/* Veículos | Animações */
+@keyframes veiculos--pesquisa {
+    from {top: -100%;}
+    to   {top: 2%;}
+}
+
+@keyframes veiculos--informacoes {
+    from {right: calc(-58% - 2% - var(--tamanho-BarraLateral))}
+    to   {right: 2%}
+}
+
+#card--entregas-andamento {
+    background-color: var(--cor-Branco);
+    height: 80%;
+    width: 50%;
+    border-radius: 40px;
+    padding: 20px;
 }

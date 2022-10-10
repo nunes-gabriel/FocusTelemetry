@@ -1,5 +1,5 @@
 from dash import html, dcc, Input, Output, State
-from plotly import express as px
+from plotly import graph_objects as go
 
 import database
 import plugins
@@ -15,116 +15,151 @@ dash.register_page(
 
 
 def layout():
-    return html.Div(id="pagina-entregas", children=[
-        html.Div(className="linha", children=[
-            html.Div(className="coluna width45", children=[
-                html.Div(className="box margem-pesquisa", children=[
-                    html.H1("Entregas"),
-                    html.P("Escolha uma entrega para análise. Caso queira registrar uma nova entrega acesse o painel do"
-                           "banco de dados."),
-                    dcc.Dropdown(className="dropdown", id="box-pesquisa-dropdown", value=1, clearable=False),
-                    dcc.Checklist(id="box-pesquisa-filtro", options=[{"label": "Exibir entregas conclúidas", "value": True}],
-                                  value=[True], inline=True)
-                    ]),
-                html.Div(className="box", id="box-info-geral", children=[
-                    html.H1("Informações Gerais"),
-                    html.Div(id="box-info-geral-textos"),
-                    html.Div(className="linha", children=[
-                        html.Button(className="botao", id="box-info-geral-entregue", children="Marcar c/ Entregue"),
-                        html.Button(className="botao", id="box-info-geral-saida", children="Saiu p/ Entrega")
-                        ]),
-                    ])
-                ]),
-            html.Div(className="coluna", id="box-rotas", children=[
-                dcc.Graph(id="box-rotas-mapa"),
-                html.Div(className="box", id="box-rotas-tabelas")
-                ])
+    return html.Div(children=[
+        dcc.Graph(id="entregas--mapa"),
+        html.Div(id="entregas--mapa-fadeout"),
+        html.Div(className="card entregas--pesquisa", children=[
+            html.H1("Entregas"),
+            html.P("Escolha uma entrega para análise ou cadastre uma nova entrega no sistema."),
+            dcc.Dropdown(className="dropdown entregas--pesquisa", id="entregas--dropdown", value=1, clearable=False),
+            dcc.Checklist(className="checklist entregas--pesquisa", id="entregas--checklist", options=[{"label": "Exibir entregas conclúidas", "value": True}],
+                value=[True], inline=True)
+            ]),
+        html.Div(className="card entregas--informacoes", children=[
+            html.H1("Informações"),
+            html.Div(id="entregas--informacoes"),
+            html.H2("Paradas"),
+            html.Table(id="entregas--tabela"),
+            html.Button(className="botao entregas--informacoes", id="entregas--botao-entregue", children="Marcar como entregue"),
+            html.Br(),
+            html.Button(className="botao entregas--informacoes", id="entregas--botao-saida", children="Saiu para entrega")
+            ]),
+        html.Div(id="entregas--legenda", children=[
+            html.Label([html.Span(className="circulo ponto--partida"), "Ponto de Partida"]),
+            html.Label([html.Span(className="circulo ponto--parada"), "Ponto de Parada"]),
+            html.Label([html.Hr(className="linha rota--recomendada"), "Rota Recomendada"]),
+            html.Label([html.Hr(className="linha rota--alternativas"), "Rota Alternativa"])
             ])
         ])
 
 
 @dash.callback(
-    [
-        Output("box-rotas-mapa", "figure"),
-        Output("box-rotas-tabelas", "children"),
-        Output("box-info-geral-textos", "children")
-    ],
-    Input("box-pesquisa-dropdown", "value"),
+    Output("entregas--mapa", "figure"),
+    Output("entregas--informacoes", "children"),
+    Output("entregas--tabela", "children"),
+    Input("entregas--dropdown", "value"),
     )
 def dropdown_callbacks(id_entrega: int):
-    """Atualiza a página de entregas conforme o dropdown."""
+    maps = plugins.maps.GoogleMaps(id_entrega)
+    
     banco_dados = database.BancoDados()
-    rotas_entrega = plugins.maps.GoogleMaps(id_entrega)
+    dados_entrega = banco_dados.entregas_busca(id_entrega)
+    banco_dados.finalizar()
 
-    def output_mapa(lista_rotas: list[dict]):
-        """Retorna um mapa com as diferentes rotas de viagem."""
-        return px.line_mapbox(
-            data_frame=lista_rotas,
-            lat="Latitude",
-            lon="Longitude",
-            color="Rota",
-            zoom=6
-            ) \
-            .update_layout(
-            mapbox_style="carto-darkmatter",
-            margin={"r": 0, "t": 0, "l": 0, "b": 0}
-            )
+    def mapa_figure():
+        mapa = go.Figure()
+        rota_final = None
 
-    def output_rotas(lista_rotas: list[dict]):
-        """Retorna uma tabela com informações sobre as rotas de viagem."""
-        layout_rotas = list()
-        for index, rota in enumerate(lista_rotas):
-            layout_rotas.extend([
-                html.H1(f"Rota {rota['index']}"),
-                html.Table(className="box-rotas-tabela", children=[
-                    html.Tr(children=[
-                        html.Th("Ordem Parada"),
-                        html.Th("Endereço"),
-                        html.Th("Distância"),
-                        html.Th("Duração")
-                        ]),
-                    * [html.Tr(children=[
-                        html.Td(parada["index"]),
-                        html.Td(parada["parada"]),
-                        html.Td(parada["distância"]),
-                        html.Td(parada["duração"])
-                        ]) for parada in rota["paradas"]]
-                    ]),
-                ])
-            if index != len(lista_rotas) - 1:
-                layout_rotas.append(html.Hr())
-        return layout_rotas
+        def _LINHAS():
+            nonlocal mapa
+            for index, rota in enumerate(reversed(maps.rota_dataframe)):
+                mapa.add_trace(go.Scattermapbox(
+                    mode="lines",
+                    lon=rota["linhas"]["lon"],
+                    lat=rota["linhas"]["lat"],
+                    name=rota["linhas"]["nome"],
+                    hoverinfo="skip",
+                    line={
+                        "color": "#173C85" if index != len(maps.rota_dataframe) - 1 else "red",
+                        "width": 3
+                        }
+                    ))
+            else:
+                nonlocal rota_final
+                rota_final = rota
 
-    def output_infos_geral(banco: database.BancoDados):
-        dados = banco.entregas_busca(id_entrega)
+        def _PARADAS():
+            nonlocal mapa
+            mapa.add_trace(go.Scattermapbox(
+                mode="markers",
+                lon=rota_final["pontos"]["lon"],
+                lat=rota_final["pontos"]["lat"],
+                name="Parada",
+                marker={
+                    "size": 11,
+                    "color": "#FDF508"
+                    }
+                ))
+
+        def _PARTIDA():
+            nonlocal mapa
+            mapa.add_trace(go.Scattermapbox(
+                mode="markers",
+                lon=[rota_final["pontos"]["partida"]["lon"]],
+                lat=[rota_final["pontos"]["partida"]["lat"]],
+                name="Partida",
+                marker={
+                    "size": 11,
+                    "color": "#F1F1F1"
+                    }
+                ))
+
+        def _LAYOUT():
+            nonlocal mapa
+            mapa.update_layout(
+                margin={"r": 0, "t": 0, "l": 0, "b": 0},
+                mapbox={
+                    "center": {"lon": -53.1805017, "lat": -14.2400732},
+                    "style": "carto-darkmatter",
+                    "zoom": 4
+                    },
+                paper_bgcolor="#262626"
+                ) \
+            .update_traces(showlegend=False)
+
+        _LINHAS()
+        _PARADAS()
+        _PARTIDA()
+        _LAYOUT()
+
+        return mapa
+
+    def informacoes_children():
         return [
-            html.P([html.Strong("ID da Entrega: "), id_entrega]),
-            html.P([html.Strong("Status Atual: "), dados[-2]]),
-            html.P([html.Strong("Feedback: "), dados[-1]]),
-            html.P([html.Strong("Placa do Veículo: "), dados[1]]),
-            html.P([html.Strong("CPF do Motorista: "), dados[2]]),
-            html.P([html.Strong("Data de Saída: "), dados[9]]),
-            html.P([html.Strong("Data Prevista: "), dados[10]]),
-            html.P([html.Strong("Data de Chegada: "), dados[11]]),
-            html.P([html.Strong("Tipo de Carga: "), dados[5]]),
-            html.P([html.Strong("Peso da Carga: "), dados[6], "kg"]),
-            html.P([html.Strong("Valor da Carga: "), "R$", dados[7]]),
-            html.P([html.Strong("Número de Paradas: "), dados[8].split("/").__len__() + 1])
+            html.P(f"ID da Entrega: {id_entrega}"),
+            html.P(f"Status Atual: {dados_entrega[-2]}"),
+            html.P(f"Data de Saída: {dados_entrega[9]}"),
+            html.P(f"Previsão de Entrega: {dados_entrega[10]}"),
+            html.Hr(),
+            html.P(children=[
+                "Placa do Veículo: ",
+                dcc.Link(href=f"/veiculos?placa={dados_entrega[1]}", children=dados_entrega[1])
+                ]),
+            html.P(children=[
+                "CPF do Motorista: ",
+                dcc.Link(href=f"/motoristas?cpf={dados_entrega[2]}", children=dados_entrega[2])
+                ]),
+            html.P(f"Tipo de Carga: {dados_entrega[5]}"),
+            html.P(f"Peso da Carga: {dados_entrega[6]}kg")
             ]
 
-    return (
-        output_mapa(rotas_entrega.rota_dataframe),
-        output_rotas(rotas_entrega.rota_organizada),
-        output_infos_geral(banco_dados)
-        )
+    def tabela_children():
+        return html.Tbody([
+            html.Tr(children=[
+                html.Td(className="left", children=f"{parada['index']}ª"),
+                html.Td(parada['parada'])
+                ])
+            for parada in maps.rota_organizada[0]["paradas"]
+            ])
+
+    return mapa_figure(), informacoes_children(), tabela_children()
 
 
 @dash.callback(
-    Output("box-pesquisa-dropdown", "options"),
-    Input("box-pesquisa-filtro", "value")
+    Output("entregas--dropdown", "options"),
+    Input("entregas--checklist", "value")
     )
 def filtrar_entregas(filtro: bool):
-    """Filtra as entregas já concluídas do dropdown."""
     banco_dados = database.BancoDados()
     opcoes = list()
     for linha in banco_dados.entregas_lista():
@@ -147,11 +182,11 @@ def filtrar_entregas(filtro: bool):
         return opcoes
 
 
-@dash.callback(
-    Output("none", "children"),
-    Input("box-info-geral-entregue", "n_clicks"),
-    State("box-pesquisa-dropdown", "value"),
-    prevent_initial_call=True
-    )
-def marcar_entregue(_, id_entrega: int):
-    return dash.no_update
+# @dash.callback(
+#     Output("none", "children"),
+#     Input("entregas-botao-entregue", "n_clicks"),
+#     State("entregas-dropdown", "value"),
+#     prevent_initial_call=True
+#     )
+# def marcar_entregue(_, id_entrega: int):
+#     return dash.no_update
