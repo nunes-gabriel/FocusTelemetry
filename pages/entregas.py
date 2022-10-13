@@ -14,14 +14,14 @@ dash.register_page(
     )
 
 
-def layout():
+def layout(**query):
     return html.Div(children=[
         dcc.Graph(id="entregas--mapa"),
         html.Div(id="entregas--mapa-fadeout"),
         html.Div(className="card entregas--pesquisa", children=[
             html.H1("Entregas"),
             html.P("Escolha uma entrega para análise ou cadastre uma nova entrega no sistema."),
-            dcc.Dropdown(className="dropdown entregas--pesquisa", id="entregas--dropdown", value=1, clearable=False),
+            dcc.Dropdown(className="dropdown entregas--pesquisa", id="entregas--dropdown", value=query.get("id", 1), clearable=False),
             dcc.Checklist(className="checklist entregas--pesquisa", id="entregas--checklist", options=[{"label": "Exibir entregas conclúidas", "value": True}],
                 value=[True], inline=True)
             ]),

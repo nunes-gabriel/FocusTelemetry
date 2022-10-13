@@ -62,12 +62,12 @@ body {
 }
 
 #barra-lateral a {
-    margin: 25px;
+    margin: 15px;
     padding: 10px;
     border: 3px solid var(--cor-AzulEscuro);
     border-radius: 15px;
     display: block;
-    max-height: 40px;
+    max-height: 35px;
 }
 
 #barra-lateral a:hover {
@@ -134,7 +134,7 @@ body {
 
 .card-busca p {
     font-family: PoppinsBold;
-    font-size: 15px;
+    font-size: 16px;
     text-align: left;
     line-height: 12px;
     margin-left: 12px;
@@ -163,8 +163,8 @@ body {
     border-bottom-left-radius: 20px;
     border-top-left-radius: 20px;
     margin-right: 10px;
-    height: 135px;
-    width: 120px;
+    height: 100px;
+    width: 100px;
 }
 
 .sem-imagem.veiculos--informacoes {
@@ -172,6 +172,7 @@ body {
     border-top-left-radius: 0;
     height: 325px;
     width: 260px;
+    margin-right: 0;
 }
 
 .card.entregas--pesquisa /* Pág. Entregas */ {
@@ -406,8 +407,9 @@ input {
 }
 
 @keyframes entregas--mapa-fadeout {
-    from {opacity: 1; visibility: visible;}
-    to   {opacity: 0; visibility: hidden;}
+    0%   {opacity: 1; visibility: visible;}
+    30%  {opacity: 1; visibility: visible;}
+    100% {opacity: 0; visibility: hidden;}
 }
 
 /* Veículos | Lista */
@@ -454,6 +456,19 @@ input {
 #veiculos--informacoes .informacoes-basicas p {
     font-family: PoppinsBold;
     font-size: 17px;
+}
+
+.status p,
+.status a {
+    font-family: PoppinsBold;
+    font-size: 20px;
+    margin-top: 8px;
+    color: var(--cor-AzulEscuro);
+}
+
+.status a {
+    text-decoration: none;
+    border-bottom: 2px solid var(--cor-AzulEscuro);
 }
 
 /* Veículos | Animações */

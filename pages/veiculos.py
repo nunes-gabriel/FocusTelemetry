@@ -1,11 +1,8 @@
 from dash import html, dcc, Input, Output, State
-from plotly import express as px
 from os import listdir
 
 import database
 import dash
-
-from database import banco_dados
 
 dash.register_page(
     __name__,
@@ -36,9 +33,7 @@ def layout(**query):
 def _OPTIONS():
     return [
         {"label": "Placa", "value": "placa"},
-        {"label": "Marca", "value": "marca"},
-        {"label": "Cor", "value": "cor"},
-        {"label": "Ano", "value": "ano"}
+        {"label": "Marca", "value": "marca"}
         ]
 
 
@@ -67,17 +62,15 @@ def _LISTA(veiculos=None):
     return [
         dcc.Link(className="card-busca-link", href=f"/veiculos?placa={veiculo[1]}", refresh=False, children=[
             html.Div(className="card-busca", children=[
-                html.Img(src=dash.get_asset_url(f"/images/veiculos/{img_arquivos[img_nomes.index(veiculo[1])]}"),
-                    width="120px", height="135px")
+                html.Img(src=dash.get_asset_url(f"images/veiculos/{img_arquivos[img_nomes.index(veiculo[1])]}"),
+                    width="100px", height="100px")
                 if veiculo[1] in img_nomes else
                 html.Div(className="sem-imagem", children=html.Img(
-                    src=dash.get_asset_url("/icons/icone-camera.svg"), width="50px", height="50px"
+                    src=dash.get_asset_url("icons/icone-camera.svg"), width="45px", height="45px"
                     )),
                 html.Div(children=[
                     html.P(f"Placa: {veiculo[1]}"),
-                    html.P(f"Marca: {veiculo[2]}"),
-                    html.P(f"Cor: {veiculo[3]}"),
-                    html.P(f"Ano: {veiculo[4]}")
+                    html.P(f"Marca: {veiculo[2]}")
                     ])
                 ])
             ])
@@ -107,7 +100,7 @@ def filtrar_veiculos(busca: str, filtro: str):
         return _LISTA(veiculos)
     
     def lista_style():
-        return {"padding-right": "5px"} if len(veiculos) > 3 else {"padding-right": "0"}
+        return {"padding-right": "5px"} if len(veiculos) > 4 else {"padding-right": "0"}
 
     return lista_children(), lista_style()
 
@@ -119,8 +112,8 @@ def filtrar_veiculos(busca: str, filtro: str):
 def informacoes_veiculo(url: str):
     query = dict()
     veiculo = None
-    entregas = None
-    status = None
+    em_viagem = None
+    id_entrega = None
 
     banco_dados = database.BancoDados()
     img_nomes = [img.split(".")[0] for img in listdir("./assets/images/veiculos/")]
@@ -139,31 +132,28 @@ def informacoes_veiculo(url: str):
         else:
             veiculo = banco_dados.veiculos_busca(query["placa"])
 
-    def _ENTREGA():
-        nonlocal entregas
-        entregas = banco_dados.veiculos_entregas(veiculo[1])
-
     def _STATUS():
-        nonlocal status
+        nonlocal em_viagem, id_entrega
         entregas_andamento = banco_dados.entregas_andamento()
         for entrega in entregas_andamento:
             if veiculo[1] == entrega[1]:
-                status = True
+                em_viagem = True
+                id_entrega = entrega[0]
         else:
-            status = False
+            em_viagem = False
 
     _QUERY()
     _VEICULO()
-    _ENTREGA()
+    _STATUS()
 
     banco_dados.finalizar()
 
     return [
-        html.Img(src=dash.get_asset_url(f"/images/veiculos/{img_arquivos[img_nomes.index(veiculo[1])]}"),
+        html.Img(src=dash.get_asset_url(f"images/veiculos/{img_arquivos[img_nomes.index(veiculo[1])]}"),
             width="260px", height="325px")
         if veiculo[1] in img_nomes else
         html.Div(className="sem-imagem veiculos--informacoes", children=html.Img(
-            src=dash.get_asset_url("/icons/icone-camera.svg"), width="100px", height="100px"
+            src=dash.get_asset_url("icons/icone-camera.svg"), width="100px", height="100px"
             )),
         html.Div(className="conteudo", children=[
             html.Div(className="informacoes-basicas", children=[
@@ -171,13 +161,12 @@ def informacoes_veiculo(url: str):
                 html.P(f"Marca: {veiculo[2]}"),
                 html.P(f"Cor do Veículo: {veiculo[3]}"),
                 html.P(f"Ano do Veículo: {veiculo[4]}"),
-                html.P(f"Vencimento dos Documentos: {veiculo[5]}"),
-                html.P(f"Entregas Realizadas: {len(entregas)}")
+                html.P(f"Vencimento dos Documentos: {veiculo[5]}")
                 ]),
             html.Div(className="status", children=[
-                html.P(style={"color": "red"}, children="Veículo em viagem...")
-                if status else
-                html.P(style={"color": "green"}, children="Veículo em espera...")
+                dcc.Link(href=f"/entregas?id={id_entrega}", children="Veículo em viagem...")
+                if em_viagem else
+                html.P(children="Veículo em espera...")
                 ])
             ])
         ]
