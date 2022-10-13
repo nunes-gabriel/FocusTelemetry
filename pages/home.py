@@ -19,11 +19,16 @@ dash.register_page(
 def layout():
     return html.Div(children=[
         html.Div(id="card--entregas-andamento", children=[
-            html.Div(className="box--entrega"),
             html.H1("Entragas em andamento"),
-            html.P("Algumas entregas que estaão em andamento no dia"),
+            html.P("Algumas entregas que estão em andamento no dia"),
             dcc.Dropdown(className="dropdown home--andamento"),
-            
-        ])
+            html.Button(className="botao criar-entrega", id="home--criar-entrega", children="Nova Entrega")
+        ]),
+        html.Div(className="card info--geral", children=[
+            html.H1("Informações"),
+            html.Div(id="entregas--informacoes"),
+            html.H2("Paradas"),
+            html.Table(id="entregas--tabela"),
+        ]),
     ])
 

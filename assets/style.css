@@ -443,7 +443,7 @@ input {
 #card--entregas-andamento {
     text-align: center;
     background-color: var(--cor-Branco);
-    height: ;
+    height: 50%;
     width: 50%;
     border-radius: 40px;
     padding: 20px;
