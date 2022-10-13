@@ -20,9 +20,10 @@ def layout(**query):
             html.H1("Veículos"),
             html.P("Escolha um veículo para análise e/ou edição ou cadastre um novo veículo no sistema."),
             html.Div(className="row", children=[
-                dcc.Dropdown(className="dropdown veiculos--pesquisa", id="veiculos--dropdown", options=_OPTIONS(), value="placa", clearable=False),
+                dcc.Dropdown(className="dropdown veiculos--pesquisa", id="veiculos--dropdown", options=_OPTIONS(),
+                             value="placa", clearable=False),
                 dcc.Input(className="input veiculos--pesquisa", id="veiculos--input", type="search", debounce=False,
-                    placeholder="Pesquisar veículo por placa...")
+                          placeholder="Pesquisar veículo por placa...")
                 ]),
             html.Div(id="veiculos--lista", style={"padding-right": "5px"}, children=_LISTA(_BUSCA()))
             ]),
@@ -63,7 +64,7 @@ def _LISTA(veiculos=None):
         dcc.Link(className="card-busca-link", href=f"/veiculos?placa={veiculo[1]}", refresh=False, children=[
             html.Div(className="card-busca", children=[
                 html.Img(src=dash.get_asset_url(f"images/veiculos/{img_arquivos[img_nomes.index(veiculo[1])]}"),
-                    width="100px", height="100px")
+                         width="100px", height="100px")
                 if veiculo[1] in img_nomes else
                 html.Div(className="sem-imagem", children=html.Img(
                     src=dash.get_asset_url("icons/icone-camera.svg"), width="45px", height="45px"
@@ -149,8 +150,8 @@ def informacoes_veiculo(url: str):
     banco_dados.finalizar()
 
     return [
-        html.Img(src=dash.get_asset_url(f"images/veiculos/{img_arquivos[img_nomes.index(veiculo[1])]}"),
-            width="260px", height="325px")
+        html.Img(className="imagem-informacoes", src=dash.get_asset_url(f"images/veiculos/{img_arquivos[img_nomes.index(veiculo[1])]}"),
+                 width="260px", height="325px")
         if veiculo[1] in img_nomes else
         html.Div(className="sem-imagem veiculos--informacoes", children=html.Img(
             src=dash.get_asset_url("icons/icone-camera.svg"), width="100px", height="100px"
@@ -168,5 +169,28 @@ def informacoes_veiculo(url: str):
                 if em_viagem else
                 html.P(children="Veículo em espera...")
                 ])
-            ])
+            ]),
+        html.Div(className="botoes", children=[
+            dcc.ConfirmDialogProvider(id="veiculos--deletar", children=html.Button(
+                className="botao-informacoes", children=html.Img(
+                    src=dash.get_asset_url("icons/icone-lixeira.svg"), width="30px", height="30px"
+                    )
+                )),
+            html.Button(className="botao-informacoes", children=html.Img(
+                src=dash.get_asset_url("icons/icone-editar.svg"), width="30px", height="30px"
+                ))
+            ]),
         ]
+
+
+@dash.callback(
+    Output("veiculos--url", "refresh"),
+    Output("veiculos--url", "pathname"),
+    Input("veiculos--deletar", "submit_n_clicks"),
+    prevent_initial_call=True
+    )
+def deletar_veiculo(submit):
+    if not submit:
+        return dash.no_update
+    else:
+        return True, "/veiculos/"
