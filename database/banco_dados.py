@@ -31,3 +31,7 @@ class BancoDados:
     def veiculos_busca(self, placa):
         self.__cur.execute("SELECT * FROM VEICULO WHERE placa=?", [placa])
         return self.__cur.fetchone()
+
+    def veiculos_deletar(self, placa):
+        self.__cur.execute("DELETE FROM VEICULO WHERE placa=?", [placa])
+        self.__con.commit()

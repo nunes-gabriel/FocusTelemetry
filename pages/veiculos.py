@@ -1,6 +1,7 @@
 from dash import html, dcc, Input, Output, State
 from os import listdir
 
+import dash_bootstrap_components as dbc
 import database
 import dash
 
@@ -20,29 +21,29 @@ def layout(**query):
             html.H1("Veículos"),
             html.P("Escolha um veículo para análise e/ou edição ou cadastre um novo veículo no sistema."),
             html.Div(className="row", children=[
-                dcc.Dropdown(className="dropdown veiculos--pesquisa", id="veiculos--dropdown", options=_OPTIONS(),
+                dcc.Dropdown(className="dropdown veiculos--pesquisa", id="veiculos--dropdown", options=dropdown_options(),
                              value="placa", clearable=False),
                 dcc.Input(className="input veiculos--pesquisa", id="veiculos--input", type="search", debounce=False,
                           placeholder="Pesquisar veículo por placa...")
                 ]),
-            html.Div(id="veiculos--lista", style={"padding-right": "5px"}, children=_LISTA(_BUSCA()))
+            html.Div(id="veiculos--lista", style={"padding-right": "5px"}, children=listar_veiculos(filtro_busca()))
             ]),
         html.Div(className="card veiculos--informacoes", id="veiculos--informacoes")
         ])
 
 
-def _OPTIONS():
+def dropdown_options():
     return [
         {"label": "Placa", "value": "placa"},
         {"label": "Marca", "value": "marca"}
         ]
 
 
-def _BUSCA(busca=None, filtro=None):
+def filtro_busca(busca=None, filtro=None):
     banco_dados = database.BancoDados()
     veiculos = banco_dados.veiculos_lista()
     if busca not in [None, ""]:
-        for index, opcao in enumerate(_OPTIONS()):
+        for index, opcao in enumerate(dropdown_options()):
             if opcao["value"] == filtro:
                 index += 1
                 break
@@ -56,7 +57,7 @@ def _BUSCA(busca=None, filtro=None):
     return veiculos
 
 
-def _LISTA(veiculos=None):
+def listar_veiculos(veiculos=None):
     img_nomes = [img.split(".")[0] for img in listdir("./assets/images/veiculos/")]
     img_arquivos = listdir("./assets/images/veiculos/")
 
@@ -79,12 +80,23 @@ def _LISTA(veiculos=None):
         ]
 
 
+def veiculo_informacoes(query: str):
+    if query == "":
+        veiculo = filtro_busca()[0]
+    else:
+        placa = query.split("?")[1].split("=")[1]
+        banco_dados = database.BancoDados()
+        veiculo = banco_dados.veiculos_busca(placa)
+        banco_dados.finalizar()
+    return veiculo
+
+
 @dash.callback(
     Output("veiculos--input", "placeholder"),
     Input("veiculos--dropdown", "value"),
     prevent_initial_call=True
     )
-def atualizar_placeholder(filtro: str):
+def _placeholder(filtro: str):
     return f"Pesquisar veículo por {filtro}..."
 
 @dash.callback(
@@ -94,11 +106,11 @@ def atualizar_placeholder(filtro: str):
     State("veiculos--dropdown", "value"),
     prevent_initial_call=True
     )
-def filtrar_veiculos(busca: str, filtro: str):
-    veiculos = _BUSCA(busca, filtro)
+def _busca(busca: str, filtro: str):
+    veiculos = filtro_busca(busca, filtro)
 
     def lista_children():
-        return _LISTA(veiculos)
+        return listar_veiculos(veiculos)
     
     def lista_style():
         return {"padding-right": "5px"} if len(veiculos) > 4 else {"padding-right": "0"}
@@ -110,30 +122,18 @@ def filtrar_veiculos(busca: str, filtro: str):
     Output("veiculos--informacoes", "children"),
     Input("veiculos--url", "search")
     )
-def informacoes_veiculo(url: str):
-    query = dict()
-    veiculo = None
+def _informacoes(url: str):
     em_viagem = None
     id_entrega = None
 
+    veiculo = veiculo_informacoes(url)
+
     banco_dados = database.BancoDados()
+
     img_nomes = [img.split(".")[0] for img in listdir("./assets/images/veiculos/")]
     img_arquivos = listdir("./assets/images/veiculos/")
 
-    def _QUERY():
-        nonlocal query
-        for arg in url.split("?")[1:]:
-            var, valor = arg.split("=")
-            query[var] = valor
-
-    def _VEICULO():
-        nonlocal veiculo
-        if url == "":
-            veiculo = _BUSCA()[0]
-        else:
-            veiculo = banco_dados.veiculos_busca(query["placa"])
-
-    def _STATUS():
+    def status_veiculo():
         nonlocal em_viagem, id_entrega
         entregas_andamento = banco_dados.entregas_andamento()
         for entrega in entregas_andamento:
@@ -143,9 +143,7 @@ def informacoes_veiculo(url: str):
         else:
             em_viagem = False
 
-    _QUERY()
-    _VEICULO()
-    _STATUS()
+    status_veiculo()
 
     banco_dados.finalizar()
 
@@ -171,7 +169,7 @@ def informacoes_veiculo(url: str):
                 ])
             ]),
         html.Div(className="botoes", children=[
-            dcc.ConfirmDialogProvider(id="veiculos--deletar", children=html.Button(
+            dcc.ConfirmDialogProvider(id="veiculos--deletar", message="Tem certeza que deseja deletar o veículo selecionado?", children=html.Button(
                 className="botao-informacoes", children=html.Img(
                     src=dash.get_asset_url("icons/icone-lixeira.svg"), width="30px", height="30px"
                     )
@@ -186,11 +184,21 @@ def informacoes_veiculo(url: str):
 @dash.callback(
     Output("veiculos--url", "refresh"),
     Output("veiculos--url", "pathname"),
+    Output("veiculos--url", "search"),
     Input("veiculos--deletar", "submit_n_clicks"),
+    State("veiculos--url", "pathname"),
+    State("veiculos--url", "search"),
     prevent_initial_call=True
     )
-def deletar_veiculo(submit):
+def _deletar(submit, path, query):
     if not submit:
         return dash.no_update
     else:
-        return True, "/veiculos/"
+        banco_dados = database.BancoDados()
+        veiculo = veiculo_informacoes(query=query)
+        banco_dados.veiculos_deletar(veiculo[1])
+        banco_dados.finalizar()
+        if path == "/veiculos/":
+            return True, "/veiculos", ""
+        else:
+            return True, "/veiculos/", ""

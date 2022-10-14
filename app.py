@@ -5,6 +5,7 @@ import dash
 app = Dash(
     __name__,
     use_pages=True,
+    suppress_callback_exceptions=True,
     title="Focus Telemetry",
     update_title="Carregando..."
     )

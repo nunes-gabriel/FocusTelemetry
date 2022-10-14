@@ -437,6 +437,8 @@ input {
 #veiculos--informacoes .sem-imagem {
     box-shadow: 0px 2px 8px #00000063;
     border-radius: 40px;
+    min-width: 260px;
+    max-height: 95%;
     position: relative;
     left: 15px;
 }
@@ -481,8 +483,9 @@ input {
 }
 
 .botao-informacoes {
+    box-shadow: 0px 2px 4px #00000063;
     background-color: var(--cor-Branco);
-    border: 2px solid var(--cor-Preto);
+    border: 2px solid var(--cor-AzulEscuro);
     border-radius: 15px;
     padding: 8px;
     margin-right: 5px;
