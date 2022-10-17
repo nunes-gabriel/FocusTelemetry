@@ -20,18 +20,25 @@ def layout(**query):
         html.Div(className="card veiculos--pesquisa", children=[
             html.H1("Veículos"),
             html.P("Escolha um veículo para análise e/ou edição ou cadastre um novo veículo no sistema."),
-            html.Div(className="row", children=[
+            html.Div(className="row veiculos--pesquisa", children=[
                 dcc.Dropdown(className="dropdown veiculos--pesquisa", id="veiculos--dropdown", options=dropdown_options(),
                              value="placa", clearable=False),
                 dcc.Input(className="input veiculos--pesquisa", id="veiculos--input", type="search", debounce=False,
                           placeholder="Pesquisar veículo por placa..."),
-                html.Button(className="botao-modal-abrir", children=html.Img(
+                html.Button(className="botao-modal-abrir", id="veiculos--modal-abrir", children=html.Img(
                     src=dash.get_asset_url("icons/icone-adicionar.svg"), width="32px", height="32px"
                     ))
                 ]),
             html.Div(id="veiculos--lista", style={"padding-right": "5px"}, children=listar_veiculos(filtro_busca()))
             ]),
-        html.Div(className="card veiculos--informacoes", id="veiculos--informacoes")
+        html.Div(className="card veiculos--informacoes", id="veiculos--informacoes"),
+        dbc.Modal(class_name="card modal", id="veiculos--modal", is_open=False, children=[
+            dbc.ModalHeader(dbc.ModalTitle("Teste")),
+            dbc.ModalBody("Centro do modal."),
+            dbc.ModalFooter(
+                html.Button(className="botao-modal-fechar", n_clicks=0, id="veiculos--modal-fechar")
+                )
+            ])
         ])
 
 
@@ -180,13 +187,6 @@ def _informacoes(url: str):
             html.Button(className="botao-informacoes", children=html.Img(
                 src=dash.get_asset_url("icons/icone-editar.svg"), width="30px", height="30px"
                 ))
-            ]),
-        dbc.Modal(id="veiculos--modal", is_open=False, children=[
-            dbc.ModalHeader(dbc.ModalTitle("Teste")),
-            dbc.ModalBody("Centro do modal."),
-            dbc.ModalFooter(
-                html.Button(className="botao-modal-fechar", n_clicks=0, id="veiculos--modal-fechar")
-                )
             ])
         ]
 
@@ -212,3 +212,17 @@ def _deletar(submit, path, query):
             return True, "/veiculos", ""
         else:
             return True, "/veiculos/", ""
+
+
+@dash.callback(
+    Output("veiculos--modal", "is_open"),
+    [
+        Input("veiculos--modal-abrir", "n_clicks"),
+        Input("veiculos--modal-fechar", "n_clicks")
+    ],
+    State("veiculos--modal", "is_open"),
+    )
+def toggle_modal(abrir, fechar, aberto):
+    if abrir or fechar:
+        return not aberto
+    return aberto
