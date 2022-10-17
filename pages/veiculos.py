@@ -24,7 +24,10 @@ def layout(**query):
                 dcc.Dropdown(className="dropdown veiculos--pesquisa", id="veiculos--dropdown", options=dropdown_options(),
                              value="placa", clearable=False),
                 dcc.Input(className="input veiculos--pesquisa", id="veiculos--input", type="search", debounce=False,
-                          placeholder="Pesquisar veículo por placa...")
+                          placeholder="Pesquisar veículo por placa..."),
+                html.Button(className="botao-modal-abrir", children=html.Img(
+                    src=dash.get_asset_url("icons/icone-adicionar.svg"), width="32px", height="32px"
+                    ))
                 ]),
             html.Div(id="veiculos--lista", style={"padding-right": "5px"}, children=listar_veiculos(filtro_busca()))
             ]),
@@ -170,7 +173,7 @@ def _informacoes(url: str):
             ]),
         html.Div(className="botoes", children=[
             dcc.ConfirmDialogProvider(id="veiculos--deletar", message="Tem certeza que deseja deletar o veículo selecionado?", children=html.Button(
-                className="botao-informacoes", children=html.Img(
+                className="botao-informacoes deletar", children=html.Img(
                     src=dash.get_asset_url("icons/icone-lixeira.svg"), width="30px", height="30px"
                     )
                 )),
@@ -178,6 +181,13 @@ def _informacoes(url: str):
                 src=dash.get_asset_url("icons/icone-editar.svg"), width="30px", height="30px"
                 ))
             ]),
+        dbc.Modal(id="veiculos--modal", is_open=False, children=[
+            dbc.ModalHeader(dbc.ModalTitle("Teste")),
+            dbc.ModalBody("Centro do modal."),
+            dbc.ModalFooter(
+                html.Button(className="botao-modal-fechar", n_clicks=0, id="veiculos--modal-fechar")
+                )
+            ])
         ]
 
 

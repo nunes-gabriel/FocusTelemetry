@@ -231,6 +231,15 @@ body {
     cursor: pointer;
 }
 
+.botao-modal-abrir {
+    width: 36px;
+    height: 36px;
+}
+
+.botao-modal-abrir img {
+    display: block;
+}
+
 /* Plotly */
 .modebar {
     display: none !important;
@@ -274,7 +283,8 @@ input {
 }
 
 .input.veiculos--pesquisa {
-    width: calc(80% - 5px);
+    width: calc(80% - 46px);
+    margin-right: 5px;
 }
 
 /* Plotly | Checklist */
