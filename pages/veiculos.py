@@ -25,20 +25,62 @@ def layout(**query):
                              value="placa", clearable=False),
                 dcc.Input(className="input veiculos--pesquisa", id="veiculos--input", type="search", debounce=False,
                           placeholder="Pesquisar veículo por placa..."),
-                html.Button(className="botao-modal-abrir", id="veiculos--modal-abrir", children=html.Img(
+                html.Button(className="botao-modal-abrir", n_clicks=0, id="veiculos--modal-abrir-novo", children=html.Img(
                     src=dash.get_asset_url("icons/icone-adicionar.svg"), width="32px", height="32px"
                     ))
                 ]),
             html.Div(id="veiculos--lista", style={"padding-right": "5px"}, children=listar_veiculos(filtro_busca()))
             ]),
         html.Div(className="card veiculos--informacoes", id="veiculos--informacoes"),
-        dbc.Modal(class_name="card modal", id="veiculos--modal", is_open=False, children=[
-            dbc.ModalHeader(dbc.ModalTitle("Teste")),
-            dbc.ModalBody("Centro do modal."),
-            dbc.ModalFooter(
-                html.Button(className="botao-modal-fechar", n_clicks=0, id="veiculos--modal-fechar")
-                )
-            ])
+        html.Div(className="modal", style={"visibility": "hidden"}, id="veiculos--modal", children=[
+            html.Button(className="backdrop", n_clicks=0, id="veiculos--modal-backdrop"),
+            html.Div(className="modal-conteudo card", id="veiculos--modal-conteudo", children=[
+                html.Button(className="botao-modal-fechar", n_clicks=0, id="veiculos--modal-fechar", children=html.Img(
+                    src=dash.get_asset_url("icons/icone-fechar.svg"), width="30px", height="30px"
+                    )),
+                html.H1("Registrar Veículo"),
+                html.Div(className="inputs", children=[
+                    html.Label([
+                        "Placa: ",
+                        dcc.Input(className="input cadastro", type="text", maxLength=8, id="veiculos--cadastro-placa")
+                        ]),
+                    html.Label([
+                        "Marca: ",
+                        dcc.Input(className="input cadastro", type="text", id="veiculos--cadastro-marca")
+                        ]),
+                    html.Label([
+                        "Tipo de Veículo: ",
+                        dcc.Dropdown(className="dropdown cadastro", options=[{"label": "Tração", "value": "Tração"}], value="Tração",
+                                     id="veiculos--cadastro-tipo-veiculo")
+                        ]),
+                    html.Label([
+                        "Cor: ",
+                        dcc.Input(className="input cadastro", type="text", id="veiculos--cadastro-cor")
+                        ]),
+                    html.Label([
+                        "RENAVAM: ",
+                        dcc.Input(className="input cadastro", type="text", pattern=u"[0-9]+", maxLength=11, id="veiculos--cadastro-renavam")
+                        ]),
+                    html.Label([
+                        "Ano: ",
+                        dcc.Input(className="input cadastro", type="number", min=1980, id="veiculos--cadastro-ano")
+                        ]),
+                    html.Label([
+                        "Tipo de Carroceria: ",
+                        dcc.Dropdown(className="dropdown cadastro", id="veiculos--cadastro-tipo-carroceria", value="Aberta", options=[
+                            {"label": "Aberta", "value": "Aberta"},
+                            {"label": "Báu Fechado ", "value": "Báu Fechado "},
+                            {"label": "Báu Frigorificado", "value": "Báu Frigorificado"},
+                            {"label": "Cegonha ", "value": "Cegonha "},
+                            {"label": "Granaleira", "value": "Granaleira"},
+                            {"label": "Porta-Container", "value": "Porta-Container"},
+                            {"label": "Sider", "value": "Sider"},
+                            {"label": "Tanque ", "value": "Tanque "}
+                            ])
+                        ]),
+                    ])
+                ])
+            ]),
         ])
 
 
@@ -106,7 +148,7 @@ def veiculo_informacoes(query: str):
     Input("veiculos--dropdown", "value"),
     prevent_initial_call=True
     )
-def _placeholder(filtro: str):
+def placeholder(filtro: str):
     return f"Pesquisar veículo por {filtro}..."
 
 @dash.callback(
@@ -116,7 +158,7 @@ def _placeholder(filtro: str):
     State("veiculos--dropdown", "value"),
     prevent_initial_call=True
     )
-def _busca(busca: str, filtro: str):
+def busca(busca: str, filtro: str):
     veiculos = filtro_busca(busca, filtro)
 
     def lista_children():
@@ -132,7 +174,7 @@ def _busca(busca: str, filtro: str):
     Output("veiculos--informacoes", "children"),
     Input("veiculos--url", "search")
     )
-def _informacoes(url: str):
+def informacoes(url: str):
     em_viagem = None
     id_entrega = None
 
@@ -142,18 +184,6 @@ def _informacoes(url: str):
 
     img_nomes = [img.split(".")[0] for img in listdir("./assets/images/veiculos/")]
     img_arquivos = listdir("./assets/images/veiculos/")
-
-    def status_veiculo():
-        nonlocal em_viagem, id_entrega
-        entregas_andamento = banco_dados.entregas_andamento()
-        for entrega in entregas_andamento:
-            if veiculo[1] == entrega[1]:
-                em_viagem = True
-                id_entrega = entrega[0]
-        else:
-            em_viagem = False
-
-    status_veiculo()
 
     banco_dados.finalizar()
 
@@ -168,23 +198,26 @@ def _informacoes(url: str):
             html.Div(className="informacoes-basicas", children=[
                 html.P(f"Placa: {veiculo[1]}"),
                 html.P(f"Marca: {veiculo[2]}"),
-                html.P(f"Cor do Veículo: {veiculo[3]}"),
-                html.P(f"Ano do Veículo: {veiculo[4]}"),
-                html.P(f"Vencimento dos Documentos: {veiculo[5]}")
+                html.P(f"Cor: {veiculo[4]}"),
+                html.P(f"Tipo de Veículo: {veiculo[3]}"),
+                html.P(f"Tipo de Carroceria: {veiculo[7]}"),
+                html.P(f"RENAVAM: {veiculo[5]}"),
+                html.P(f"Ano: {veiculo[6]}"),
+                html.P(f"Altura: {float(veiculo[8]):.2f}m")
                 ]),
             html.Div(className="status", children=[
                 dcc.Link(href=f"/entregas?id={id_entrega}", children="Veículo em viagem...")
-                if em_viagem else
-                html.P(children="Veículo em espera...")
+                if veiculo[-1] == "Em Viagem " else
+                html.P(children=f"Veículo {veiculo[-1].strip().lower()}...")
                 ])
             ]),
         html.Div(className="botoes", children=[
             dcc.ConfirmDialogProvider(id="veiculos--deletar", message="Tem certeza que deseja deletar o veículo selecionado?", children=html.Button(
-                className="botao-informacoes deletar", children=html.Img(
+                n_clicks=0, className="botao-informacoes deletar", children=html.Img(
                     src=dash.get_asset_url("icons/icone-lixeira.svg"), width="30px", height="30px"
                     )
                 )),
-            html.Button(className="botao-informacoes", children=html.Img(
+            html.Button(className="botao-informacoes", n_clicks=0, id="veiculos--modal-abrir-edicao", children=html.Img(
                 src=dash.get_asset_url("icons/icone-editar.svg"), width="30px", height="30px"
                 ))
             ])
@@ -200,7 +233,7 @@ def _informacoes(url: str):
     State("veiculos--url", "search"),
     prevent_initial_call=True
     )
-def _deletar(submit, path, query):
+def deletar(submit, path, query):
     if not submit:
         return dash.no_update
     else:
@@ -215,14 +248,19 @@ def _deletar(submit, path, query):
 
 
 @dash.callback(
-    Output("veiculos--modal", "is_open"),
-    [
-        Input("veiculos--modal-abrir", "n_clicks"),
-        Input("veiculos--modal-fechar", "n_clicks")
-    ],
-    State("veiculos--modal", "is_open"),
+    Output("veiculos--modal", "style"),
+    Input("veiculos--modal-abrir-novo", "n_clicks"),
+    Input("veiculos--modal-abrir-edicao", "n_clicks"),
+    Input("veiculos--modal-backdrop", "n_clicks"),
+    Input("veiculos--modal-fechar", "n_clicks"), 
+    State("veiculos--modal", "style"),
+    prevent_initial_call=True
     )
-def toggle_modal(abrir, fechar, aberto):
-    if abrir or fechar:
-        return not aberto
-    return aberto
+def abrir_modal(b1, b2, b3, b4, modal):
+    if b1 or b2 or b3 or b4:
+        if modal["visibility"] == "hidden":
+            return {"visibility": "visible"}
+        else:
+            return {"visibility": "hidden"}
+    else:
+        return dash.no_update

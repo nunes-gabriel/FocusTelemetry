@@ -303,3 +303,13 @@ def filtrar_veiculos(busca: str, filtro: str):
     _BUSCA()
 
     return lista_children(), lista_style()
+
+    def status_veiculo():
+        nonlocal em_viagem, id_entrega
+        entregas_andamento = banco_dados.entregas_andamento()
+        for entrega in entregas_andamento:
+            if veiculo[1] == entrega[1]:
+                em_viagem = True
+                id_entrega = entrega[0]
+        else:
+            em_viagem = False

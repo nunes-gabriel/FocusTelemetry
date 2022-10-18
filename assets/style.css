@@ -216,8 +216,51 @@ body {
 
 /* Modal */
 .modal {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    left: 0;
+    z-index: 1;
+}
+
+.modal-conteudo {
+    position: relative;
+    height: 70%;
+    width: 50%;
+    z-index: 3;
+}
+
+.modal .inputs {
+    text-align: left;
+}
+
+.modal .inputs label {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin: 10px;
+}
+
+.modal .inputs label::before {
+    content: "";
+    display: block;
+}
+
+.backdrop {
+    background-color: #0000006d;
     position: absolute;
+    border: none;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    left: 0;
     z-index: 2;
+    align-items: center;
+    justify-content: center;
 }
 
 /* Botões */
@@ -256,6 +299,27 @@ body {
 }
 
 .botao-modal-abrir img {
+    display: block;
+}
+
+.botao-modal-fechar {
+    box-shadow: 0px 2px 4px #00000063;
+    background-color: var(--cor-Branco);
+    border: 2px solid var(--cor-AzulEscuro);
+    border-radius: 15px;
+    padding: 8px;
+    margin-right: 5px;
+    position: absolute;
+    top: 25px;
+    right: 25px;
+}
+
+.botao-modal-fechar:hover {
+    background-color: var(--cor-AzulClaro);
+    cursor: pointer;
+}
+
+.botao-modal-fechar img {
     display: block;
 }
 
@@ -308,14 +372,19 @@ body {
     float: left;
 }
 
+.dropdown.cadastro {
+    margin-left: 5px;
+    display: inline-block;
+    width: 100%;
+    height: 39px;
+}
+
 /* Plotly | Input */
 .input {
     background-color: #fff;
     border: 1px solid #ccc;
     border-radius: 4px;
-    height: 36px;
     color: var(--cor-CinzaClaro);
-    margin-left: 5px;
     overflow: hidden;
 }
 
@@ -329,8 +398,15 @@ input {
 .input.veiculos--pesquisa {
     width: calc(80% - 46px);
     margin-right: 5px;
+    margin-left: 5px;
+    height: 36px;
     position: relative;
     top: -11.5px;
+}
+
+.input.cadastro {
+    height: 23px;
+    margin-left: 5px;
 }
 
 /* Plotly | Checklist */
@@ -515,7 +591,7 @@ input {
 
 #veiculos--informacoes .informacoes-basicas p {
     font-family: PoppinsBold;
-    font-size: 17px;
+    font-size: 14px;
 }
 
 .status p,
