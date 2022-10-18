@@ -21,8 +21,8 @@ def layout(**query):
             html.H1("Veículos"),
             html.P("Escolha um veículo para análise e/ou edição ou cadastre um novo veículo no sistema."),
             html.Div(className="row veiculos--pesquisa", children=[
-                dcc.Dropdown(className="dropdown veiculos--pesquisa", id="veiculos--dropdown", options=dropdown_options(),
-                             value="placa", clearable=False),
+                dcc.Dropdown(className="dropdown veiculos--pesquisa", id="veiculos--dropdown",
+                             options=dropdown_options(), value="placa", clearable=False),
                 dcc.Input(className="input veiculos--pesquisa", id="veiculos--input", type="search", debounce=False,
                           placeholder="Pesquisar veículo por placa..."),
                 html.Button(className="botao-modal-abrir", n_clicks=0, id="veiculos--modal-abrir-novo", children=html.Img(
@@ -34,50 +34,96 @@ def layout(**query):
         html.Div(className="card veiculos--informacoes", id="veiculos--informacoes"),
         html.Div(className="modal", style={"visibility": "hidden"}, id="veiculos--modal", children=[
             html.Button(className="backdrop", n_clicks=0, id="veiculos--modal-backdrop"),
-            html.Div(className="modal-conteudo card", id="veiculos--modal-conteudo", children=[
-                html.Button(className="botao-modal-fechar", n_clicks=0, id="veiculos--modal-fechar", children=html.Img(
-                    src=dash.get_asset_url("icons/icone-fechar.svg"), width="30px", height="30px"
-                    )),
+            html.Div(className="modal-conteudo card veiculo", id="veiculos--modal-conteudo", children=[
                 html.H1("Registrar Veículo"),
-                html.Div(className="inputs", children=[
-                    html.Label([
-                        "Placa: ",
-                        dcc.Input(className="input cadastro", type="text", maxLength=8, id="veiculos--cadastro-placa")
-                        ]),
-                    html.Label([
-                        "Marca: ",
-                        dcc.Input(className="input cadastro", type="text", id="veiculos--cadastro-marca")
-                        ]),
-                    html.Label([
-                        "Tipo de Veículo: ",
-                        dcc.Dropdown(className="dropdown cadastro", options=[{"label": "Tração", "value": "Tração"}], value="Tração",
-                                     id="veiculos--cadastro-tipo-veiculo")
-                        ]),
-                    html.Label([
-                        "Cor: ",
-                        dcc.Input(className="input cadastro", type="text", id="veiculos--cadastro-cor")
-                        ]),
-                    html.Label([
-                        "RENAVAM: ",
-                        dcc.Input(className="input cadastro", type="text", pattern=u"[0-9]+", maxLength=11, id="veiculos--cadastro-renavam")
-                        ]),
-                    html.Label([
-                        "Ano: ",
-                        dcc.Input(className="input cadastro", type="number", min=1980, id="veiculos--cadastro-ano")
-                        ]),
-                    html.Label([
-                        "Tipo de Carroceria: ",
-                        dcc.Dropdown(className="dropdown cadastro", id="veiculos--cadastro-tipo-carroceria", value="Aberta", options=[
-                            {"label": "Aberta", "value": "Aberta"},
-                            {"label": "Báu Fechado ", "value": "Báu Fechado "},
-                            {"label": "Báu Frigorificado", "value": "Báu Frigorificado"},
-                            {"label": "Cegonha ", "value": "Cegonha "},
-                            {"label": "Granaleira", "value": "Granaleira"},
-                            {"label": "Porta-Container", "value": "Porta-Container"},
-                            {"label": "Sider", "value": "Sider"},
-                            {"label": "Tanque ", "value": "Tanque "}
+                html.Form(className="inputs", children=[
+                    html.Div(className="row cadastro", children=[
+                        html.Label([
+                            html.Span("Placa"),
+                            dcc.Input(className="input cadastro", type="text", maxLength=8, id="veiculos--cadastro-placa")
                             ])
                         ]),
+                    html.Div(className="row cadastro", children=[
+                        html.Label([
+                            html.Span("Marca: "),
+                            dcc.Input(className="input cadastro", type="text", id="veiculos--cadastro-marca")
+                            ])
+                        ]),
+                    html.Div(className="row cadastro", children=[
+                        html.Label([
+                            html.Span("Tipo de Veículo: "),
+                            dcc.Dropdown(className="dropdown cadastro", clearable=False, options=[{"label": "Tração", "value": "Tração"}],
+                                         value="Tração", id="veiculos--cadastro-tipo-veiculo")
+                            ])
+                        ]),
+                    html.Div(className="row cadastro", children=[
+                        html.Label([
+                            html.Span("Cor: "),
+                            dcc.Input(className="input cadastro", type="text", id="veiculos--cadastro-cor")
+                            ])
+                        ]),
+                    html.Div(className="row cadastro", children=[
+                        html.Label([
+                            html.Span("RENAVAM: "),
+                            dcc.Input(className="input cadastro", type="text", pattern=u"[0-9]+", maxLength=11,
+                                      id="veiculos--cadastro-renavam")
+                            ])
+                        ]),
+                    html.Div(className="row cadastro", children=[
+                        html.Label([
+                            html.Span("Ano: "),
+                            dcc.Input(className="input cadastro", type="number", min=1980, id="veiculos--cadastro-ano")
+                            ])
+                        ]),
+                    html.Div(className="row cadastro", children=[
+                        html.Label([
+                            html.Span("Tipo de Carroceria: "),
+                            dcc.Dropdown(className="dropdown cadastro", clearable=False, id="veiculos--cadastro-tipo-carroceria", value="Aberta", options=[
+                                    {"label": "Aberta", "value": "Aberta"},
+                                    {"label": "Báu Fechado ", "value": "Báu Fechado "},
+                                    {"label": "Báu Frigorificado", "value": "Báu Frigorificado"},
+                                    {"label": "Cegonha ", "value": "Cegonha "},
+                                    {"label": "Granaleira", "value": "Granaleira"},
+                                    {"label": "Porta-Container", "value": "Porta-Container"},
+                                    {"label": "Sider", "value": "Sider"},
+                                    {"label": "Tanque ", "value": "Tanque "}
+                                ])
+                            ])
+                        ]),
+                    html.Div(className="row cadastro", children=[
+                        html.Label([
+                            html.Span("Altura(m): "),
+                            dcc.Input(className="input cadastro", type="number", id="veiculos--cadastro-altura")
+                            ])
+                        ]),
+                    html.Div(className="row cadastro", children=[
+                        html.Label([
+                            html.Span("Largura(m): "),
+                            dcc.Input(className="input cadastro", type="number", id="veiculos--cadastro-largura")
+                            ])
+                        ]),
+                    html.Div(className="row cadastro", children=[
+                        html.Label([
+                            html.Span("Comprimento(m): "),
+                            dcc.Input(className="input cadastro", type="number", id="veiculos--cadastro-comprimento")
+                            ])
+                        ]),
+                    html.Div(className="row cadastro", children=[
+                        html.Label([
+                            html.Span("Tara(kg): "),
+                            dcc.Input(className="input cadastro", type="number", id="veiculos--cadastro-tara")
+                            ])
+                        ]),
+                    html.Div(className="row cadastro", children=[
+                        html.Label([
+                            html.Span("Capacidade(kg): "),
+                            dcc.Input(className="input cadastro", type="number", id="veiculos--cadastro-capacidade")
+                            ])
+                        ])
+                    ]),
+                html.Div(className="row cadastro-botoes", children=[
+                    html.Button(className="botao modal-cadastro", n_clicks=0, id="veiculos--modal-confirmar", children="Confirmar"),
+                    html.Button(className="botao modal-cadastro", n_clicks=0, id="veiculos--modal-cancelar", children="Cancelar")
                     ])
                 ])
             ]),
@@ -163,7 +209,7 @@ def busca(busca: str, filtro: str):
 
     def lista_children():
         return listar_veiculos(veiculos)
-    
+
     def lista_style():
         return {"padding-right": "5px"} if len(veiculos) > 4 else {"padding-right": "0"}
 
@@ -252,7 +298,7 @@ def deletar(submit, path, query):
     Input("veiculos--modal-abrir-novo", "n_clicks"),
     Input("veiculos--modal-abrir-edicao", "n_clicks"),
     Input("veiculos--modal-backdrop", "n_clicks"),
-    Input("veiculos--modal-fechar", "n_clicks"), 
+    Input("veiculos--modal-cancelar", "n_clicks"),
     State("veiculos--modal", "style"),
     prevent_initial_call=True
     )
