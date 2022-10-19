@@ -18,21 +18,21 @@ def layout(**query):
     return html.Div(children=[
         dcc.Graph(id="entregas--mapa"),
         html.Div(id="entregas--mapa-fadeout"),
-        html.Div(className="card entregas--pesquisa", children=[
+        html.Div(className="card search-A", children=[
             html.H1("Entregas"),
             html.P("Escolha uma entrega para análise ou cadastre uma nova entrega no sistema."),
-            dcc.Dropdown(className="dropdown entregas--pesquisa", id="entregas--dropdown", value=query.get("id", 1), clearable=False),
-            dcc.Checklist(className="checklist entregas--pesquisa", id="entregas--checklist", options=[{"label": "Exibir entregas conclúidas", "value": True}],
+            dcc.Dropdown(className="dropdown search-A", id="entregas--dropdown", value=query.get("id", 1), clearable=False),
+            dcc.Checklist(className="checklist search-A", id="entregas--checklist", options=[{"label": "Exibir entregas conclúidas", "value": True}],
                 value=[True], inline=True)
             ]),
-        html.Div(className="card entregas--informacoes", children=[
+        html.Div(className="card infos-A", children=[
             html.H1("Informações"),
             html.Div(id="entregas--informacoes"),
             html.H2("Paradas"),
             html.Table(id="entregas--tabela"),
-            html.Button(className="botao entregas--informacoes", id="entregas--botao-entregue", children="Marcar como entregue"),
+            html.Button(className="button infos-A click", id="entregas--botao-entregue", children="Marcar como entregue"),
             html.Br(),
-            html.Button(className="botao entregas--informacoes", id="entregas--botao-saida", children="Saiu para entrega")
+            html.Button(className="button infos-A click", id="entregas--botao-saida", children="Saiu para entrega")
             ]),
         html.Div(id="entregas--legenda", children=[
             html.Label([html.Span(className="circulo ponto--partida"), "Ponto de Partida"]),
@@ -180,13 +180,3 @@ def filtrar_entregas(filtro: bool):
     else:
         banco_dados.finalizar()
         return opcoes
-
-
-# @dash.callback(
-#     Output("none", "children"),
-#     Input("entregas-botao-entregue", "n_clicks"),
-#     State("entregas-dropdown", "value"),
-#     prevent_initial_call=True
-#     )
-# def marcar_entregue(_, id_entrega: int):
-#     return dash.no_update

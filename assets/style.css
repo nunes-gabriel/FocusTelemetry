@@ -1,4 +1,4 @@
-/* Imports */
+/* >>> Importando arquivos de fonte. */
 @font-face {
     font-family: PoppinsBold;
     src: url("./fonts/Poppins-Bold.ttf");
@@ -14,7 +14,7 @@
     src: url("./fonts/Inter-Regular.ttf");
 }
 
-/* Variáveis */
+/* >>> Definindo variáveis de cores e tamanhos */
 :root {
     --cor-Preto: #1C1C1C;
     --cor-Branco: #FCFBFB;
@@ -28,7 +28,7 @@
     --tamanho-BarraLateral: 120px;
 }
 
-/* Geral */
+/* >>> Estilos gerais do corpo da página */
 * {
     margin: 0;
     padding: 0;
@@ -41,42 +41,22 @@ body {
     overflow-x: hidden;
 }
 
-#conteudo {
+#content {
     margin-left: var(--tamanho-BarraLateral);
 }
 
-/* Barra Lateral */
-#barra-lateral {
-    background-color: var(--cor-Branco);
-    height: 100%;
-    width: var(--tamanho-BarraLateral);
-    position: fixed;
-    display: flex;
-    align-items: center;
-    flex-direction: column;
-    justify-content: center;
-    left: 0;
-    top: 0;
-    overflow-y: hidden;
-    z-index: 1;
-}
-
-#barra-lateral a {
-    margin: 15px;
-    padding: 10px;
-    border: 3px solid var(--cor-AzulEscuro);
-    border-radius: 15px;
-    display: block;
-    max-height: 35px;
-}
-
-#barra-lateral a:hover {
-    transform: scale(1.2, 1.2);
+/* >>> Estilos gerais dos elementos da página */
+.click:hover {
     background-color: var(--cor-AzulClaro);
+    text-decoration: none;
     cursor: pointer;
 }
 
-/* Scrollbar */
+.modebar {
+    display: none !important;
+}
+
+/* >>> Scrollbar customizada */
 ::-webkit-scrollbar {
     width: 12px;
 }
@@ -91,26 +71,56 @@ body {
     box-shadow: inset 0 0 6px #00000042;
 }
 
-/* Linhas (rows) */
+/* >>> Barra lateral e ícones */
+#sidebar {
+    background-color: var(--cor-Branco);
+    height: 100%;
+    width: var(--tamanho-BarraLateral);
+    position: fixed;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    left: 0;
+    top: 0;
+    overflow-y: hidden;
+    z-index: 1;
+}
+
+#sidebar a {
+    border: 3px solid var(--cor-AzulEscuro);
+    border-radius: 15px;
+    display: block;
+    margin: 15px;
+    padding: 10px;
+    max-height: 35px;
+}
+
+#sidebar a:hover {
+    transform: scale(1.2, 1.2);
+}
+
+/* >>> Grades (linhas e colunas) */
 .row {
     display: inline-block;
     width: 100%;
     text-align: left;
 }
 
-.row.veiculos--pesquisa {
+.row.search-B {
     max-height: 36px;
 }
 
-.row.cadastro {
-    margin-top: 8px;
+.row.form-field {
+    margin-top: 5px;
+    text-align: right;
 }
 
-.row.cadastro-botoes {
+.row.form-buttons {
     text-align: center;
 }
 
-/* Cards */
+/* >>> Cartões de conteúdo */
 .card {
     background-color: var(--cor-Branco);
     border-radius: 40px;
@@ -125,27 +135,58 @@ body {
     padding: 5px;
 }
 
-.card-busca {
+.card.infos-A {
+    position: absolute;
+    width: calc(35% - var(--tamanho-BarraLateral));
+    top: 2%;
+    right: 2%;
+    animation: showoff--infos-A 0.8s;
+}
+
+.card.infos-B {
+    position: absolute;
+    height: 45%;
+    width: calc(58% - var(--tamanho-BarraLateral));
+    right: 2%;
+    top: 2%;
+    animation: showoff--infos-B 0.8s;
+}
+
+.card.infos-B .buttons-layout {
+    position: absolute;
+    top: 25px;
+    right: 25px;
     display: flex;
+}
+
+.card.search-A {
+    position: absolute;
+    width: calc(35% - var(--tamanho-BarraLateral));
+    left: calc(2% + var(--tamanho-BarraLateral));
+    top: 2%;
+    animation: showoff--search-A 0.8s;
+}
+
+.card.search-B {
+    position: absolute;
+    height: 90%;
+    width: calc(39% - var(--tamanho-BarraLateral));
+    left: calc(2% + var(--tamanho-BarraLateral));
+    top: 2%;
+    animation: showoff--search-B 0.8s;
+}
+
+.card-list-item {
+    background-color: var(--cor-Branco);
     border: 2px solid var(--cor-AzulEscuro);
     border-radius: 20px;
+    display: flex;
     width: calc(100% -2px);
     margin-bottom: 10px;
     max-height: 100px;
 }
 
-.card-busca:hover {
-    background-color: var(--cor-AzulClaro);
-}
-
-.card-busca img {
-    border-right: 1px solid #ccc;
-    border-bottom-left-radius: 20px;
-    border-top-left-radius: 20px;
-    margin-right: 10px;
-}
-
-.card-busca p {
+.card-list-item p {
     font-family: PoppinsBold;
     font-size: 16px;
     text-align: left;
@@ -153,21 +194,25 @@ body {
     margin-left: 12px;
 }
 
-.card-busca div {
+.card-list-item img {
+    border-right: 1px solid #ccc;
+    border-bottom-left-radius: 20px;
+    border-top-left-radius: 20px;
+    margin-right: 10px;
+}
+
+.card-list-item div {
     display: flex;
     flex-direction: column;
     justify-content: center;
 }
 
-.card-busca .sem-imagem img {
+.card-list-item .no-img img {
     margin-right: 0;
 }
 
-.card-busca-link {
-    text-decoration: none;
-}
-
-.sem-imagem {
+.no-img {
+    /* Modelo para quando não há imagem disponível */
     display: flex;
     align-items: center;
     justify-content: center;
@@ -180,7 +225,7 @@ body {
     width: 100px;
 }
 
-.sem-imagem.veiculos--informacoes {
+.no-img.infos-B {
     border-bottom-left-radius: 0;
     border-top-left-radius: 0;
     height: 325px;
@@ -188,41 +233,7 @@ body {
     margin-right: 0;
 }
 
-.card.entregas--pesquisa /* Pág. Entregas */ {
-    position: absolute;
-    width: calc(35% - var(--tamanho-BarraLateral));
-    left: calc(2% + var(--tamanho-BarraLateral));
-    top: 2%;
-    animation: entregas--pesquisa 0.8s;
-}
-
-.card.entregas--informacoes /* Pág. Entregas */ {
-    position: absolute;
-    width: calc(35% - var(--tamanho-BarraLateral));
-    top: 2%;
-    right: 2%;
-    animation: entregas--informacoes 0.8s;
-}
-
-.card.veiculos--pesquisa /* Pág. Veículos */ {
-    position: absolute;
-    height: 90%;
-    width: calc(39% - var(--tamanho-BarraLateral));
-    left: calc(2% + var(--tamanho-BarraLateral));
-    top: 2%;
-    animation: veiculos--pesquisa 0.8s;
-}
-
-.card.veiculos--informacoes /* Pág. Veículos */ {
-    position: absolute;
-    height: 45%;
-    width: calc(58% - var(--tamanho-BarraLateral));
-    right: 2%;
-    top: 2%;
-    animation: veiculos--informacoes 0.8s;
-}
-
-/* Modal */
+/* Modal de cadastro do banco de dados */
 .modal {
     display: flex;
     align-items: center;
@@ -235,28 +246,61 @@ body {
     z-index: 1;
 }
 
-.modal-conteudo {
+.modal-body {
     position: relative;
     width: 27.5%;
     z-index: 3;
 }
 
-.inputs label {
+.modal-form {
     font-family: PoppinsRegular;
+}
+
+.modal-form label { 
     font-size: 14px;
     color: var(--cor-CinzaClaro);
     max-height: 14px;
 }
 
-.inputs .row:first-child {
+.modal-form .input {
+    height: 19.2px;
+    margin-left: 15px;
+    width: 55%;
+}
+
+.modal-form label > input {
+    font-family: PoppinsRegular;
+    color: var(--cor-Preto);
+    padding: 3.5px;
+}
+
+.modal-form .span-dropdown {
+    position: absolute;
+    display: flex;
+    margin-top: 7px;
+    right: calc(57.4% + 12px);
+}
+
+.modal-form .dropdown {
+    display: inline-block;
+    max-height: 28.2px;
+    width: 57.4%;
+}
+
+.modal-form .dropdown .Select-control {
+    text-align: left;
+    height: 28.2px;
+}
+
+.modal-form .row:first-child {
     margin-top: 15px;
 }
 
-.inputs .row:last-child {
+.modal-form .row:last-child {
     margin-bottom: 15px;
 }
 
-.backdrop {
+.modal-backdrop {
     background-color: #0000006d;
     position: absolute;
     border: none;
@@ -269,60 +313,24 @@ body {
     justify-content: center;
 }
 
-/* Botões */
-.botao {
+/* Estilo dos botões das páginas */
+.button {
     background-color: var(--cor-BrancoClaro);
-    border: 1px solid var(--cor-AzulEscuro);
+    border: 2px solid var(--cor-AzulEscuro);
     border-radius: 50px;
     box-shadow: 0px 2px 8px #00000063;
     font-family: PoppinsRegular;
     color: var(--cor-AzulEscuro);
 }
 
-.botao.entregas--informacoes /* Pág. Entregas */ {
+.button.infos-A /* Pág. Entregas */ {
     height: 38px;
     width: 100%;
     font-size: 24px;
     margin-top: 15px;
 }
 
-.botao:hover {
-    background-color: var(--cor-AzulClaro);
-    cursor: pointer;
-}
-
-.botao.modal-cadastro {
-    height: 42px;
-    width: 30%;
-    margin: 8px;
-}
-
-.botao-modal-abrir {
-    box-shadow: 0px 2px 3px #00000063;
-    background-color: var(--cor-BrancoClaro);
-    border: 2px solid var(--cor-AzulEscuro);
-    border-radius: 10px;
-    width: 36px;
-    height: 36px;
-}
-
-.botao-modal-abrir:hover{
-    background-color: var(--cor-AzulClaro);
-    cursor: pointer;
-}
-
-.botao-modal-abrir img {
-    display: block;
-}
-
-.botoes {
-    position: absolute;
-    top: 25px;
-    right: 25px;
-    display: flex;
-}
-
-.botao-informacoes {
+.button-infos-B {
     box-shadow: 0px 2px 4px #00000063;
     background-color: var(--cor-BrancoClaro);
     border: 2px solid var(--cor-AzulEscuro);
@@ -331,18 +339,55 @@ body {
     margin-right: 5px;
 }
 
-.botao-informacoes:hover {
-    background-color: var(--cor-AzulClaro);
-    cursor: pointer;
-}
-
-.botao-informacoes img {
+.button-infos-B img {
     display: block;
 }
 
-/* Plotly */
-.modebar {
-    display: none !important;
+.button-search-B {
+    box-shadow: 0px 2px 3px #00000063;
+    background-color: var(--cor-BrancoClaro);
+    border: 2px solid var(--cor-AzulEscuro);
+    border-radius: 10px;
+    width: 36px;
+    height: 36px;
+}
+
+.button-search-B img {
+    display: block;
+}
+
+.button.form-button {
+    height: 42px;
+    width: 30%;
+    margin: 8px;
+}
+
+/* Datepicker */
+.datepicker {
+    position: absolute;
+    margin-left: 15px;
+    width: 57.4%;
+}
+
+.datepicker .DateInput, .DateInput_1 {
+    box-sizing: border-box;
+    border-radius: 4px !important;
+    width: inherit;
+}
+
+.datepicker .DateInput_input, .DateInput_input_1 {
+    background-color: #fff;
+    border-radius: inherit;
+    font-family: PoppinsRegular;
+    font-size: 14px;
+    height: 28.2px;
+    width: inherit;
+}
+
+.datepicker .SingleDatePickerInput__withBorder {
+    border-radius: 4px;
+    border: 1px solid #ccc !important;
+    width: auto;
 }
 
 /* Plotly | Dropdown */
@@ -350,24 +395,18 @@ body {
     color: var(--cor-CinzaClaro);
 }
 
-.dropdown.entregas--pesquisa /* Pág. Entregas */ {
+.dropdown.search-A /* Pág. Entregas */ {
     font-size: 10px;
 }
 
-.dropdown.entregas--pesquisa .Select-control /* Pág. Entregas */ {
+.dropdown.search-A .Select-control /* Pág. Entregas */ {
     border-radius: 10px;
 }
 
-.dropdown.veiculos--pesquisa {
+.dropdown.search-B {
     font-size: 14px;
     width: 20%;
     float: left;
-}
-
-.dropdown.cadastro {
-    width: 50%;
-    float: left;
-    height: 39px;
 }
 
 /* Plotly | Input */
@@ -386,12 +425,7 @@ input {
     padding: 7px;
 }
 
-label > input {
-    font-family: PoppinsRegular;
-    padding: 3.5px;
-}
-
-.input.veiculos--pesquisa {
+.input.search-B {
     width: calc(80% - 46px);
     margin-right: 5px;
     margin-left: 5px;
@@ -400,13 +434,8 @@ label > input {
     top: -11.5px;
 }
 
-.input.cadastro {
-    height: 19.2px;
-    margin-left: 5px;
-}
-
 /* Plotly | Checklist */
-.checklist.entregas--pesquisa {
+.checklist.search-A {
     padding-top: 10px;
     font-size: 12px;
 }
@@ -433,7 +462,7 @@ label > input {
     visibility: hidden;
     overflow: hidden;
     z-index: -1;
-    animation: entregas--mapa-fadeout 0.8s linear;
+    animation: fadeout--map 0.8s linear;
 }
 
 /* Entregas | Posições */
@@ -524,23 +553,6 @@ label > input {
     background-color: var(--cor-AzulEscuro);
 }
 
-/* Entregas | Animações */
-@keyframes entregas--pesquisa {
-    from {top: -30%;}
-    to   {top: 2%;}
-}
-
-@keyframes entregas--informacoes {
-    from {right: calc(-35% - 2% - var(--tamanho-BarraLateral))}
-    to   {right: 2%}
-}
-
-@keyframes entregas--mapa-fadeout {
-    0%   {opacity: 1; visibility: visible;}
-    35%  {opacity: 1; visibility: visible;}
-    100% {opacity: 0; visibility: hidden;}
-}
-
 /* Veículos | Lista */
 #veiculos--lista {
     margin-top: 10px;
@@ -562,7 +574,7 @@ label > input {
     max-height: 95%;
 }
 
-#veiculos--informacoes .sem-imagem {
+#veiculos--informacoes .no-img {
     box-shadow: 0px 2px 8px #00000063;
     border-radius: 40px;
     min-width: 260px;
@@ -571,7 +583,7 @@ label > input {
     left: 15px;
 }
 
-#veiculos--informacoes .sem-imagem img {
+#veiculos--informacoes .no-img img {
     box-shadow: none;
     left: 0;
 }
@@ -603,13 +615,29 @@ label > input {
     border-bottom: 2px solid var(--cor-AzulEscuro);
 }
 
-/* Veículos | Animações */
-@keyframes veiculos--pesquisa {
+/* >>> Animações */
+@keyframes showoff--infos-A {
+    from {right: calc(-35% - 2% - var(--tamanho-BarraLateral))}
+    to   {right: 2%}
+}
+
+@keyframes showoff--infos-B {
+    from {right: calc(-58% - 2% - var(--tamanho-BarraLateral))}
+    to   {right: 2%}
+}
+
+@keyframes showoff--search-A {
+    from {top: -30%;}
+    to   {top: 2%;}
+}
+
+@keyframes showoff--search-B {
     from {top: -100%;}
     to   {top: 2%;}
 }
 
-@keyframes veiculos--informacoes {
-    from {right: calc(-58% - 2% - var(--tamanho-BarraLateral))}
-    to   {right: 2%}
+@keyframes fadeout--map {
+    0%   {opacity: 1; visibility: visible;}
+    35%  {opacity: 1; visibility: visible;}
+    100% {opacity: 0; visibility: hidden;}
 }
