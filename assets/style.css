@@ -145,7 +145,7 @@ body {
 
 .card.infos-B {
     position: absolute;
-    height: 45%;
+    height: 47%;
     width: calc(58% - var(--tamanho-BarraLateral));
     right: 2%;
     top: 2%;
@@ -232,6 +232,43 @@ body {
     height: 325px;
     width: 260px;
     margin-right: 0;
+}
+
+.layout-stats-A {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 40%;
+    width: calc(58% - var(--tamanho-BarraLateral));
+    top: 57.5%;
+    right: 2%;
+    animation: showoff--stats-A 0.8s;
+}
+
+.card.stats-A {
+    display: block;
+    text-align: center;
+    line-height: 60px;
+    margin-right: 30px;
+    min-width: calc((58% - var(--tamanho-BarraLateral)) / 4 + 45px);;
+}
+
+.card.stats-A:hover {
+    transform: scale(1.12);
+}
+
+.card.stats-A img {
+    display: block;
+    margin-bottom: -15px;
+}
+
+.card.stats-A h1 {
+    font-size: 65px;
+}
+
+.card.stats-A h2 {
+    font-size: 18px;
 }
 
 /* Modal de cadastro do banco de dados */
@@ -635,6 +672,11 @@ input {
 @keyframes showoff--search-B {
     from {top: -100%;}
     to   {top: 2%;}
+}
+
+@keyframes showoff--stats-A {
+    from {top: 100%;}
+    to   {top: 57.5%;}
 }
 
 @keyframes fadeout--map {

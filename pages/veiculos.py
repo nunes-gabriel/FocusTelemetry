@@ -39,8 +39,12 @@ def layout(**query):
             html.Div(id="pg2--lista", style={"padding-right": "5px"}, children=Layouts.cardlist(Utils.busca()))
             ]),
         html.Div(className="card infos-B", id="pg2--informacoes"),
-        Layouts.forms(n=0),
-        Layouts.forms(n=1)
+        html.Div(className="layout-stats-A", children=Layouts.stats()),
+        html.Div(className="modal-div", children=[
+            Layouts.forms(n=0),
+            Layouts.forms(n=1),
+            Layouts.erro_upload()
+            ])
         ])
 
 
@@ -166,6 +170,16 @@ class Layouts:
             ])
 
     @staticmethod
+    def erro_upload():
+        """Modal para erro de upload de imagens."""
+        return html.Div(className="modal", style={"visibility": "hidden"}, id="pg2--mod3", children=[
+            html.Button(className="modal-backdrop", n_clicks=0, id="pg2--mod3-backdrop"),
+            html.Div(className="card modal-body", id="pg2--mod3-conteudo", children=[
+                html.H3(style={"margin-top": "15px", "margin-bottom": "15px"}, children="Erro ao fazer upload de imagem, tamanho ou formato inválido.")
+                ])
+            ])
+
+    @staticmethod
     def cardlist(veiculos: tuple):
         """Lista de cards com os veículos registrados no banco de dados."""
         img_arquivos = listdir("./assets/images/veiculos/")
@@ -187,6 +201,35 @@ class Layouts:
                     ])
                 ])
             for veiculo in veiculos
+            ]
+    
+    @staticmethod
+    def stats():
+        """Status da frota de veículos da transportadora."""
+        banco_dados = database.BancoDados()
+        veiculos = banco_dados.veiculos_lista()
+
+        return [
+            html.Div(className="card stats-A", children=[
+                html.Img(src=dash.get_asset_url("icons/icone-chave.svg"), width="120px", height="120px"),
+                html.H2("Disponíveis"),
+                html.H1(len([v for v in veiculos if v[-1] == "Disponível"]))
+                ]),
+            html.Div(className="card stats-A", children=[
+                html.Img(src=dash.get_asset_url("icons/icone-chave.svg"), width="120px", height="120px"),
+                html.H2("Em viagem"),
+                html.H1(len([v for v in veiculos if v[-1] == "Em Viagem "]))
+                ]),
+            html.Div(className="card stats-A", children=[
+                html.Img(src=dash.get_asset_url("icons/icone-chave.svg"), width="120px", height="120px"),
+                html.H2("Manutenção"),
+                html.H1(len([v for v in veiculos if v[-1] == "Em Manutenção "]))
+                ]),
+            html.Div(className="card stats-A", children=[
+                html.Img(src=dash.get_asset_url("icons/icone-chave.svg"), width="120px", height="120px"),
+                html.H2("Indisponíveis"),
+                html.H1(len([v for v in veiculos if v[-1] == "Indisponível"]))
+                ])
             ]
 
 
@@ -501,18 +544,29 @@ def deletar_confirmar(bt, placa, path):
 @dash.callback(
     Output("pg2--upload-refresh", "refresh"),
     Output("pg2--upload-refresh", "pathname"),
+    Output("pg2--mod3", "style"),
+    Input("pg2--mod3-backdrop", "n_clicks"),
     Input("pg2--upload", "contents"),
     State("pg2--upload", "filename"),
     State("pg2--url", "search"),
     State("pg2--upload-refresh", "pathname"),
     prevent_initial_call=True
     )
-def upload_imagem(img, filename, query, path):
-    img = re.sub("^data:image/.+;base64,", "", img)
-    img_b64 = base64.b64decode(img)
-    imagem = Image.open(BytesIO(img_b64))
-    imagem.save(f"./assets/images/veiculos/{Utils.veiculo(query)[1]}.{filename.split('.')[1]}")
-    if path == "/veiculos/":
-        return True, "/veiculos"
+def upload_imagem(bt, img, filename, query, path):
+    """Upload de imagem de veículo para o dashboard com mensagem de erro."""
+    if img is not None and ctx.triggered_id == "pg2--upload":
+        try:
+            img = re.sub("^data:image/.+;base64,", "", img)
+            img_b64 = base64.b64decode(img)
+            imagem = Image.open(BytesIO(img_b64))
+            imagem.save(f"./assets/images/veiculos/{Utils.veiculo(query)[1]}.{filename.split('.')[1]}")
+            if path == "/veiculos/":
+                return True, "/veiculos", dash.no_update
+            else:
+                return True, "/veiculos/", dash.no_update
+        except:
+            return *[dash.no_update] * 2, {"visibility": "visible"}
+    elif ctx.triggered_id == "pg2--mod3-backdrop":
+        return *[dash.no_update] * 2, {"visibility": "hidden"}
     else:
-        return True, "/veiculos/"
+        raise PreventUpdate
