@@ -223,6 +223,7 @@ body {
     margin-right: 10px;
     height: 100px;
     width: 100px;
+    min-width: 100px;
 }
 
 .no-img.infos-B {
@@ -554,19 +555,19 @@ input {
 }
 
 /* Veículos | Lista */
-#veiculos--lista {
+#pg2--lista {
     margin-top: 10px;
     max-height: calc(80% - 10px);
     overflow: auto;
 }
 
-#veiculos--informacoes {
+#pg2--informacoes {
     display: flex;
     flex-direction: row;
     align-items: center;
 }
 
-#veiculos--informacoes .imagem-informacoes {
+#pg2--informacoes .imagem-informacoes {
     box-shadow: 0px 2px 8px #00000063;
     border-radius: 40px;
     position: relative;
@@ -574,7 +575,7 @@ input {
     max-height: 95%;
 }
 
-#veiculos--informacoes .no-img {
+#pg2--informacoes .no-img {
     box-shadow: 0px 2px 8px #00000063;
     border-radius: 40px;
     min-width: 260px;
@@ -583,12 +584,12 @@ input {
     left: 15px;
 }
 
-#veiculos--informacoes .no-img img {
+#pg2--informacoes .no-img img {
     box-shadow: none;
     left: 0;
 }
 
-#veiculos--informacoes .conteudo {
+#pg2--informacoes .conteudo {
     display: flex;
     flex-direction: column;
     position: relative;
@@ -597,7 +598,7 @@ input {
     padding-left: 15px;
 }
 
-#veiculos--informacoes .informacoes-basicas p {
+#pg2--informacoes .informacoes-basicas p {
     font-family: PoppinsBold;
     font-size: 14px;
 }

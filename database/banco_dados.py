@@ -28,9 +28,30 @@ class BancoDados:
         self.__cur.execute("SELECT * FROM VEICULO")
         return self.__cur.fetchall()
 
+    def veiculos_placas(self):
+        self.__cur.execute("SELECT placa FROM VEICULO")
+        return self.__cur.fetchall()
+
     def veiculos_busca(self, placa):
         self.__cur.execute("SELECT * FROM VEICULO WHERE placa=?", [placa])
         return self.__cur.fetchone()
+
+    def veiculos_criar(self, colunas):
+        self.__cur.execute("""
+            INSERT INTO VEICULO(Placa, Marca, Tipo_de_Veículo, Cor, Renavam, Ano, Tipo_Carroceria, Altura, Largura,
+            Comprimento, Tara_KG, Capacidade_em_KG, Vencimento_do_Documento, Feedback_do_Veículo)
+            VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """, colunas + ["Disponível"])
+        self.__con.commit()
+
+    def veiculos_atualizar(self, colunas):
+        self.__cur.execute(f"""
+            UPDATE VEICULO
+            SET Marca=?, Tipo_de_Veículo=?, Cor=?, Renavam=?, Ano=?, Tipo_Carroceria=?, Altura=?,
+            Largura=?, Comprimento=?, Tara_KG=?, Capacidade_em_KG=?, Vencimento_do_Documento=?
+            WHERE placa='{colunas[0]}'
+            """, colunas[1:])
+        self.__con.commit()
 
     def veiculos_deletar(self, placa):
         self.__cur.execute("DELETE FROM VEICULO WHERE placa=?", [placa])
