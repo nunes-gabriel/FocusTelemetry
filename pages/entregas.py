@@ -16,25 +16,25 @@ dash.register_page(
 
 def layout(**query):
     return html.Div(children=[
-        dcc.Graph(id="entregas--mapa"),
-        html.Div(id="entregas--mapa-fadeout"),
+        dcc.Graph(id="pg1--mapa"),
+        html.Div(id="pg1--mapa-fadeout"),
         html.Div(className="card search-A", children=[
             html.H1("Entregas"),
             html.P("Escolha uma entrega para análise ou cadastre uma nova entrega no sistema."),
-            dcc.Dropdown(className="dropdown search-A", id="entregas--dropdown", value=query.get("id", 1), clearable=False),
-            dcc.Checklist(className="checklist search-A", id="entregas--checklist", options=[{"label": "Exibir entregas conclúidas", "value": True}],
+            dcc.Dropdown(className="dropdown search-A", id="pg1--dropdown", value=query.get("id", 1), clearable=False),
+            dcc.Checklist(className="checklist search-A", id="pg1--checklist", options=[{"label": "Exibir entregas conclúidas", "value": True}],
                 value=[True], inline=True)
             ]),
         html.Div(className="card infos-A", children=[
             html.H1("Informações"),
-            html.Div(id="entregas--informacoes"),
+            html.Div(className="infos-list", id="pg1--informacoes"),
             html.H2("Paradas"),
-            html.Table(id="entregas--tabela"),
-            html.Button(className="button infos-A click", id="entregas--botao-entregue", children="Marcar como entregue"),
+            html.Table(id="pg1--tabela"),
+            html.Button(className="button infos-A click", id="pg1--botao-entregue", children="Marcar como entregue"),
             html.Br(),
-            html.Button(className="button infos-A click", id="entregas--botao-saida", children="Saiu para entrega")
+            html.Button(className="button infos-A click", id="pg1--botao-saida", children="Saiu para entrega")
             ]),
-        html.Div(id="entregas--legenda", children=[
+        html.Div(id="pg1--mapa-legenda", children=[
             html.Label([html.Span(className="circulo ponto--partida"), "Ponto de Partida"]),
             html.Label([html.Span(className="circulo ponto--parada"), "Ponto de Parada"]),
             html.Label([html.Hr(className="linha rota--recomendada"), "Rota Recomendada"]),
@@ -44,10 +44,10 @@ def layout(**query):
 
 
 @dash.callback(
-    Output("entregas--mapa", "figure"),
-    Output("entregas--informacoes", "children"),
-    Output("entregas--tabela", "children"),
-    Input("entregas--dropdown", "value"),
+    Output("pg1--mapa", "figure"),
+    Output("pg1--informacoes", "children"),
+    Output("pg1--tabela", "children"),
+    Input("pg1--dropdown", "value"),
     )
 def dropdown_callbacks(id_entrega: int):
     maps = plugins.maps.GoogleMaps(id_entrega)
@@ -156,8 +156,8 @@ def dropdown_callbacks(id_entrega: int):
 
 
 @dash.callback(
-    Output("entregas--dropdown", "options"),
-    Input("entregas--checklist", "value")
+    Output("pg1--dropdown", "options"),
+    Input("pg1--checklist", "value")
     )
 def filtrar_entregas(filtro: bool):
     banco_dados = database.BancoDados()

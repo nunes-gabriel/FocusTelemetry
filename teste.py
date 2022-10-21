@@ -1,3 +1,3 @@
-placa = "AKF8248"
+teste = "(17) 99762-0555"
 
-print(placa[:3] + "-" + placa[3:])
+print(teste.split("/"))

@@ -23,7 +23,7 @@
     --cor-CinzaClaro: #4C4B4E;
     --cor-CinzaMapa: #262626;
     --cor-AzulEscuro: #173C85;
-    --cor-AzulClaro: #E5F2FF;
+    --cor-AzulClaro: #e0eefc;
     --cor-Amarelo: #FDF508;
     --tamanho-BarraLateral: 120px;
 }
@@ -50,6 +50,15 @@ body {
     background-color: var(--cor-AzulClaro);
     text-decoration: none;
     cursor: pointer;
+}
+
+.click-ativo {
+    background-color: #bddaf8;
+}
+
+.click-ativo:hover {
+    transform: none;
+    cursor: auto;
 }
 
 .modebar {
@@ -96,7 +105,7 @@ body {
     max-height: 35px;
 }
 
-#sidebar a:hover {
+#sidebar a.click:hover {
     transform: scale(1.2, 1.2);
 }
 
@@ -120,7 +129,7 @@ body {
     text-align: center;
 }
 
-/* >>> Cartões de conteúdo */
+/* >>> Base dos cartões de conteúdo das páginas */
 .card {
     background-color: var(--cor-Branco);
     border-radius: 40px;
@@ -135,21 +144,120 @@ body {
     padding: 5px;
 }
 
+/* >>> Cartões de conteúdo com informações do banco de dados. */
 .card.infos-A {
     position: absolute;
     width: calc(35% - var(--tamanho-BarraLateral));
     top: 2%;
     right: 2%;
-    animation: showoff--infos-A 0.8s;
+    animation: showoff--infos-A 1s;
+}
+
+.card.infos-A .infos-list {
+    line-height: 15px;
+    margin-bottom: 20px;
+}
+
+.card.infos-A .infos-list p {
+    font-family: PoppinsBold;
+    font-size: 14px;
+    text-align: center;
+    color: var(--cor-CinzaClaro);
+}
+
+.card.infos-A .infos-list a {
+    text-decoration: none;
+    color: var(--cor-Preto);
+    border-bottom: 2px solid var(--cor-Preto);
+}
+
+.card.infos-A table {
+    border-collapse: collapse;
+    text-align: left;
+    font-size: 14px;
+    color: var(--cor-CinzaClaro);
+}
+
+.card.infos-A table tbody {
+    display: block;
+    max-height: 240px;
+    overflow: auto;
+}
+
+.card.infos-A table td {
+    padding: 15px;
+}
+
+.card.infos-A table .left {
+    border-right: 1px solid var(--cor-CinzaClaro);
 }
 
 .card.infos-B {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
     position: absolute;
     height: 47%;
     width: calc(58% - var(--tamanho-BarraLateral));
     right: 2%;
     top: 2%;
-    animation: showoff--infos-B 0.8s;
+}
+
+.card.infos-B.i-B1 {
+    animation: showoff--infos-B1 1s;   
+}
+
+.card.infos-B.i-B2 {
+    animation: showoff--infos-B2 1s;   
+}
+
+.card.infos-B .image {
+    box-shadow: 0px 2px 8px #00000063;
+    border-radius: 40px;
+    position: relative;
+    left: 15px;
+    max-height: 95%;
+}
+
+.card.infos-B .no-img {
+    box-shadow: 0px 2px 8px #00000063;
+    border-radius: 40px;
+    min-width: 260px;
+    max-height: 95%;
+    position: relative;
+    left: 15px;
+}
+
+.card.infos-B .no-img img {
+    box-shadow: none;
+    left: 0;
+}
+
+.card.infos-B .content {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    text-align: left;
+    left: 15px;
+    padding-left: 15px;
+}
+
+.card.infos-B .infos-list p {
+    font-family: PoppinsBold;
+    font-size: 14px;
+}
+
+.card.infos-B .status p,
+.card.infos-B .status a {
+    font-family: PoppinsBold;
+    font-size: 20px;
+    margin-top: 8px;
+    color: var(--cor-AzulEscuro);
+}
+
+.card.infos-B .status a {
+    text-decoration: none;
+    border-bottom: 2px solid var(--cor-AzulEscuro);
 }
 
 .card.infos-B .buttons-layout {
@@ -159,12 +267,13 @@ body {
     display: flex;
 }
 
+/* >>> Cartões de conteúdo de pesquisa no banco de dados */
 .card.search-A {
     position: absolute;
     width: calc(35% - var(--tamanho-BarraLateral));
     left: calc(2% + var(--tamanho-BarraLateral));
     top: 2%;
-    animation: showoff--search-A 0.8s;
+    animation: showoff--search-A 1s;
 }
 
 .card.search-B {
@@ -173,7 +282,21 @@ body {
     width: calc(39% - var(--tamanho-BarraLateral));
     left: calc(2% + var(--tamanho-BarraLateral));
     top: 2%;
-    animation: showoff--search-B 0.8s;
+}
+
+.card.search-B.s-B1 {
+    animation: showoff--search-B1 1s;
+}
+
+.card.search-B.s-B2 {
+    animation: showoff--search-B2 1s;
+}
+
+/* >>> Lista de cartões de conteúdo para itens do banco de dados */
+.card-list {
+    margin-top: 10px;
+    max-height: calc(80% - 10px);
+    overflow: auto;
 }
 
 .card-list-item {
@@ -234,6 +357,7 @@ body {
     margin-right: 0;
 }
 
+/* >>> Mini cartões de conteúdo com números do banco de dados */
 .layout-stats-A {
     position: absolute;
     display: flex;
@@ -243,7 +367,14 @@ body {
     width: calc(58% - var(--tamanho-BarraLateral));
     top: 57.5%;
     right: 2%;
-    animation: showoff--stats-A 0.8s;
+}
+
+.layout-stats-A.st-A1 {
+    animation: showoff--stats-A1 1s;
+}
+
+.layout-stats-A.st-A2 {
+    animation: showoff--stats-A2 1s;
 }
 
 .card.stats-A {
@@ -251,7 +382,7 @@ body {
     text-align: center;
     line-height: 60px;
     margin-right: 30px;
-    min-width: calc((58% - var(--tamanho-BarraLateral)) / 4 + 45px);;
+    padding: 30px 40px 30px 40px;
 }
 
 .card.stats-A:hover {
@@ -264,7 +395,7 @@ body {
 }
 
 .card.stats-A h1 {
-    font-size: 65px;
+    font-size: 70px;
 }
 
 .card.stats-A h2 {
@@ -351,7 +482,7 @@ body {
     justify-content: center;
 }
 
-/* Estilo dos botões das páginas */
+/* >>> Estilo dos botões das páginas */
 .button {
     background-color: var(--cor-BrancoClaro);
     border: 2px solid var(--cor-AzulEscuro);
@@ -361,7 +492,7 @@ body {
     color: var(--cor-AzulEscuro);
 }
 
-.button.infos-A /* Pág. Entregas */ {
+.button.infos-A {
     height: 38px;
     width: 100%;
     font-size: 24px;
@@ -400,7 +531,7 @@ body {
     margin: 8px;
 }
 
-/* Datepicker */
+/* >>> Estilo dos datepickers (plotly) */
 .datepicker {
     position: absolute;
     margin-left: 15px;
@@ -428,16 +559,16 @@ body {
     width: auto;
 }
 
-/* Plotly | Dropdown */
+/* >>> Estilos dos dropdowns (plotly) */
 .dropdown {
     color: var(--cor-CinzaClaro);
 }
 
-.dropdown.search-A /* Pág. Entregas */ {
+.dropdown.search-A {
     font-size: 10px;
 }
 
-.dropdown.search-A .Select-control /* Pág. Entregas */ {
+.dropdown.search-A .Select-control {
     border-radius: 10px;
 }
 
@@ -447,7 +578,7 @@ body {
     float: left;
 }
 
-/* Plotly | Input */
+/* >>> Estilo dos inputs (plotly) */
 .input {
     background-color: #fff;
     border: 1px solid #ccc;
@@ -472,7 +603,7 @@ input {
     top: -11.5px;
 }
 
-/* Plotly | Checklist */
+/* >>> Estilo dos checklists (plotly) */
 .checklist.search-A {
     padding-top: 10px;
     font-size: 12px;
@@ -482,8 +613,8 @@ input {
     margin-right: 5px;
 }
 
-/* Entregas | Mapa*/
-#entregas--mapa {
+/* >>> Mapa de de rotas de entrega (plotly) */
+#pg1--mapa {
     position: absolute;
     height: 100%;
     width: calc(100% - var(--tamanho-BarraLateral));
@@ -491,7 +622,7 @@ input {
     z-index: -2;
 }
 
-#entregas--mapa-fadeout {
+#pg1--mapa-fadeout {
     background-color: var(--cor-CinzaMapa);
     position: absolute;
     height: 100%;
@@ -500,52 +631,10 @@ input {
     visibility: hidden;
     overflow: hidden;
     z-index: -1;
-    animation: fadeout--map 0.8s linear;
+    animation: fadeout--map 1s linear;
 }
 
-/* Entregas | Posições */
-#entregas--informacoes {
-    line-height: 15px;
-    margin-bottom: 20px;
-}
-
-#entregas--informacoes p {
-    font-family: PoppinsBold;
-    font-size: 14px;
-    text-align: center;
-    color: var(--cor-CinzaClaro);
-}
-
-#entregas--informacoes a {
-    text-decoration: none;
-    color: var(--cor-Preto);
-    border-bottom: 2px solid var(--cor-Preto);
-}
-
-/* Entregas | Tabela */
-#entregas--tabela {
-    border-collapse: collapse;
-    text-align: left;
-    font-size: 14px;
-    color: var(--cor-CinzaClaro);
-}
-
-#entregas--tabela tbody {
-    display: block;
-    max-height: 240px;
-    overflow: auto;
-}
-
-#entregas--tabela td {
-    padding: 15px;
-}
-
-#entregas--tabela .left {
-    border-right: 1px solid var(--cor-CinzaClaro);
-}
-
-/* Entregas | Legenda */
-#entregas--legenda {
+#pg1--mapa-legenda {
     position: absolute;
     display: flex;
     flex-direction: column;
@@ -555,12 +644,12 @@ input {
     color: var(--cor-Branco);
 }
 
-#entregas--legenda label {
+#pg1--mapa-legenda label {
     display: flex;
     align-items: center;
 }
 
-.circulo {
+#pg1--mapa-legenda .circulo {
     height: 16px;
     width: 16px;
     border-radius: 50%;
@@ -568,100 +657,43 @@ input {
     margin-right: 5px;
 }
 
-.circulo.ponto--partida {
+#pg1--mapa-legenda .ponto--partida {
     background-color: var(--cor-BrancoClaro);
 }
 
-.circulo.ponto--parada {
+#pg1--mapa-legenda .ponto--parada {
     background-color: var(--cor-Amarelo);
 }
 
-.linha {
+#pg1--mapa-legenda .linha {
     height: 3px;
     width: 16px;
     border: none;
     margin-right: 5px;
 }
 
-.linha.rota--recomendada {
+#pg1--mapa-legenda .rota--recomendada {
     background-color: red;
 }
 
-.linha.rota--alternativas {
+#pg1--mapa-legenda .rota--alternativas {
     background-color: var(--cor-AzulEscuro);
 }
 
-/* Veículos | Lista */
-#pg2--lista {
-    margin-top: 10px;
-    max-height: calc(80% - 10px);
-    overflow: auto;
-}
-
-#pg2--informacoes {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-}
-
-#pg2--informacoes .imagem-informacoes {
-    box-shadow: 0px 2px 8px #00000063;
-    border-radius: 40px;
-    position: relative;
-    left: 15px;
-    max-height: 95%;
-}
-
-#pg2--informacoes .no-img {
-    box-shadow: 0px 2px 8px #00000063;
-    border-radius: 40px;
-    min-width: 260px;
-    max-height: 95%;
-    position: relative;
-    left: 15px;
-}
-
-#pg2--informacoes .no-img img {
-    box-shadow: none;
-    left: 0;
-}
-
-#pg2--informacoes .conteudo {
-    display: flex;
-    flex-direction: column;
-    position: relative;
-    text-align: left;
-    left: 15px;
-    padding-left: 15px;
-}
-
-#pg2--informacoes .informacoes-basicas p {
-    font-family: PoppinsBold;
-    font-size: 14px;
-}
-
-.status p,
-.status a {
-    font-family: PoppinsBold;
-    font-size: 20px;
-    margin-top: 8px;
-    color: var(--cor-AzulEscuro);
-}
-
-.status a {
-    text-decoration: none;
-    border-bottom: 2px solid var(--cor-AzulEscuro);
-}
-
-/* >>> Animações */
+/* >>> Animações gerais das páginas do dashboard */
 @keyframes showoff--infos-A {
-    from {right: calc(-35% - 2% - var(--tamanho-BarraLateral))}
-    to   {right: 2%}
+    from {right: calc(-35% - 2% - var(--tamanho-BarraLateral));}
+    to   {right: 2%;}
 }
 
-@keyframes showoff--infos-B {
-    from {right: calc(-58% - 2% - var(--tamanho-BarraLateral))}
-    to   {right: 2%}
+@keyframes showoff--infos-B1 {
+    from {right: calc(-58% - 2% - var(--tamanho-BarraLateral));}
+    to   {right: 2%;}
+}
+
+@keyframes showoff--infos-B2 {
+    from {top: -100%;}
+    to   {top: 2%;}
 }
 
 @keyframes showoff--search-A {
@@ -669,14 +701,24 @@ input {
     to   {top: 2%;}
 }
 
-@keyframes showoff--search-B {
+@keyframes showoff--search-B1 {
     from {top: -100%;}
     to   {top: 2%;}
 }
 
-@keyframes showoff--stats-A {
+@keyframes showoff--search-B2 {
+    from {top: 100%;}
+    to   {top: 2%;}
+}
+
+@keyframes showoff--stats-A1 {
     from {top: 100%;}
     to   {top: 57.5%;}
+}
+
+@keyframes showoff--stats-A2 {
+    from {right: calc(-58% - 2% - var(--tamanho-BarraLateral))}
+    to   {right: 2%;}
 }
 
 @keyframes fadeout--map {

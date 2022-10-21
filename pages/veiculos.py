@@ -1,4 +1,4 @@
-from dash import html, dcc, Input, Output, State, DiskcacheManager, ctx
+from dash import html, dcc, Input, Output, State, ctx
 from dash.exceptions import PreventUpdate
 
 from PIL import Image
@@ -24,9 +24,9 @@ dash.register_page(
 def layout(**query):
     return html.Div(children=[
         dcc.Location(id="pg2--url", refresh=False),
-        html.Div(className="card search-B", children=[
+        html.Div(className="card search-B s-B1", children=[
             html.H1("Veículos"),
-            html.P("Escolha um veículo para análise e/ou edição ou cadastre um novo veículo no sistema."),
+            html.P("Escolha um veículo para acessar suas informações e/ou edite ou cadastre um novo veículo no sistema."),
             html.Div(className="row search-B", children=[
                 dcc.Dropdown(className="dropdown search-B", id="pg2--search-filter",
                              options=Utils.options(), value="placa", clearable=False),
@@ -36,10 +36,10 @@ def layout(**query):
                     src=dash.get_asset_url("icons/icone-adicionar.svg"), width="32px", height="32px"
                     ))
                 ]),
-            html.Div(id="pg2--lista", style={"padding-right": "5px"}, children=Layouts.cardlist(Utils.busca()))
+            html.Div(className="card-list", id="pg2--lista", style={"padding-right": "5px"}, children=Layouts.cardlist(Utils.busca()))
             ]),
-        html.Div(className="card infos-B", id="pg2--informacoes"),
-        html.Div(className="layout-stats-A", children=Layouts.stats()),
+        html.Div(className="card infos-B i-B1", id="pg2--informacoes"),
+        html.Div(className="layout-stats-A st-A1", children=Layouts.stats()),
         html.Div(className="modal-div", children=[
             Layouts.forms(n=0),
             Layouts.forms(n=1),
@@ -211,24 +211,19 @@ class Layouts:
 
         return [
             html.Div(className="card stats-A", children=[
-                html.Img(src=dash.get_asset_url("icons/icone-chave.svg"), width="120px", height="120px"),
+                html.Img(src=dash.get_asset_url("icons/icone-viagem.svg"), width="120px", height="120px"),
+                html.H2("Em viagem"),
+                html.H1(len([v for v in veiculos if v[-1] == "Em Viagem "]))
+                ]),
+            html.Div(className="card stats-A", children=[
+                html.Img(src=dash.get_asset_url("icons/icone-veiculo-disponivel.svg"), width="120px", height="120px"),
                 html.H2("Disponíveis"),
                 html.H1(len([v for v in veiculos if v[-1] == "Disponível"]))
                 ]),
             html.Div(className="card stats-A", children=[
                 html.Img(src=dash.get_asset_url("icons/icone-chave.svg"), width="120px", height="120px"),
-                html.H2("Em viagem"),
-                html.H1(len([v for v in veiculos if v[-1] == "Em Viagem "]))
-                ]),
-            html.Div(className="card stats-A", children=[
-                html.Img(src=dash.get_asset_url("icons/icone-chave.svg"), width="120px", height="120px"),
                 html.H2("Manutenção"),
                 html.H1(len([v for v in veiculos if v[-1] == "Em Manutenção "]))
-                ]),
-            html.Div(className="card stats-A", children=[
-                html.Img(src=dash.get_asset_url("icons/icone-chave.svg"), width="120px", height="120px"),
-                html.H2("Indisponíveis"),
-                html.H1(len([v for v in veiculos if v[-1] == "Indisponível"]))
                 ])
             ]
 
@@ -340,14 +335,14 @@ def atualizar_informacoes(url: str):
     img_nomes = [img.split(".")[0] for img in img_arquivos]
 
     return [
-        html.Img(className="imagem-informacoes", src=dash.get_asset_url(f"images/veiculos/{img_arquivos[img_nomes.index(veiculo[1])]}"),
+        html.Img(className="image", src=dash.get_asset_url(f"images/veiculos/{img_arquivos[img_nomes.index(veiculo[1])]}"),
                 width="260px", height="325px")
         if veiculo[1] in img_nomes else
         html.Div(className="no-img infos-B", children=html.Img(
             src=dash.get_asset_url("icons/icone-camera.svg"), width="100px", height="100px"
             )),
-        html.Div(className="conteudo", children=[
-            html.Div(className="informacoes-basicas", children=[
+        html.Div(className="content", children=[
+            html.Div(className="infos-list", children=[
                 html.P(f"Placa: {veiculo[1]}"),
                 html.P(f"Marca: {veiculo[2]}"),
                 html.P(f"Cor: {veiculo[4]}"),
@@ -484,7 +479,7 @@ def forms_editar_confirmar(bt, path, *forms):
         if erro is not None:
             return *[dash.no_update] * 2, erro
 
-        banco_dados.veiculos_atualizar(forms)
+        banco_dados.veiculos_atualizar(forms[0], forms[1:])
 
         if path == "/veiculos/":
             return True, "/veiculos", dash.no_update
@@ -559,6 +554,7 @@ def upload_imagem(bt, img, filename, query, path):
             img = re.sub("^data:image/.+;base64,", "", img)
             img_b64 = base64.b64decode(img)
             imagem = Image.open(BytesIO(img_b64))
+            imagem = imagem.resize((260, 325))
             imagem.save(f"./assets/images/veiculos/{Utils.veiculo(query)[1]}.{filename.split('.')[1]}")
             if path == "/veiculos/":
                 return True, "/veiculos", dash.no_update
