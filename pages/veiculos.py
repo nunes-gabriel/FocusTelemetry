@@ -6,6 +6,7 @@ from string import punctuation
 from os import listdir, remove
 from io import BytesIO
 
+import os
 import re
 import base64
 import datetime
@@ -182,7 +183,7 @@ class Layouts:
     @staticmethod
     def cardlist(veiculos: tuple):
         """Lista de cards com os veículos registrados no banco de dados."""
-        img_arquivos = listdir("./assets/images/veiculos/")
+        img_arquivos = listdir(Utils.assets_path() + "\\assets\\images\\veiculos\\")
         img_nomes = [img.split(".")[0] for img in img_arquivos]
 
         return [
@@ -236,7 +237,11 @@ class Utils:
             {"label": "Placa", "value": "placa"},
             {"label": "Marca", "value": "marca"}
             ]
-    
+
+    @staticmethod
+    def assets_path():
+        return os.path.normpath(os.path.dirname(__file__) + os.sep + os.pardir)
+
     @staticmethod
     def busca(busca=None, filtro=None):
         """Busca um veículo no banco de dados através de uma pesquisa."""
@@ -331,7 +336,7 @@ def atualizar_informacoes(url: str):
     id_entrega = None
     veiculo = Utils.veiculo(url)
 
-    img_arquivos = listdir("./assets/images/veiculos/")
+    img_arquivos = listdir(Utils.assets_path() + "\\assets\\images\\veiculos\\")
     img_nomes = [img.split(".")[0] for img in img_arquivos]
 
     return [
@@ -360,16 +365,16 @@ def atualizar_informacoes(url: str):
             ]),
         html.Div(className="buttons-layout", children=[
             html.Button(className="button-infos-B click", n_clicks=0, id="pg2--mod2-abrir", children=html.Img(
-                src=dash.get_asset_url("icons/icone-lixeira.svg"), width="30px", height="30px"
+                src=dash.get_asset_url("icons/icone-lixeira.svg"), width="35px", height="35px"
                 )),
             dcc.Location(id="pg2--upload-refresh", refresh=False),
             dcc.Upload(id="pg2--upload", children=[
                 html.Button(className="button-infos-B click", n_clicks=0, children=[
-                    html.Img(src=dash.get_asset_url("icons/icone-imagem.svg"), width="30px", height="30px")
+                    html.Img(src=dash.get_asset_url("icons/icone-imagem.svg"), width="35px", height="35px")
                     ])
                 ]),
             html.Button(className="button-infos-B click", n_clicks=0, id=f"pg2--mod1-abrir", children=html.Img(
-                src=dash.get_asset_url("icons/icone-editar.svg"), width="30px", height="30px"
+                src=dash.get_asset_url("icons/icone-editar.svg"), width="35px", height="35px"
                 )),
             ]),
         Layouts.deletar(veiculo[1])
@@ -523,7 +528,7 @@ def deletar_confirmar(bt, placa, path):
         banco_dados.veiculos_deletar(placa)
         banco_dados.finalizar()
 
-        img_arquivos = listdir("./assets/images/veiculos/")
+        img_arquivos = listdir(Utils.assets_path() + "\\assets\\images\\veiculos\\")
         img_nomes = [img.split(".")[0] for img in img_arquivos]
         if placa in img_nomes:
             remove(f"./assets/images/veiculos/{img_arquivos[img_nomes.index(placa)]}")

@@ -15,4 +15,12 @@ dash.register_page(
 
 
 def layout():
-    return html.Div("Home")
+    return html.Div(children=[
+        html.Div(className="card", children=[
+
+            ])
+        ])
+
+
+class Utils:
+    pass
