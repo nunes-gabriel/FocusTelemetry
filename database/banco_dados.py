@@ -131,6 +131,10 @@ class BancoDados:
             """, colunas)
         self.__con.commit()
 
+    def veiculos_status(self, placa, coluna):
+        self.__cur.execute("UPDATE VEICULO SET Feedback_do_Veículo=? WHERE placa=?", [coluna, placa])
+        self.__con.commit()
+
     def veiculos_deletar(self, placa):
         self.__cur.execute("DELETE FROM VEICULO WHERE placa=?", [placa])
         self.__con.commit()
@@ -173,6 +177,10 @@ class BancoDados:
             Categoria_Habilitação=?
             WHERE cpf='{cpf}'
             """, colunas)
+        self.__con.commit()
+
+    def motoristas_status(self, cpf, coluna):
+        self.__cur.execute("UPDATE MOTORISTA SET Status=? WHERE cpf=?", [coluna, cpf])
         self.__con.commit()
 
     def motoristas_deletar(self, cpf):

@@ -180,6 +180,29 @@ class Layouts:
             ])
 
     @staticmethod
+    def manutencao(placa: str):
+        return html.Div(className="modal", style={"visibility": "hidden"}, id="pg2--mod4", children=[
+            dcc.Location(id="pg2--mod4-refresh", refresh=False),
+            html.Button(className="modal-backdrop", n_clicks=0, id="pg2--mod4-backdrop"),
+            html.Div(className="card modal-body", id="pg2--mod4-conteudo", children=[
+                html.H3(style={"margin-top": "15px"}, children="Tem certeza que deseja marcar/retirar o veículo como em manutenção?"),
+                html.Div(className="row form-buttons", children=[
+                    html.Button(className="button form-button click", value=placa, n_clicks=0, id="pg2--mod4-confirmar", children="Confirmar"),
+                    html.Button(className="button form-button click", n_clicks=0, id="pg2--mod4-cancelar", children="Cancelar"),
+                    ])
+                ])
+            ])
+
+    @staticmethod
+    def aviso_viagem():
+        return html.Div(className="modal", style={"visibility": "hidden"}, id="pg2--mod5", children=[
+            html.Button(className="modal-backdrop", n_clicks=0, id="pg2--mod5-backdrop"),
+            html.Div(className="card modal-body", id="pg2--mod5-conteudo", children=[
+                html.H3(style={"margin-top": "15px", "margin-bottom": "15px"}, children="O veículo em questão está em viagem e não pode ser alterado.")
+                ])
+            ])
+
+    @staticmethod
     def cardlist(veiculos: tuple):
         """Lista de cards com os veículos registrados no banco de dados."""
         img_arquivos = listdir(Utils.assets_path() + "\\assets\\images\\veiculos\\")
@@ -224,7 +247,7 @@ class Layouts:
             html.Div(className="card stats-A", children=[
                 html.Img(src=dash.get_asset_url("icons/icone-chave.svg"), width="70px", height="70px"),
                 html.H2("Manutenção"),
-                html.H1(len([v for v in veiculos if v[-1] == ["Em Manutenção ", "Em Manutenção"]]))
+                html.H1(len([v for v in veiculos if v[-1] in ["Em Manutenção ", "Em Manutenção"]]))
                 ])
             ]
 
@@ -377,11 +400,16 @@ def atualizar_informacoes(url: str):
                     html.Img(src=dash.get_asset_url("icons/icone-imagem.svg"), width="35px", height="35px")
                     ])
                 ]),
+            html.Button(className="button-infos-B click", n_clicks=0, id=f"pg2--mod4-abrir", children=html.Img(
+                src=dash.get_asset_url("icons/icone-chave-branco.svg"), width="35px", height="35px"
+                )),
             html.Button(className="button-infos-B click", n_clicks=0, id=f"pg2--mod1-abrir", children=html.Img(
                 src=dash.get_asset_url("icons/icone-editar.svg"), width="35px", height="35px"
                 )),
             ]),
-        Layouts.deletar(veiculo[1])
+        Layouts.deletar(veiculo[1]),
+        Layouts.manutencao(veiculo[1]),
+        Layouts.aviso_viagem()
         ]
 
 
@@ -576,5 +604,58 @@ def upload_imagem(bt, img, filename, query, path):
             return *[dash.no_update] * 2, {"visibility": "visible"}
     elif ctx.triggered_id == "pg2--mod3-backdrop":
         return *[dash.no_update] * 2, {"visibility": "hidden"}
+    else:
+        raise PreventUpdate
+
+
+@dash.callback(
+    Output("pg2--mod4", "style"),
+    Output("pg2--mod5", "style"),
+    State("pg2--mod4-confirmar", "value"),
+    Input("pg2--mod4-abrir", "n_clicks"),
+    Input("pg2--mod4-backdrop", "n_clicks"),
+    Input("pg2--mod4-cancelar", "n_clicks"),
+    Input("pg2--mod5-backdrop", "n_clicks"),
+    prevent_initial_call=True
+    )
+def manutencao_abrir(placa, *bt):
+    if any(bt):
+        if ctx.triggered_id in ["pg2--mod4-backdrop", "pg2--mod4-cancelar"]:
+            return {"visibility": "hidden"}, dash.no_update
+        elif ctx.triggered_id == "pg2--mod5-backdrop":
+            return dash.no_update, {"visibility": "hidden"}
+        else:
+            banco_dados = database.BancoDados()
+            veiculo = banco_dados.veiculos_busca(placa)
+            banco_dados.finalizar()
+            if veiculo[-1] in ["Em Viagem ", "Em Viagem"]:
+                return dash.no_update, {"visibility": "visible"}
+            else:
+                return {"visibility": "visible"}, dash.no_update
+    else:
+        return dash.no_update
+
+
+@dash.callback(
+    Output("pg2--mod4-refresh", "refresh"),
+    Output("pg2--mod4-refresh", "pathname"),
+    Input("pg2--mod4-confirmar", "n_clicks"),
+    State("pg2--mod4-confirmar", "value"),
+    State("pg2--mod2-refresh", "pathname"),
+    prevent_initial_call=True
+    )
+def manutencao_confirmar(bt, placa, path):
+    if bt:
+        banco_dados = database.BancoDados()
+        veiculo = banco_dados.veiculos_busca(placa)
+        if veiculo[-1] in ["Em Manutenção ", "Em Manutenção"]:
+            banco_dados.veiculos_status(placa, "Disponível")
+        else:
+            banco_dados.veiculos_status(placa, "Em Manutenção")
+        banco_dados.finalizar()
+        if path == "/veiculos/":
+            return True, "/veiculos"
+        else:
+            return True, "/veiculos/"
     else:
         raise PreventUpdate
