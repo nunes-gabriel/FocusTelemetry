@@ -15,9 +15,9 @@ import dash
 dash.register_page(
     __name__,
     path="/motoristas",
-    title="Painel de Motoristas",
+    title="Focus Telemetry - Motoristas",
     name="motoristas",
-    order=3
+    order=2
     )
 
 
@@ -399,7 +399,7 @@ def atualizar_informacoes(url: str):
                 html.Hr()
                 ]),
             html.Div(className="status", children=[
-                dcc.Link(href=f"/entregas?id={id_entrega[0]}", children="Motorista em viagem...")
+                dcc.Link(href=f"/?id={id_entrega[0]}", children="Motorista em viagem...")
                 if motorista[-1] in ["Em Viagem ", "Em Viagem"] else
                 html.P(children=f"Motorista {motorista[-1].lower()}")
                 ])

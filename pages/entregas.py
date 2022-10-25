@@ -1,7 +1,6 @@
 from dash import html, dcc, Input, Output, State, ctx
 from dash.exceptions import PreventUpdate
 from plotly import graph_objects as go
-from os import remove
 
 import os
 import datetime
@@ -11,10 +10,10 @@ import dash
 
 dash.register_page(
     __name__,
-    path="/entregas",
-    title="Painel de Entregas",
+    path="/",
+    title="Focus Telemetry",
     name="entregas",
-    order=1
+    order=0
     )
 
 
@@ -125,7 +124,7 @@ class Layouts:
                     html.Div(className="row form-field", children=[
                         html.Label([
                             html.Span(className="span-datepicker", children="Data de Saída"),
-                            dcc.DatePickerSingle(className="form-field datepicker", display_format="DD/MM/YYYY", id=f"pg1--mod0-forms9")])
+                            dcc.DatePickerSingle(className="form-field datepicker", placeholder="DD/MM/AAAA", display_format="DD/MM/YYYY", id=f"pg1--mod0-forms9")])
                         ]),
                     html.Div(className="row form-field", children=[
                         html.Label([
@@ -142,7 +141,8 @@ class Layouts:
                     html.Div(className="row form-field", children=[
                         html.Label([
                             html.Span(className="span-textarea", children="Pontos de Parada"),
-                            dcc.Textarea(className="textarea", required=False, draggable=False, spellCheck=False, id=f"pg1--mod0-forms8")
+                            dcc.Textarea(className="textarea", placeholder="Os pontos de parada da entrega devem ser separados por uma quebra de linha(enter)...",
+                                         required=False, draggable=False, spellCheck=False, id=f"pg1--mod0-forms8")
                             ])
                         ])
                     ]),
@@ -260,6 +260,16 @@ class Utils:
         return motoristas[0][1]
 
     @staticmethod
+    def calcular_tempo(segundos: int):
+        horas = segundos // 3600
+        minutos = segundos % 3600 // 60
+        resto = segundos % 3600 % 60
+        if horas > 1:
+            return f"{horas}h {minutos}m"
+        else:
+            return f"{minutos}m {resto}s"
+
+    @staticmethod
     def filtrar(forms: tuple):
         """Filtra os formulários de cadastro e edição para evitar erros no banco de dados."""
         if any(form in [None, "", 0] for form in forms[:7]):
@@ -268,8 +278,8 @@ class Utils:
             try:
                 ano, mes, dia = [int(d) for d in forms[-1].split("-")]
                 datetime.date(ano, mes, dia)
-            except Exception as err:
-                return str(err) #"A data de saída inserida é inválida."
+            except:
+                return "A data de saída inserida é inválida."
         return None
     
     @staticmethod
@@ -380,6 +390,7 @@ def dropdown_callbacks(id_entrega: int):
                 dcc.Link(href=f"/motoristas?cpf={dados_entrega[2]}", target="_blank", children=dados_entrega[2])
                 ]),
             html.P(f"Tipo de Carga: {dados_entrega[5]}"),
+            html.P(f"Distância: {maps.rota_organizada[0]['distância'] / 1000:.2f}km | Tempo: {Utils.calcular_tempo(maps.rota_organizada[0]['duração'])}"),
             html.P(f"Peso da Carga: {dados_entrega[6]}kg"),
             html.P(f"Valor da Carga: R${dados_entrega[7]}")
             ]
@@ -499,10 +510,10 @@ def forms_novo_confirmar(bt, path, *forms):
 
         banco_dados.finalizar()
 
-        if path == "/entregas/":
-            return True, "/entregas", f"id={id_entrega}", dash.no_update
+        if path == "/":
+            return True, "", f"id={id_entrega}", dash.no_update
         else:
-            return True, "/entregas/", f"id={id_entrega}", dash.no_update
+            return True, "/", f"id={id_entrega}", dash.no_update
     else:
         raise PreventUpdate
 
@@ -542,10 +553,10 @@ def deletar_confirmar(bt, id_entrega, path):
         banco_dados.entregas_deletar(int(id_entrega))
         banco_dados.finalizar()
         os.remove(Utils.assets_path() + f"\\plugins\\cache\\maps\\maps_ID#{id_entrega}.json")
-        if path == "/entregas/":
-            return True, "/entregas", ""
+        if path == "/":
+            return True, "", ""
         else:
-            return True, "/entregas/", ""
+            return True, "/", ""
     else:
         raise PreventUpdate
 

@@ -16,9 +16,9 @@ import dash
 dash.register_page(
     __name__,
     path="/veiculos",
-    title="Painel de Veículos",
+    title="Focus Telemetry - Veículos",
     name="veiculos",
-    order=2
+    order=1
     )
 
 
@@ -362,7 +362,7 @@ def atualizar_informacoes(url: str):
                 html.Hr()
                 ]),
             html.Div(className="status", children=[
-                html.P(children=dcc.Link(href=f"/entregas?id={id_entrega[0]}", children="Veículo em viagem..."))
+                html.P(children=dcc.Link(href=f"/?id={id_entrega[0]}", children="Veículo em viagem..."))
                 if veiculo[-1] in ["Em Viagem ", "Em Viagem"] else
                 html.P(children=f"Veículo {veiculo[-1].strip().lower()}...")
                 ])

@@ -120,6 +120,13 @@ body {
     transform: scale(1.2, 1.2);
 }
 
+#logo {
+    position: absolute;
+    z-index: 2;
+    top: 0;
+    left: 0;
+}
+
 /* >>> Grades (linhas e colunas) */
 .row {
     display: inline-block;
@@ -168,7 +175,7 @@ body {
 .card.infos-A .infos-list {
     margin-top: 5px;
     margin-bottom: 20px;
-    line-height: 15px;
+    line-height: 13px;
 }
 
 .card.infos-A .infos-list p {
@@ -387,16 +394,6 @@ body {
 }
 
 /* >>> Mini cartões de conteúdo com números do banco de dados */
-.layout-database-info {
-    position: absolute;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    min-width: calc(40% - var(--tamanho-BarraLateral));
-    height: 30%;
-    right: 2%;
-}
-
 .layout-stats-A {
     position: absolute;
     display: flex;
@@ -457,13 +454,13 @@ body {
     width: 100%;
     top: 0;
     left: 0;
-    z-index: 1;
+    z-index: 3;
 }
 
 .modal-body {
     position: relative;
     width: 27.5%;
-    z-index: 3;
+    z-index: 5;
 }
 
 .modal-body h3 {
@@ -526,7 +523,7 @@ body {
     width: 100%;
     top: 0;
     left: 0;
-    z-index: 2;
+    z-index: 4;
     align-items: center;
     justify-content: center;
 }
