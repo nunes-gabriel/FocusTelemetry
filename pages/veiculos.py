@@ -478,7 +478,8 @@ def forms_novo_confirmar(bt, path, *forms):
     )
 def forms_editar_atualizar(url):
     """Preenche o modal de edição do veículo com as informações já cadastradas do banco de dados."""
-    veiculo = Utils.veiculo(url)
+    veiculo = list(Utils.veiculo(url))
+    veiculo[1] = veiculo[1].replace("-", "")
     return [veiculo[-2]] + list(veiculo[1:-2])
 
 
@@ -518,6 +519,9 @@ def forms_editar_confirmar(bt, path, *forms):
         erro = Utils.filtrar(forms)
         if erro is not None:
             return *[dash.no_update] * 2, erro
+
+        forms = list(forms)
+        forms[0] = forms[0][:3] + "-" + forms[0][3:]
 
         banco_dados.veiculos_atualizar(forms[0], forms[1:])
 

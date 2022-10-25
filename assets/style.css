@@ -276,14 +276,14 @@ body {
 
 .card.infos-B .infos-list p {
     font-family: PoppinsRegular;
-    font-size: 14.5px;
+    font-size: 14px;
     color: var(--cor-Branco);
 }
 
 .card.infos-B .status p,
 .card.infos-B .status a {
     font-family: PoppinsBold;
-    font-size: 16px;
+    font-size: 15px;
     margin-top: 8px;
     color: var(--cor-Branco);
 }

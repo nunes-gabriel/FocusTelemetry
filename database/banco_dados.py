@@ -164,7 +164,7 @@ class BancoDados:
 
     def motoristas_criar(self, colunas):
         self.__cur.execute("""
-            INSERT INTO MOTORISTA(Nome, Idade, RG, CPF, Telefone, CEP, Rua, Número, Cidade, Estado,
+            INSERT INTO MOTORISTA(Nome, Idade, RG, CPF, Telefone, CEP, Rua, Bairro, Número, Cidade, Estado,
             Registro_Habilitação, Categoria_Habilitação, Status)
             VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'Disponível')
             """, colunas)
@@ -173,7 +173,7 @@ class BancoDados:
     def motoristas_atualizar(self, cpf, colunas):
         self.__cur.execute(f"""
             UPDATE MOTORISTA
-            SET Nome=?, Idade=?, Telefone=?, CEP=?, Rua=?, Número=?, Cidade=?, Estado=?, Registro_Habilitação=?,
+            SET Nome=?, Idade=?, Telefone=?, CEP=?, Rua=?, Bairro=?, Número=?, Cidade=?, Estado=?, Registro_Habilitação=?,
             Categoria_Habilitação=?
             WHERE cpf='{cpf}'
             """, colunas)

@@ -347,7 +347,7 @@ class Utils:
             return "Um dos campos do formulários está vazio ou com um valor inválido."    
         elif any(any([str.isdigit(c), c in punctuation]) for c in forms[0]):
             return "O nome do motorista inserido é inválido."
-        elif 18 < forms[1] > 120 or not isinstance(forms[1], int):
+        elif 18 < int(forms[1]) > 120:
             return "A idade do motorista inserida é inválida."
         elif len(forms[2]) < 9 or any(not str.isdigit(c) for c in forms[2]):
             return "O RG do motorista inserido é inválido."
@@ -581,13 +581,6 @@ def forms_editar_confirmar(bt, path, *forms):
         forms = list(forms)
 
         forms[3] = f"{forms[3][:3]}.{forms[3][3:6]}.{forms[3][6:9]}-{forms[3][9:]}"
-        forms[2] = f"{forms[2][:2]}.{forms[2][2:5]}.{forms[2][5:8]}-{forms[2][-1]}"
-
-        for rg_cpf in banco_dados.motoristas_identidade():
-            if forms[3] == rg_cpf[1]:
-                return *[dash.no_update] * 2, "O CPF inserido já existe no banco de dados."
-            elif forms[2] == rg_cpf[0]:
-                return *[dash.no_update] * 2, "O RG inserido já existe no banco de dados."
 
         forms[6] = f"{forms[6][:5]}-{forms[6][5:]}"
         forms[-1] = "/".join(forms[-1])
@@ -597,8 +590,11 @@ def forms_editar_confirmar(bt, path, *forms):
         if tel2 not in ["", None]:
             forms[4] = f"{forms[4]} / ({tel2[:2]}) {tel2[2:-4]}-{tel2[-4:]}"
 
-        banco_dados.motoristas_atualizar(forms)
+        cpf = forms.pop(3)
+        del forms[2]
 
+        banco_dados.motoristas_atualizar(cpf, forms)
+        
         if path == "/motoristas/":
             return True, "/motoristas", dash.no_update
         else:
