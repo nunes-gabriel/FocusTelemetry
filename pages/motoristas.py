@@ -32,7 +32,7 @@ def layout(**query):
                              options=Utils.options(), value="nome", clearable=False),
                 dcc.Input(className="input search-B", id="pg3--search-bar", type="search", debounce=False,
                           placeholder="Pesquisar motorista por nome..."),
-                html.Button(className="button-search-B click", n_clicks=0, id="pg3--mod0-abrir", children=html.Img(
+                html.Button(className="button-search click", n_clicks=0, id="pg3--mod0-abrir", children=html.Img(
                     src=dash.get_asset_url("icons/icone-adicionar.svg"), width="32px", height="32px"
                     ))
                 ]),
@@ -211,22 +211,23 @@ class Layouts:
         """Status dos motoristas da transportadora."""
         banco_dados = database.BancoDados()
         motoristas = banco_dados.motoristas_lista()
+        banco_dados.finalizar()
 
         return [
             html.Div(className="card stats-A", children=[
-                html.Img(src=dash.get_asset_url("icons/icone-volante.svg"), width="120px", height="120px"),
+                html.Img(src=dash.get_asset_url("icons/icone-volante.svg"), width="70px", height="70px"),
                 html.H2("Em viagem"),
-                html.H1(len([v for v in motoristas if v[-1] == "Em Viagem "]))
+                html.H1(len([v for v in motoristas if v[-1] in ["Em Viagem ", "Em Viagem"]]))
                 ]),
             html.Div(className="card stats-A", children=[
-                html.Img(src=dash.get_asset_url("icons/icone-motorista-disponivel.svg"), width="120px", height="120px"),
+                html.Img(src=dash.get_asset_url("icons/icone-motorista-disponivel.svg"), width="70px", height="70px"),
                 html.H2("Disponíveis"),
-                html.H1(len([v for v in motoristas if v[-1] == "Disponível"]))
+                html.H1(len([v for v in motoristas if v[-1] in ["Disponível ", "Disponível"]]))
                 ]),
             html.Div(className="card stats-A", children=[
-                html.Img(src=dash.get_asset_url("icons/icone-afastado.svg"), width="120px", height="120px"),
+                html.Img(src=dash.get_asset_url("icons/icone-afastado.svg"), width="70px", height="70px"),
                 html.H2("Afastados"),
-                html.H1(len([v for v in motoristas if v[-1] == "Afastado"]))
+                html.H1(len([v for v in motoristas if v[-1] in ["Afastado", "Afastado "]]))
                 ])
             ]
 
@@ -308,7 +309,7 @@ class Utils:
     @staticmethod
     def motorista(query: str):
         """Busca por um motorista no banco de dados de acordo com seu CPF."""
-        if "cpf" not in query:
+        if query is None or "cpf" not in query:
             motorista = Utils.busca()[0]
         else:
             banco_dados = database.BancoDados()
@@ -370,8 +371,11 @@ def barra_busca(busca: str, filtro: str):
     )
 def atualizar_informacoes(url: str):
     """Atualiza o card de informações de acordo com o motorista selecionado da lista."""
-    id_entrega = None
     motorista = Utils.motorista(url)
+
+    banco_dados = database.BancoDados()
+    id_entrega = banco_dados.entregas_motorista(motorista[4])
+    banco_dados.finalizar()
 
     img_arquivos = listdir(Utils.assets_path() + "\\assets\\images\\motoristas\\")
     img_nomes = [img.split(".")[0] for img in img_arquivos]
@@ -385,22 +389,23 @@ def atualizar_informacoes(url: str):
             )),
         html.Div(className="content", children=[
             html.Div(className="infos-list", children=[
-                html.P(f"CPF: {motorista[4]}"),
-                html.P(f"RG: {motorista[3]}"),
                 html.P(f"Nome Completo: {motorista[1]}"),
+                html.P(f"CPF: {motorista[4]} | RG: {motorista[3]}"),
                 html.P(f"Idade: {motorista[2]}"),
                 html.P(f"Telefone(s): {motorista[5]}"),
                 html.P(f"CEP: {motorista[6]}"),
-                html.P(f"Endereço: {motorista[7]}"),
+                html.P(f"Endereço: {motorista[11]}, {motorista[10]}, {motorista[8]}, {motorista[7]}, {motorista[9]}"),
+                html.P(f"Habilitação: {motorista[12]}"),
+                html.Hr()
                 ]),
             html.Div(className="status", children=[
-                dcc.Link(href=f"/entregas?id={id_entrega}", children="motorista em viagem...")
-                if motorista[-1] == "Em Viagem " else
-                html.P(children=f"Motorista...")
+                dcc.Link(href=f"/entregas?id={id_entrega[0]}", children="Motorista em viagem...")
+                if motorista[-1] in ["Em Viagem ", "Em Viagem"] else
+                html.P(children=f"Motorista {motorista[-1].lower()}")
                 ])
             ]),
         html.Div(className="buttons-layout", children=[
-            html.Button(className="button-infos-B click", n_clicks=0, id="pg3--mod2-abrir", children=html.Img(
+            html.Button(className="button-infos-B last click", n_clicks=0, id="pg3--mod2-abrir", children=html.Img(
                 src=dash.get_asset_url("icons/icone-lixeira.svg"), width="35px", height="35px"
                 )),
             dcc.Location(id="pg3--upload-refresh", refresh=False),

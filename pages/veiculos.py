@@ -33,8 +33,8 @@ def layout(**query):
                              options=Utils.options(), value="placa", clearable=False),
                 dcc.Input(className="input search-B", id="pg2--search-bar", type="search", debounce=False,
                           placeholder="Pesquisar veículo por placa..."),
-                html.Button(className="button-search-B click", n_clicks=0, id="pg2--mod0-abrir", children=html.Img(
-                    src=dash.get_asset_url("icons/icone-adicionar.svg"), width="32px", height="32px"
+                html.Button(className="button-search click", n_clicks=0, id="pg2--mod0-abrir", children=html.Img(
+                    src=dash.get_asset_url("icons/icone-adicionar.svg"), width="34px", height="34px"
                     ))
                 ]),
             html.Div(className="card-list", id="pg2--lista", style={"padding-right": "5px"}, children=Layouts.cardlist(Utils.busca()))
@@ -107,8 +107,7 @@ class Layouts:
                     html.Div(className="row form-field", children=[
                         html.Label([
                             html.Span(className="span-datepicker", children="Documentação"),
-                            dcc.DatePickerSingle(className="form-field datepicker", placeholder="Data", display_format="DD/MM/YYYY",
-                                                id=f"pg2--mod{n}-forms13")])
+                            dcc.DatePickerSingle(className="form-field datepicker", display_format="DD/MM/YYYY", id=f"pg2--mod{n}-forms13")])
                         ]),
                     html.Div(className="row form-field", children=[
                         html.Label([
@@ -197,7 +196,7 @@ class Layouts:
                         )),
                     html.Div(children=[
                         html.P(f"Placa: {veiculo[1]}"),
-                        html.P(f"Marca: {veiculo[2]}")
+                        html.P(style={"line-height": "16px"}, children=f"Marca: {veiculo[2]}")
                         ])
                     ])
                 ])
@@ -209,22 +208,23 @@ class Layouts:
         """Status da frota de veículos da transportadora."""
         banco_dados = database.BancoDados()
         veiculos = banco_dados.veiculos_lista()
+        banco_dados.finalizar()
 
         return [
             html.Div(className="card stats-A", children=[
-                html.Img(src=dash.get_asset_url("icons/icone-viagem.svg"), width="120px", height="120px"),
+                html.Img(src=dash.get_asset_url("icons/icone-viagem.svg"), width="70px", height="70px"),
                 html.H2("Em viagem"),
-                html.H1(len([v for v in veiculos if v[-1] == "Em Viagem "]))
+                html.H1(len([v for v in veiculos if v[-1] in ["Em Viagem ", "Em Viagem"]]))
                 ]),
             html.Div(className="card stats-A", children=[
-                html.Img(src=dash.get_asset_url("icons/icone-veiculo-disponivel.svg"), width="120px", height="120px"),
+                html.Img(src=dash.get_asset_url("icons/icone-veiculo-disponivel.svg"), width="70px", height="70px"),
                 html.H2("Disponíveis"),
-                html.H1(len([v for v in veiculos if v[-1] == "Disponível"]))
+                html.H1(len([v for v in veiculos if v[-1] in ["Disponível ", "Disponível"]]))
                 ]),
             html.Div(className="card stats-A", children=[
-                html.Img(src=dash.get_asset_url("icons/icone-chave.svg"), width="120px", height="120px"),
+                html.Img(src=dash.get_asset_url("icons/icone-chave.svg"), width="70px", height="70px"),
                 html.H2("Manutenção"),
-                html.H1(len([v for v in veiculos if v[-1] == "Em Manutenção "]))
+                html.H1(len([v for v in veiculos if v[-1] == ["Em Manutenção ", "Em Manutenção"]]))
                 ])
             ]
 
@@ -273,7 +273,7 @@ class Utils:
     @staticmethod
     def veiculo(query: str):
         """Busca por um veículo no banco de dados de acordo com a sua placa."""
-        if "placa" not in query:
+        if query is None or "placa" not in query:
             veiculo = Utils.busca()[0]
         else:
             banco_dados = database.BancoDados()
@@ -296,7 +296,7 @@ class Utils:
             return "O ano do veículo inserido é inválido."
         else:
             try:
-                dia, mes, ano = [int(d) for d in forms[-1].split("/")]
+                ano, mes, dia = [int(d) for d in forms[-1].split("-")]
                 datetime.date(ano, mes, dia)
             except:
                 return "A data de validade dos documentos inserida é inválida."
@@ -333,8 +333,11 @@ def barra_busca(busca: str, filtro: str):
     )
 def atualizar_informacoes(url: str):
     """Atualiza o card de informações de acordo com o veículo selecionado da lista."""
-    id_entrega = None
     veiculo = Utils.veiculo(url)
+
+    banco_dados = database.BancoDados()
+    id_entrega = banco_dados.entregas_veiculo(veiculo[1])
+    banco_dados.finalizar()
 
     img_arquivos = listdir(Utils.assets_path() + "\\assets\\images\\veiculos\\")
     img_nomes = [img.split(".")[0] for img in img_arquivos]
@@ -350,21 +353,22 @@ def atualizar_informacoes(url: str):
             html.Div(className="infos-list", children=[
                 html.P(f"Placa: {veiculo[1]}"),
                 html.P(f"Marca: {veiculo[2]}"),
-                html.P(f"Cor: {veiculo[4]}"),
-                html.P(f"Tipo de Veículo: {veiculo[3]}"),
-                html.P(f"Tipo de Carroceria: {veiculo[7]}"),
                 html.P(f"RENAVAM: {veiculo[5]}"),
-                html.P(f"Ano: {veiculo[6]}"),
-                html.P(f"Altura: {float(veiculo[8]):.2f}m")
+                html.P(f"Documentação: {veiculo[13]}"),
+                html.P(f"Cor: {veiculo[4]} | Ano: {veiculo[6]}"),
+                html.P(f"Tipo: {veiculo[3]} | {veiculo[7]}"),
+                html.P(f"Alt.: {float(veiculo[8]):.2f}m | Larg.: {float(veiculo[9]):.2f}m | Comp.: {float(veiculo[10]):.2f}m"),
+                html.P(f"Tara: {int(veiculo[11].replace('.', '')) / 1000}t | Capacidade: {int(veiculo[12].replace('.', '')) / 1000}t"),
+                html.Hr()
                 ]),
             html.Div(className="status", children=[
-                dcc.Link(href=f"/entregas?id={id_entrega}", children="Veículo em viagem...")
-                if veiculo[-1] == "Em Viagem " else
+                html.P(children=dcc.Link(href=f"/entregas?id={id_entrega[0]}", children="Veículo em viagem..."))
+                if veiculo[-1] in ["Em Viagem ", "Em Viagem"] else
                 html.P(children=f"Veículo {veiculo[-1].strip().lower()}...")
                 ])
             ]),
         html.Div(className="buttons-layout", children=[
-            html.Button(className="button-infos-B click", n_clicks=0, id="pg2--mod2-abrir", children=html.Img(
+            html.Button(className="button-infos-B last click", n_clicks=0, id="pg2--mod2-abrir", children=html.Img(
                 src=dash.get_asset_url("icons/icone-lixeira.svg"), width="35px", height="35px"
                 )),
             dcc.Location(id="pg2--upload-refresh", refresh=False),
@@ -420,6 +424,9 @@ def forms_novo_confirmar(bt, path, *forms):
 
         forms = list(forms)
         forms[0] = forms[0][:3] + "-" + forms[0][3:]
+
+        ano, mes, dia = forms[-1].split("-")
+        forms[-1] = f"{dia}/{mes}/{ano}"
 
         placas = banco_dados.veiculos_placas()
         for placa in placas:

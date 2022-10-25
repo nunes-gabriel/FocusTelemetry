@@ -3,48 +3,47 @@ import database
 import datetime
 import string
 import json
-import os
 
 
 class GoogleMaps:
     dir_cache = "./plugins/cache/maps/"
 
-    def __init__(self, cod_entrega: int):
+    def __init__(self, cod_entrega: int = None, **entrega):
         """Gera os datasets contendo as rotas de entrega e as suas informações."""
         self.__id_entrega = cod_entrega
-        if self.__cache_existe():
+        if cod_entrega is not None:
             self.__cache_carregar()
         else:
-            banco_dados = self.__banco_dados()
+            self.erro = False
             maps = googlemaps.Client("AIzaSyD9j77oIrgO1-fAXb4V3af9srmuJArBp_4")
-            self.__response = maps.directions(
-                origin=banco_dados[0],
-                destination=banco_dados[1],
-                mode="driving",
-                waypoints=banco_dados[2],
-                alternatives=True,
-                language="pt-br",
-                units="metric",
-                departure_time=datetime.datetime.now(),
-                optimize_waypoints=True,
-                traffic_model="best_guess"
-                )
-            self.rota_organizada = self.__filtro_organizado()
-            self.rota_dataframe = self.__filtro_dataframe()
-            self.__cache_criar()
+            try:
+                self.__response = maps.directions(
+                    origin=entrega["origem"],
+                    destination=entrega["destino"],
+                    mode="driving",
+                    waypoints=entrega["paradas"],
+                    alternatives=True,
+                    language="pt-br",
+                    units="metric",
+                    departure_time=datetime.datetime.now(),
+                    optimize_waypoints=True,
+                    traffic_model="best_guess"
+                    )
+                self.rota_organizada = self.__filtro_organizado()
+                self.rota_dataframe = self.__filtro_dataframe()
+                if len(self.rota_dataframe) == 0:
+                    self.erro = "A rota indicada não pôde ser encontrada por um problema na API do Google Maps."
+                else:
+                    self.__id_entrega = self.__ultimo_id()
+                    self.__cache_criar()
+            except Exception as err:
+                self.erro = str(err)
 
-    def __banco_dados(self) -> list:
-        """Conecta-se com o banco de dados retornando as informações necessárias."""
+    def __ultimo_id(self):
         banco_dados = database.BancoDados()
-        entrega = banco_dados.entregas_busca(self.__id_entrega)
-        dados_maps = [entrega[3], entrega[4]]
-        if entrega[8].strip() == "Sem parada":
-            dados_maps.append([])
-        else:
-            paradas = entrega[8].split("/")
-            dados_maps.append(paradas)
+        id = banco_dados.entregas_id()
         banco_dados.finalizar()
-        return dados_maps
+        return id
 
     def __filtro_organizado(self) -> list[dict]:
         """Converte os dados da rota para uma lista de dicionários ordenada."""
@@ -104,15 +103,6 @@ class GoogleMaps:
                     }
                 })
         return dataframe
-
-    def __cache_existe(self) -> bool:
-        """Verifica se há ou não um cache já criado para a entrega analisada."""
-        arquivos = os.listdir(GoogleMaps.dir_cache)
-        nome_cache = f"maps_ID#{self.__id_entrega}.json"
-        if nome_cache in arquivos:
-            return True
-        else:
-            return False
     
     def __cache_carregar(self) -> None:
         """Carrega o cache da entrega analisada caso este já tenha sido criado."""

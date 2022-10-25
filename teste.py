@@ -1,3 +1,3 @@
-teste = "(17) 99762-0555"
+import datetime
 
-print(teste.split("/"))
+
